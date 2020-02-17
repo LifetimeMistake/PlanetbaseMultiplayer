@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planetbase.Server", "Planetbase.Server\Planetbase.Server.csproj", "{868E9A60-1AB3-4311-8BD9-107A80E6752B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetbaseMultiplayer.Server", "Planetbase.Server\PlanetbaseMultiplayer.Server.csproj", "{868E9A60-1AB3-4311-8BD9-107A80E6752B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetbaseMultiplayer.Patcher", "Planetbase.Patcher\PlanetbaseMultiplayer.Patcher.csproj", "{1E7FA9EA-68E9-4609-9AB1-3BFBB0B4F25A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetbaseMultiplayer.SharedLibs", "PlanetbaseMultiplayer.SharedLibs\PlanetbaseMultiplayer.SharedLibs.csproj", "{4F5C51E2-504C-4B66-9353-381B3CACE09B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetbaseMultiplayer.Client", "PlanetbaseMultiplayer.Client\PlanetbaseMultiplayer.Client.csproj", "{FC5AB468-D76A-4A2A-82E8-F9066BA29C54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{868E9A60-1AB3-4311-8BD9-107A80E6752B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{868E9A60-1AB3-4311-8BD9-107A80E6752B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{868E9A60-1AB3-4311-8BD9-107A80E6752B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E7FA9EA-68E9-4609-9AB1-3BFBB0B4F25A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E7FA9EA-68E9-4609-9AB1-3BFBB0B4F25A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E7FA9EA-68E9-4609-9AB1-3BFBB0B4F25A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E7FA9EA-68E9-4609-9AB1-3BFBB0B4F25A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F5C51E2-504C-4B66-9353-381B3CACE09B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F5C51E2-504C-4B66-9353-381B3CACE09B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F5C51E2-504C-4B66-9353-381B3CACE09B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F5C51E2-504C-4B66-9353-381B3CACE09B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC5AB468-D76A-4A2A-82E8-F9066BA29C54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC5AB468-D76A-4A2A-82E8-F9066BA29C54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC5AB468-D76A-4A2A-82E8-F9066BA29C54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC5AB468-D76A-4A2A-82E8-F9066BA29C54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

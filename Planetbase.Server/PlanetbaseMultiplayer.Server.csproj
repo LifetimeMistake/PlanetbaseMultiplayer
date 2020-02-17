@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{868E9A60-1AB3-4311-8BD9-107A80E6752B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Planetbase.Server</RootNamespace>
-    <AssemblyName>Planetbase.Server</AssemblyName>
+    <RootNamespace>PlanetbaseMultiplayer.Server</RootNamespace>
+    <AssemblyName>PlanetbaseMultiplayer.Server</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Lidgren.Network.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,9 +49,17 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server.cs" />
+    <Compile Include="TimeManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlanetbaseMultiplayer.SharedLibs\PlanetbaseMultiplayer.SharedLibs.csproj">
+      <Project>{4F5C51E2-504C-4B66-9353-381B3CACE09B}</Project>
+      <Name>PlanetbaseMultiplayer.SharedLibs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
