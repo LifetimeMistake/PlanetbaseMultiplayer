@@ -15,12 +15,14 @@ namespace PlanetbaseMultiplayer.Client
     public class Client
     {
         public NetClient client;
+        public ConcurrentQueue<Packet> packetQueue;
         public Client()
         {
             NetPeerConfiguration config = new NetPeerConfiguration("PlanetbaseMultiplayerMod");
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             client = new NetClient(config);
+            packetQueue = new ConcurrentQueue<Packet>();
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
             client.RegisterReceivedCallback(new System.Threading.SendOrPostCallback(MessageReceived));
             Globals.LocalClient = this;
@@ -72,7 +74,7 @@ namespace PlanetbaseMultiplayer.Client
                     try
                     {
                         Packet packet = Packet.Deserialize(msg.ReadBytes(msg.LengthBytes));
-                        ProcessPacket(packet);
+                        packetQueue.Enqueue(packet);
                     }
                     catch (Exception e)
                     {
@@ -173,10 +175,43 @@ namespace PlanetbaseMultiplayer.Client
                 if (m1 == null) { UnityEngine.Debug.LogError("Could not find m1"); return; }
                 if (m2 == null) { UnityEngine.Debug.LogError("Could not find m2"); return; }
 
-                Debug.Log($"m1 was {m1.getName()}");
-                Debug.Log($"m2 was {m2.getName()}");
+                Debug.Log($"Error while processing packet type PlaceConnection: m1 was {m1.getName()}");
+                Debug.Log($"Error while processing packet type PlaceConnection: m2 was {m2.getName()}");
 
                 Module.linkModules(m1, m2, (GameManager.getInstance().getGameState() as GameStateGame).mRenderTops);
+            }
+            if(packet.Type == PacketType.PlaceComponent)
+            {
+                PlaceComponentDataPackage pkg = packet.Data as PlaceComponentDataPackage;
+                Construction parentModule = null;
+                ComponentType componentType = null;
+                foreach(Construction construction in Construction.mConstructions)
+                {
+                    if (construction.mId == pkg.ParentModuleId)
+                    {
+                        parentModule = construction;
+                        break;
+                    }
+                }
+                foreach (ComponentType cType in TypeList<ComponentType, ComponentTypeList>.get())
+                    if (cType.getName() == pkg.ComponentType)
+                    {
+                        componentType = cType;
+                        break;
+                    }
+
+                if (parentModule == null) { UnityEngine.Debug.LogError("Error while processing packet type PlaceComponent: parentModule was null"); return; }
+                if (componentType == null) { UnityEngine.Debug.LogError("Error while processing packet type PlaceComponent: componentType was null\r\n" +
+                    $"Could not find the requested component type: {pkg.ComponentType}"); return; 
+                }
+
+                // create the component
+                ConstructionComponent component = ConstructionComponent.create(construction: parentModule, componentType: componentType);
+                component.setRotation(((Quaternion)pkg.Rotation));
+                component.setPosition((Vector3)pkg.Position);
+                component.setPositionY(component.getParentConstruction().getFloorPosition().y);
+                parentModule.addComponent(component);
+                component.onUserPlaced();
             }
         }
 
@@ -185,6 +220,7 @@ namespace PlanetbaseMultiplayer.Client
             if (Globals.LocalPlayer.ClientState != ClientState.LoadingSaveData) return;
             SendPacket(new Packet(PacketType.SetClientState, new ClientStatePackage(ClientState.ConnectedReady)));
             Globals.LocalPlayer.ClientState = ClientState.ConnectedReady;
+            Console.WriteLine($"Util.captureScreenshot returned {Util.captureScreenshot(135)}");
         }
 
         public void OnTimeSpeedChanged_Locally(GameTimeSpeed speed, bool isPaused)
@@ -200,6 +236,12 @@ namespace PlanetbaseMultiplayer.Client
         public void OnConnectionPlaced_Locally(Module m1, Module m2)
         {
             SendPacket(new Packet(PacketType.PlaceConnection, new PlaceConnectionDataPackage(m1.mId, m2.mId)));
+        }
+
+        public void OnComponentPlaced_Locally(Construction parentConstruction, Vector3 componentPosition, Quaternion componentRotation, string componentType)
+        {
+            SendPacket(new Packet(PacketType.PlaceComponent, new PlaceComponentDataPackage(parentConstruction.mId, (Quaternion_Serializable)componentRotation,
+                (Vector3_Serializable)componentPosition, componentType)));
         }
 
         public void SendPacket(Packet packet)

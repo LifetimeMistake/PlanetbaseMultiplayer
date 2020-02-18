@@ -5,12 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PlanetbaseMultiplayer.Patcher.Patches
 {
     [HarmonyPatch(typeof(GameManager), "fixedUpdate", new[] { typeof(float) })]
-    public class Hook_WorldLoadingFinished
+    class Hook_WorldLoadingFinished
     {
         private static GameManager.State previousState = GameManager.State.Loading;
         [HarmonyPostfix]

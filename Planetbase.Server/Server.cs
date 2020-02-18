@@ -145,9 +145,7 @@ namespace PlanetbaseMultiplayer.Server
 								Console.WriteLine("Requesting the latest world state from the simulation owner");
 								SendPacket(GetSimulationOwner(), new Packet(PacketType.RequestXmlSaveData, null));
 							}
-							Console.WriteLine("end2");
 						});
-						Console.WriteLine("end1");
 						break;
 					case ClientState.ConnectedReady:
 						// If there are no remaining players in the loading queue, unpause the game
@@ -195,6 +193,12 @@ namespace PlanetbaseMultiplayer.Server
 			{
 				PlaceConnectionDataPackage pkg = packet.Data as PlaceConnectionDataPackage;
 				Console.WriteLine($"Build connection: Link1_Id: {pkg.Module1_Id}, Link2_Id: {pkg.Module2_Id}");
+				SendPacketToAll(packet);
+			}
+			if(packet.Type == PacketType.PlaceComponent)
+			{
+				PlaceComponentDataPackage pkg = packet.Data as PlaceComponentDataPackage;
+				Console.WriteLine($"Build component: Parent module Id: {pkg.ParentModuleId}, Position: {pkg.Position.ToString()}, Rotation: {pkg.Rotation.ToString()}, ComponentType: {pkg.ComponentType}");
 				SendPacketToAll(packet);
 			}
 		}

@@ -1,11 +1,12 @@
 ﻿using Harmony;
 using Planetbase;
 using PlanetbaseMultiplayer.Client;
+using PlanetbaseMultiplayer.SharedLibs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Patcher.Patches
 {
@@ -47,6 +48,32 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 				Selection.getSelected().playSound(SoundList.getInstance().ConnectionPlace);
 				__instance.clearSelection();
 			}
+			return false;
+		}
+	}
+
+	[HarmonyPatch(typeof(GameStateGame), "placeComponent")]
+	class hook_placeComponent
+	{
+		static bool Prefix(GameStateGame __instance)
+		{
+			if (!Globals.IsInMultiplayerMode) return true;
+			Construction parentConstruction = __instance.mPlacedComponent.getParentConstruction();
+			if (__instance.mValidComponentPosition == null) { UnityEngine.Debug.LogError("mvalidComponentPosition was null"); }
+			if (__instance.mValidComponentRotation == null) { UnityEngine.Debug.LogError("mValidComponentRotation was null"); }
+			Vector3 position = (Vector3)__instance.mValidComponentPosition;
+			Quaternion rotation = (Quaternion)__instance.mValidComponentRotation;
+			string componentType = __instance.mPlacedComponent.getComponentType().getName();
+			// original code
+			__instance.mPlacedComponent.playSound(SoundList.getInstance().ComponentPlace);
+			bool flag = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+			ComponentType componentType__ = null;
+			if (flag && __instance.mPlacedComponent != null && !__instance.inTutorial())
+				componentType__ = __instance.mPlacedComponent.getComponentType();
+			__instance.cancelComponentPlacement();
+			if (componentType__ != null)
+				__instance.startPlacingComponent(componentType__);
+			Globals.LocalClient.OnComponentPlaced_Locally(parentConstruction, position, rotation, componentType);
 			return false;
 		}
 	}
