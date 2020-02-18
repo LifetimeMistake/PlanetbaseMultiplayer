@@ -175,9 +175,6 @@ namespace PlanetbaseMultiplayer.Client
                 if (m1 == null) { UnityEngine.Debug.LogError("Could not find m1"); return; }
                 if (m2 == null) { UnityEngine.Debug.LogError("Could not find m2"); return; }
 
-                Debug.Log($"Error while processing packet type PlaceConnection: m1 was {m1.getName()}");
-                Debug.Log($"Error while processing packet type PlaceConnection: m2 was {m2.getName()}");
-
                 Module.linkModules(m1, m2, (GameManager.getInstance().getGameState() as GameStateGame).mRenderTops);
             }
             if(packet.Type == PacketType.PlaceComponent)
@@ -213,14 +210,24 @@ namespace PlanetbaseMultiplayer.Client
                 parentModule.addComponent(component);
                 component.onUserPlaced();
             }
+            if(packet.Type == PacketType.IncrementNextId)
+            {
+                IdGenerator.getInstance().generate();
+            }
+            if(packet.Type == PacketType.IncrementNextBotId)
+            {
+                IdGenerator.getInstance().generateBot();
+            }
         }
 
         public void OnWorldLoadingFinished()
         {
             if (Globals.LocalPlayer.ClientState != ClientState.LoadingSaveData) return;
+            // For some reason the Id is incremented on each load.
+            // We must  increment the Id on every other client to stay in sync.
+            Send_IncrementId_Packet();
             SendPacket(new Packet(PacketType.SetClientState, new ClientStatePackage(ClientState.ConnectedReady)));
             Globals.LocalPlayer.ClientState = ClientState.ConnectedReady;
-            Console.WriteLine($"Util.captureScreenshot returned {Util.captureScreenshot(135)}");
         }
 
         public void OnTimeSpeedChanged_Locally(GameTimeSpeed speed, bool isPaused)
@@ -242,6 +249,16 @@ namespace PlanetbaseMultiplayer.Client
         {
             SendPacket(new Packet(PacketType.PlaceComponent, new PlaceComponentDataPackage(parentConstruction.mId, (Quaternion_Serializable)componentRotation,
                 (Vector3_Serializable)componentPosition, componentType)));
+        }
+        // A fix for Id desync
+        public void Send_IncrementId_Packet()
+        {
+            SendPacket(new Packet(PacketType.IncrementNextId, null));
+        }
+        // A fix for Id desync
+        public void Send_IncrementBotId_Packet()
+        {
+            SendPacket(new Packet(PacketType.IncrementNextBotId, null));
         }
 
         public void SendPacket(Packet packet)

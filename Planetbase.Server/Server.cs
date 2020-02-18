@@ -201,6 +201,14 @@ namespace PlanetbaseMultiplayer.Server
 				Console.WriteLine($"Build component: Parent module Id: {pkg.ParentModuleId}, Position: {pkg.Position.ToString()}, Rotation: {pkg.Rotation.ToString()}, ComponentType: {pkg.ComponentType}");
 				SendPacketToAll(packet);
 			}
+			if(packet.Type == PacketType.IncrementNextId)
+			{
+				SendPacketToAllExcept(sender, packet);
+			}
+			if(packet.Type == PacketType.IncrementNextBotId)
+			{
+				SendPacketToAllExcept(sender, packet);
+			}
 		}
 
 		public bool SendPacket(Player recipient, Packet packet)

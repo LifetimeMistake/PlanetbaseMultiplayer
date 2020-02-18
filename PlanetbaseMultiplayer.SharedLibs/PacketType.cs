@@ -16,6 +16,8 @@ namespace PlanetbaseMultiplayer.SharedLibs
         PlaceModule = 5,
         PlaceComponent = 6,
         PlaceConnection = 7,
-        SetSimOwnerStatus = 8
+        SetSimOwnerStatus = 8,
+        IncrementNextId = 9,
+        IncrementNextBotId = 10
     }
 }

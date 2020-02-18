@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Fix_Id_Desync_Patch.cs" />
     <Compile Include="Patches\Hook_PlaceBuilding.cs" />
     <Compile Include="Patches\Hook_TimeSettings.cs" />
     <Compile Include="Patches\Override_IsSaveAllowed_Patch.cs" />
