@@ -21,7 +21,7 @@ Parts of the game which are already synced:
 And many more...
 
 ## How to contribute
-Just send me a merge request! I'll try to merge it as soon as possible.
+Just send me a pull request! I'll try to merge it as soon as possible.
 There's one rule for now though. I'd like to avoid modifying the Assembly-CSharp dll if possible. Changing private or protected fields to public is acceptable. However, try to add all the patches to the Patcher project instead.
 
 ## Setting up a dev environment
