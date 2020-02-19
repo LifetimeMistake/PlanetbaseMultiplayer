@@ -12,7 +12,6 @@ Parts of the game which are already synced:
 
 ## To-Do List
 
-- Resource syncing
 - Recycling syncing (requires resources to be synced)
 - Character syncing
 - Ship syncing
