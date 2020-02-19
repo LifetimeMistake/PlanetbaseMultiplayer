@@ -34,6 +34,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Planetbase-Assembly">
+      <HintPath>..\References\Planetbase-Assembly.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ConcurrentQueue.cs" />
     <Compile Include="DataPackages\ClientStatePackage.cs" />
+    <Compile Include="DataPackages\ProduceResourceDataPackage.cs" />
     <Compile Include="DataPackages\GameTimeSpeedPackage.cs" />
     <Compile Include="DataPackages\PlaceComponentDataPackage.cs" />
     <Compile Include="DataPackages\PlaceConnectionDataPackage.cs" />
@@ -61,6 +65,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quaternion_Serializable.cs" />
+    <Compile Include="ResourceDataStructures.cs" />
     <Compile Include="Vector3_Serializable.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

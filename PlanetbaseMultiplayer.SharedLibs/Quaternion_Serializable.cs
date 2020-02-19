@@ -15,12 +15,15 @@ namespace PlanetbaseMultiplayer.SharedLibs
         public float z;
         public float w;
 
+        private bool is_initialized;
+        public bool IsEmpty { get { return !is_initialized; } }
         public Quaternion_Serializable(float x, float y, float z, float w)
         {
             this.x = x;
             this.y = y;
             this.z = z;
             this.w = w;
+            is_initialized = true;
         }
 
         public static explicit operator Quaternion_Serializable(Quaternion v) => new Quaternion_Serializable(v.x, v.y, v.z, v.w);

@@ -16,7 +16,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
         {
             Client.Client c = new Client.Client();
             c.Start();
-            UnityEngine.Debug.Log("Multiplayer mode started!");
+            UnityEngine.Debug.Log("Multiplayer mode ready!");
         }
     }
     [HarmonyPatch(typeof(GameManager), "fixedUpdate", new[] { typeof(float) })]

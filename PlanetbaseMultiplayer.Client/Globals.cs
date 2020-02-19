@@ -11,5 +11,6 @@ namespace PlanetbaseMultiplayer.Client
         public static Client LocalClient;
         public static Player LocalPlayer;
         public static bool IsInMultiplayerMode;
+        public static bool IdSyncRequired;
     }
 }

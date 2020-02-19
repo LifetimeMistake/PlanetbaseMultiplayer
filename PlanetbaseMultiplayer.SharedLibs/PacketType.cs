@@ -18,6 +18,7 @@ namespace PlanetbaseMultiplayer.SharedLibs
         PlaceConnection = 7,
         SetSimOwnerStatus = 8,
         IncrementNextId = 9,
-        IncrementNextBotId = 10
+        IncrementNextBotId = 10,
+        ProduceResource = 11
     }
 }

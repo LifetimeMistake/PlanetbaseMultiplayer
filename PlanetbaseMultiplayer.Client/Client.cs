@@ -137,78 +137,18 @@ namespace PlanetbaseMultiplayer.Client
             }
             if(packet.Type == PacketType.PlaceModule)
             {
-                // reconstruct module
                 PlaceModuleDataPackage pkg = packet.Data as PlaceModuleDataPackage;
-                ModuleType mType = null;
-                foreach(ModuleType moduleType in TypeList<ModuleType, ModuleTypeList>.get())
-                    if(moduleType.getName() == pkg.ModuleType)
-                    {
-                        mType = moduleType;
-                        break;
-                    }
-                Console.WriteLine("placeModule - found module type");
-                if (mType == null) return;
-                Console.WriteLine("placeModule - mType != null");
-                Module module = Module.create((Vector3)pkg.Position, pkg.SizeIndex, mType);
-                Console.WriteLine("placeModule - module created");
-                module.setPositionY(Singleton<TerrainGenerator>.getInstance().getFloorHeight());
-                Console.WriteLine("placeModule - y position set");
-                module.setRenderTop((GameManager.getInstance().getGameState() as GameStateGame).mRenderTops);
-                Console.WriteLine("placeModule - renderTops flag set");
-                module.onUserPlaced();
-                Console.WriteLine("placeModule - onUserPlaced called");
+                MultiplayerMethods.PlaceModule(pkg);
             }
             if(packet.Type == PacketType.PlaceConnection)
             {
                 PlaceConnectionDataPackage pkg = packet.Data as PlaceConnectionDataPackage;
-                // reconstruct modules from Id
-                Module m1 = null;
-                Module m2 = null;
-                foreach(Construction construction in Construction.mConstructions)
-                {
-                    if (construction.mId == pkg.Module1_Id)
-                        m1 = (Module)construction;
-                    if (construction.mId == pkg.Module2_Id)
-                        m2 = (Module)construction;
-                }
-
-                if (m1 == null) { UnityEngine.Debug.LogError("Could not find m1"); return; }
-                if (m2 == null) { UnityEngine.Debug.LogError("Could not find m2"); return; }
-
-                Module.linkModules(m1, m2, (GameManager.getInstance().getGameState() as GameStateGame).mRenderTops);
+                MultiplayerMethods.PlaceConnection(pkg);
             }
             if(packet.Type == PacketType.PlaceComponent)
             {
                 PlaceComponentDataPackage pkg = packet.Data as PlaceComponentDataPackage;
-                Construction parentModule = null;
-                ComponentType componentType = null;
-                foreach(Construction construction in Construction.mConstructions)
-                {
-                    if (construction.mId == pkg.ParentModuleId)
-                    {
-                        parentModule = construction;
-                        break;
-                    }
-                }
-                foreach (ComponentType cType in TypeList<ComponentType, ComponentTypeList>.get())
-                    if (cType.getName() == pkg.ComponentType)
-                    {
-                        componentType = cType;
-                        break;
-                    }
-
-                if (parentModule == null) { UnityEngine.Debug.LogError("Error while processing packet type PlaceComponent: parentModule was null"); return; }
-                if (componentType == null) { UnityEngine.Debug.LogError("Error while processing packet type PlaceComponent: componentType was null\r\n" +
-                    $"Could not find the requested component type: {pkg.ComponentType}"); return; 
-                }
-
-                // create the component
-                ConstructionComponent component = ConstructionComponent.create(construction: parentModule, componentType: componentType);
-                component.setRotation(((Quaternion)pkg.Rotation));
-                component.setPosition((Vector3)pkg.Position);
-                component.setPositionY(component.getParentConstruction().getFloorPosition().y);
-                parentModule.addComponent(component);
-                component.onUserPlaced();
+                MultiplayerMethods.PlaceComponent(pkg);
             }
             if(packet.Type == PacketType.IncrementNextId)
             {
@@ -218,14 +158,26 @@ namespace PlanetbaseMultiplayer.Client
             {
                 IdGenerator.getInstance().generateBot();
             }
+            if(packet.Type == PacketType.ProduceResource)
+            {
+                ProduceResourceDataPackage pkg = packet.Data as ProduceResourceDataPackage;
+                MultiplayerMethods.CompleteProduction(pkg);
+            }
         }
 
         public void OnWorldLoadingFinished()
         {
             if (Globals.LocalPlayer.ClientState != ClientState.LoadingSaveData) return;
-            // For some reason the Id is incremented on each load.
-            // We must  increment the Id on every other client to stay in sync.
-            Send_IncrementId_Packet();
+            Console.WriteLine("Client started");
+            if (Globals.LocalPlayer.IsSimulationOwner)
+                Console.WriteLine("IsSimulationOwner");
+            if(Globals.IdSyncRequired)
+            {
+                Console.WriteLine("IdSyncRequired");
+                Globals.IdSyncRequired = false;
+                Send_IncrementId_Packet();
+            }
+                
             SendPacket(new Packet(PacketType.SetClientState, new ClientStatePackage(ClientState.ConnectedReady)));
             Globals.LocalPlayer.ClientState = ClientState.ConnectedReady;
         }
@@ -249,6 +201,12 @@ namespace PlanetbaseMultiplayer.Client
         {
             SendPacket(new Packet(PacketType.PlaceComponent, new PlaceComponentDataPackage(parentConstruction.mId, (Quaternion_Serializable)componentRotation,
                 (Vector3_Serializable)componentPosition, componentType)));
+        }
+
+        public void OnProductionCompleted_Locally(Buildable producer, ProducerType type, ResourceConstructionData[] producedResources, ResourceDestructionData[] consumedResources)
+        {
+            UnityEngine.Debug.Log($"Local produced: {producedResources.Length} {consumedResources.Length}");
+            SendPacket(new Packet(PacketType.ProduceResource, new ProduceResourceDataPackage(producer.getId(), type, producedResources, consumedResources)));
         }
         // A fix for Id desync
         public void Send_IncrementId_Packet()

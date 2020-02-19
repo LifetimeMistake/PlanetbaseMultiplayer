@@ -8,6 +8,7 @@ Parts of the game which are already synced:
 - Placing buildings
 - Placing connections
 - Placing components inside buildings
+- Component resource production and mine ore production
 
 ## To-Do List
 

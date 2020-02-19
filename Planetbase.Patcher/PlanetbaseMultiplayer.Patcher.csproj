@@ -65,6 +65,8 @@
     <Compile Include="Patches\Fix_Id_Desync_Patch.cs" />
     <Compile Include="Patches\Hook_PlaceBuilding.cs" />
     <Compile Include="Patches\Hook_TimeSettings.cs" />
+    <Compile Include="Patches\Hook_UpdateMining.cs" />
+    <Compile Include="Patches\Override_completeProduction_Patch.cs" />
     <Compile Include="Patches\Override_IsSaveAllowed_Patch.cs" />
     <Compile Include="Patches\Hook_Multiplayer.cs" />
     <Compile Include="Patches\Hook_WorldLoadingFinished.cs" />

@@ -209,6 +209,10 @@ namespace PlanetbaseMultiplayer.Server
 			{
 				SendPacketToAllExcept(sender, packet);
 			}
+			if(packet.Type == PacketType.ProduceResource)
+			{
+				SendPacketToAll(packet);
+			}
 		}
 
 		public bool SendPacket(Player recipient, Packet packet)
