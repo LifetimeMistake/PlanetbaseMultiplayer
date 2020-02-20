@@ -20,6 +20,7 @@ namespace PlanetbaseMultiplayer.SharedLibs
         IncrementNextId = 9,
         IncrementNextBotId = 10,
         ProduceResource = 11,
-        RecycleColonyShip = 12
+        RecycleColonyShip = 12,
+        RecycleComponent = 13
     }
 }

@@ -114,5 +114,28 @@ namespace PlanetbaseMultiplayer.Client
             if (colonyShip != null)
                 colonyShip.destroy();
         }
+
+        public static void RecycleComponent(RecycleComponentDataPackage pkg)
+        {
+            ConstructionComponent component = ConstructionComponent.find(pkg.ComponentId);
+            foreach(ResourceConstructionData data in pkg.CreatedResources)
+            {
+                ResourceType resourceType = TypeList<ResourceType, ResourceTypeList>.find(data.Type);
+                if (resourceType == null) { UnityEngine.Debug.LogError($"Could not find the requested resource type: {data.Type}"); continue; }
+                Resource resource = Resource.create(resourceType, data.Subtype, (Vector3)data.Position, data.Location);
+                if (!data.Rotation.IsEmpty)
+                    resource.setRotation((Quaternion)data.Rotation);
+                resource.drop(Resource.State.Idle);
+            }
+            foreach(ResourceDestructionData data in pkg.DestroyedResources)
+            {
+                Resource resource = Resource.find(data.ResourceId);
+                if (resource == null) { UnityEngine.Debug.LogWarning("recyclecomponent: resource was null"); continue; }
+                resource.destroy();
+            }
+            Console.WriteLine($"{pkg.CreatedResources.Length}   {pkg.DestroyedResources.Length}");
+            if (component != null)
+                component.destroy();
+        }
     }
 }

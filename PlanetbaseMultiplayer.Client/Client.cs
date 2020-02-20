@@ -168,6 +168,11 @@ namespace PlanetbaseMultiplayer.Client
                 RecycleColonyShipDataPackage pkg = packet.Data as RecycleColonyShipDataPackage;
                 MultiplayerMethods.RecycleColonyShip(pkg);
             }
+            if (packet.Type == PacketType.RecycleComponent)
+            {
+                RecycleComponentDataPackage pkg = packet.Data as RecycleComponentDataPackage;
+                MultiplayerMethods.RecycleComponent(pkg);
+            }
         }
 
         public void OnWorldLoadingFinished()
@@ -227,6 +232,11 @@ namespace PlanetbaseMultiplayer.Client
         public void Send_IncrementBotId_Packet()
         {
             SendPacket(new Packet(PacketType.IncrementNextBotId, null));
+        }
+
+        public void OnComponentRecycled_Locally(ConstructionComponent component, ResourceConstructionData[] resourceConstructionData, ResourceDestructionData[] resourceDestructionData)
+        {
+            SendPacket(new Packet(PacketType.RecycleComponent, new RecycleComponentDataPackage(component.getId(), resourceConstructionData, resourceDestructionData)));
         }
 
         public void SendPacket(Packet packet)

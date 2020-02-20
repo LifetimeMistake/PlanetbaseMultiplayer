@@ -49,7 +49,8 @@ namespace PlanetbaseMultiplayer.SharedLibs
     public enum ResourceAction
     {
         Extract,
-        Embed
+        Embed,
+        FreeResource
     }
 
     [Serializable]

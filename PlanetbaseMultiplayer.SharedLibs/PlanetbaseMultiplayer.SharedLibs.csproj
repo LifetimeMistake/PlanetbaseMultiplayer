@@ -57,10 +57,12 @@
     <Compile Include="DataPackages\PlaceModuleDataPackage.cs" />
     <Compile Include="DataPackages\PrepareClientPackage.cs" />
     <Compile Include="DataPackages\RecycleColonyShipDataPackage.cs" />
+    <Compile Include="DataPackages\RecycleComponentDataPackage.cs" />
     <Compile Include="DataPackages\SaveDataPackage.cs" />
     <Compile Include="DataPackages\SetSimOwnerStatusDataPackage.cs" />
     <Compile Include="GameTimeSpeed.cs" />
     <Compile Include="IDataPackage.cs" />
+    <Compile Include="MultiplayerUtil.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="PacketType.cs" />
     <Compile Include="Player.cs" />

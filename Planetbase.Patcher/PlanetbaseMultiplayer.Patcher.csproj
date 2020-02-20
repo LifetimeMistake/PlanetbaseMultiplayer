@@ -70,7 +70,7 @@
     <Compile Include="Patches\Override_IsSaveAllowed_Patch.cs" />
     <Compile Include="Patches\Hook_Multiplayer.cs" />
     <Compile Include="Patches\Hook_WorldLoadingFinished.cs" />
-    <Compile Include="Patches\Override_RecycleColonyShip_Patch.cs" />
+    <Compile Include="Patches\Override_Recycle_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
