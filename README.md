@@ -9,7 +9,7 @@ Parts of the game which are already synced:
 - Placing connections
 - Placing components inside buildings
 - Component resource production and mine ore production
-- Colony ship recycling
+- Colony ship and component recycling
 
 ## To-Do List
 
