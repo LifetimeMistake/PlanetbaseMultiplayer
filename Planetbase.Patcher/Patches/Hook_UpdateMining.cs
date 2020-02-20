@@ -32,7 +32,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
                     Vector3 position;
                     if(__instance.findValidProductionPosition(out position))
                     {
-                        ResourceConstructionData data = new ResourceConstructionData(ResourceTypeList.OreInstance.getName(), ResourceSubtype.None,
+                        ResourceConstructionData data = new ResourceConstructionData(ResourceTypeList.OreInstance.GetType().Name, ResourceSubtype.None,
                             (Vector3_Serializable)position, (Quaternion_Serializable)__instance.mObject.transform.rotation, Location.Exterior, false);
                         Globals.LocalClient.OnProductionCompleted_Locally(__instance, ProducerType.Module, new ResourceConstructionData[] { data }, new ResourceDestructionData[] { });
                     }

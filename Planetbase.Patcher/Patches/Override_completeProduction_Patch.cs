@@ -89,7 +89,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
         static ResourceConstructionData? produceResource(ConstructionComponent __instance, ResourceType resourceType, ResourceSubtype subtype, bool embedded)
         {
             if(embedded)
-                return new ResourceConstructionData(resourceType.getName(), subtype, (Vector3_Serializable)__instance.getPosition(), new Quaternion_Serializable(), Location.Interior, true);
+                return new ResourceConstructionData(resourceType.GetType().Name, subtype, (Vector3_Serializable)__instance.getPosition(), new Quaternion_Serializable(), Location.Interior, true);
 
             List<Vector2> resourcePositions = __instance.mParentConstruction.getResourcePositions();
             if(resourcePositions != null)
@@ -111,7 +111,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
                 Vector3 vector3;
                 if (PhysicsUtil.findFloor(position2, out vector3, 5120) && vector3.y - __instance.getPosition().y < 2f)
                 {
-                    return new ResourceConstructionData(resourceType.getName(), subtype, (Vector3_Serializable)position2,
+                    return new ResourceConstructionData(resourceType.GetType().Name, subtype, (Vector3_Serializable)position2,
                         (Quaternion_Serializable)__instance.mObject.transform.rotation, Location.Interior, embedded);
                 }
             }
@@ -119,7 +119,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             {
                 Vector3 position = __instance.getPosition() + (__instance as Selectable).getTransform().forward * 2.25f;
                 Quaternion rotation = (__instance as Selectable).getTransform().rotation;
-                return new ResourceConstructionData(resourceType.getName(), subtype, (Vector3_Serializable)position, (Quaternion_Serializable)rotation, Location.Interior, embedded);
+                return new ResourceConstructionData(resourceType.GetType().Name, subtype, (Vector3_Serializable)position, (Quaternion_Serializable)rotation, Location.Interior, embedded);
             }
             return null;
         }

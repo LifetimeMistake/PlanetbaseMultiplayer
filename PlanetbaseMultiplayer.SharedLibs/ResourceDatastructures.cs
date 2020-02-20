@@ -27,6 +27,30 @@ namespace PlanetbaseMultiplayer.SharedLibs
             Embedded = embedded;
         }
     }
+    [Serializable]
+    public struct ResourceUpdateData
+    {
+        public int ResourceId;
+        public ResourceAction UpdateAction;
+        public Vector3_Serializable Position;
+        public Quaternion_Serializable Rotation;
+        public Location Location;
+
+        public ResourceUpdateData(int resourceId, ResourceAction updateAction, Vector3_Serializable position, Quaternion_Serializable rotation, Location location)
+        {
+            ResourceId = resourceId;
+            UpdateAction = updateAction;
+            Position = position;
+            Rotation = rotation;
+            Location = location;
+        }
+    }
+
+    public enum ResourceAction
+    {
+        Extract,
+        Embed
+    }
 
     [Serializable]
     public struct ResourceDestructionData

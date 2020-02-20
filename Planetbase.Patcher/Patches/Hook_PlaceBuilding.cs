@@ -63,7 +63,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 			if (__instance.mValidComponentRotation == null) { UnityEngine.Debug.LogError("mValidComponentRotation was null"); }
 			Vector3 position = (Vector3)__instance.mValidComponentPosition;
 			Quaternion rotation = (Quaternion)__instance.mValidComponentRotation;
-			string componentType = __instance.mPlacedComponent.getComponentType().getName();
+			string componentType = __instance.mPlacedComponent.getComponentType().GetType().Name;
 			// original code
 			__instance.mPlacedComponent.playSound(SoundList.getInstance().ComponentPlace);
 			bool flag = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);

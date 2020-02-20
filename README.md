@@ -12,6 +12,7 @@ Parts of the game which are already synced:
 
 ## To-Do List
 
+- Resource syncing
 - Recycling syncing (requires resources to be synced)
 - Character syncing
 - Ship syncing
@@ -31,4 +32,4 @@ There's one rule for now though. I'd like to avoid modifying the Assembly-CSharp
 - Replace it with the DLL provided in the References directory of this project.
 - Compile the project and enter the bin directory of the Planetbase.Patcher project. 
 - Copy the relevant DLLs (0Harmony, Lidgren.Network, PlanetbaseMultiplayer.Client, PlanetbaseMultiplayer.SharedLibs, PlanetbasePatcher) to the Managed directory.
-- Run the server binary and open your game. For now, the game will automatically connect to the server as soon as it finds it on your local network. ~~This is because I've yet no clue how to edit the game menu. So no multiplayer button for now, I guess!~~ (multiplayer button coming soonTM :).)
+- Run the server binary and open your game. For now, the game will automatically connect to the server as soon as it finds it on your local network. This is because I've yet no clue how to edit the game menu. So no multiplayer button for now, I guess!

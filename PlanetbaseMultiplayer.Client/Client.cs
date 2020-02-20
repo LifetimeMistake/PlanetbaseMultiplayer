@@ -163,6 +163,11 @@ namespace PlanetbaseMultiplayer.Client
                 ProduceResourceDataPackage pkg = packet.Data as ProduceResourceDataPackage;
                 MultiplayerMethods.CompleteProduction(pkg);
             }
+            if(packet.Type == PacketType.RecycleColonyShip)
+            {
+                RecycleColonyShipDataPackage pkg = packet.Data as RecycleColonyShipDataPackage;
+                MultiplayerMethods.RecycleColonyShip(pkg);
+            }
         }
 
         public void OnWorldLoadingFinished()
@@ -189,7 +194,7 @@ namespace PlanetbaseMultiplayer.Client
 
         public void OnModulePlaced_Locally(Module module)
         {
-            SendPacket(new Packet(PacketType.PlaceModule, new PlaceModuleDataPackage(module.getPosition(), module.getSizeIndex(), module.getName())));
+            SendPacket(new Packet(PacketType.PlaceModule, new PlaceModuleDataPackage(module.getPosition(), module.getSizeIndex(), module.getModuleType().GetType().Name)));
         }
 
         public void OnConnectionPlaced_Locally(Module m1, Module m2)
@@ -201,6 +206,11 @@ namespace PlanetbaseMultiplayer.Client
         {
             SendPacket(new Packet(PacketType.PlaceComponent, new PlaceComponentDataPackage(parentConstruction.mId, (Quaternion_Serializable)componentRotation,
                 (Vector3_Serializable)componentPosition, componentType)));
+        }
+
+        public void OnColonyShipRecycled_Locally(ColonyShip colonyShip, ResourceConstructionData[] producedResources, ResourceUpdateData[] resourceUpdates)
+        {
+            SendPacket(new Packet(PacketType.RecycleColonyShip, new RecycleColonyShipDataPackage(colonyShip.getId(), resourceUpdates, producedResources)));
         }
 
         public void OnProductionCompleted_Locally(Buildable producer, ProducerType type, ResourceConstructionData[] producedResources, ResourceDestructionData[] consumedResources)
