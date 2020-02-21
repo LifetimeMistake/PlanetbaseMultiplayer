@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="CustomImplementations.cs" />
+    <Compile Include="GameStateMultiplayer.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

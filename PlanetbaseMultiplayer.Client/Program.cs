@@ -7,10 +7,11 @@ namespace PlanetbaseMultiplayer.Client
 {
     public class Program
     {
+        // only for debug
         public static void Main()
         {
             Client c = new Client();
-            c.Start();
+            c.Start(host: "127.0.0.1", 8080);
             Console.ReadLine();
         }
     }

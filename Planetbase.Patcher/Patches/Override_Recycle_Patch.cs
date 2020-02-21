@@ -30,11 +30,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
                 else if (selected is ConstructionComponent)
                     Recycle_Component(selected as ConstructionComponent);
                 else
-                {
-                    Console.WriteLine($"Recycled an unhandled type: {selected.GetType()}. Falling back to a local processor");
-                    selected.recycle();
-                    selected.destroy();
-                }
+                    Recycle_Selectable(selected);
             }
             Selection.clear();
             // recycle
@@ -47,6 +43,24 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             __instance.mGameGui.setWindow(null);
             return false;
 		}
+
+        private static void Recycle_Selectable(Selectable selectable)
+        {
+            List<ResourceConstructionData> created = new List<ResourceConstructionData>();
+            ResourceAmounts resourceAmounts = selectable.calculateRecycleAmounts();
+            if (resourceAmounts != null)
+            {
+                foreach (ResourceAmount resourceAmount in resourceAmounts)
+                {
+                    for (int i = 0; i < resourceAmount.getAmount(); i++)
+                    {
+                        created.Add(new ResourceConstructionData(resourceAmount.getResourceType().GetType().Name, MultiplayerUtil.GetDefaultResourceSubtype(resourceAmount.getResourceType()),
+                            (Vector3_Serializable)(selectable.getPosition() + MathUtil.randFlatVector(selectable.getRadius())), new Quaternion_Serializable(), Location.Exterior, false));
+                    }
+                }
+            }
+            Globals.LocalClient.OnSelectableRecycled_Locally(selectable, created.ToArray());
+        }
 
         static void Recycle_Component(ConstructionComponent component)
         {

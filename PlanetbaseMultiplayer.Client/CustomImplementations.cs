@@ -137,5 +137,23 @@ namespace PlanetbaseMultiplayer.Client
             if (component != null)
                 component.destroy();
         }
+
+        public static void RecycleSelectable(RecycleSelectableDataPackage pkg)
+        {
+            Selectable selectable = Resource.find(pkg.SelectableId);
+            if (selectable == null) selectable = Construction.find(pkg.SelectableId);
+            if (selectable == null) { UnityEngine.Debug.LogError($"Could not find selectable object with Id: {pkg.SelectableId}"); return; }
+            foreach(ResourceConstructionData data in pkg.CreatedResources)
+            {
+                ResourceType resourceType = TypeList<ResourceType, ResourceTypeList>.find(data.Type);
+                if (resourceType == null) { UnityEngine.Debug.LogError($"Could not find the requested resource type: {data.Type}"); continue; }
+                Resource resource = Resource.create(resourceType, data.Subtype, (Vector3)data.Position, data.Location);
+                if (!data.Rotation.IsEmpty)
+                    resource.setRotation((Quaternion)data.Rotation);
+                resource.drop(Resource.State.Idle);
+            }
+            if (selectable != null)
+                selectable.destroy();
+        }
     }
 }

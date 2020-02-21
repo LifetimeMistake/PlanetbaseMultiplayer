@@ -58,6 +58,7 @@
     <Compile Include="DataPackages\PrepareClientPackage.cs" />
     <Compile Include="DataPackages\RecycleColonyShipDataPackage.cs" />
     <Compile Include="DataPackages\RecycleComponentDataPackage.cs" />
+    <Compile Include="DataPackages\RecycleSelectableDataPackage.cs" />
     <Compile Include="DataPackages\SaveDataPackage.cs" />
     <Compile Include="DataPackages\SetSimOwnerStatusDataPackage.cs" />
     <Compile Include="GameTimeSpeed.cs" />

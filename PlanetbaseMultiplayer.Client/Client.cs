@@ -28,10 +28,10 @@ namespace PlanetbaseMultiplayer.Client
             Globals.LocalClient = this;
         }
 
-        public void Start()
+        public void Start(string host, int port)
         {
             client.Start();
-            client.DiscoverLocalPeers(8081);
+            client.Connect(host: host, port: port);
         }
 
         public void MessageReceived(object p)
@@ -113,7 +113,6 @@ namespace PlanetbaseMultiplayer.Client
                 string file = Path.GetTempFileName();
                 File.WriteAllText(file, (packet.Data as SaveDataPackage).XmlData);
                 SaveData save = new SaveData(file, DateTime.Now);
-                while(!(GameManager.getInstance().getGameState() is GameStateTitle)) { Thread.Sleep(100); }
                 GameManager.getInstance().setNewState(new GameStateGame(save.getPath(), save.getPlanetIndex(), null));
                 SendPacket(new Packet(PacketType.SetClientState, new ClientStatePackage(ClientState.LoadingSaveData)));
                 Globals.LocalPlayer.ClientState = ClientState.LoadingSaveData;
@@ -173,6 +172,11 @@ namespace PlanetbaseMultiplayer.Client
                 RecycleComponentDataPackage pkg = packet.Data as RecycleComponentDataPackage;
                 MultiplayerMethods.RecycleComponent(pkg);
             }
+            if (packet.Type == PacketType.RecycleSelectable)
+            {
+                RecycleSelectableDataPackage pkg = packet.Data as RecycleSelectableDataPackage;
+                MultiplayerMethods.RecycleSelectable(pkg);
+            }
         }
 
         public void OnWorldLoadingFinished()
@@ -223,6 +227,11 @@ namespace PlanetbaseMultiplayer.Client
             UnityEngine.Debug.Log($"Local produced: {producedResources.Length} {consumedResources.Length}");
             SendPacket(new Packet(PacketType.ProduceResource, new ProduceResourceDataPackage(producer.getId(), type, producedResources, consumedResources)));
         }
+
+        public void OnSelectableRecycled_Locally(Selectable selectable, ResourceConstructionData[] resourceConstructionData)
+        {
+            SendPacket(new Packet(PacketType.RecycleSelectable, new RecycleSelectableDataPackage(selectable.getId(), resourceConstructionData)));
+        }
         // A fix for Id desync
         public void Send_IncrementId_Packet()
         {
@@ -245,6 +254,12 @@ namespace PlanetbaseMultiplayer.Client
             msg.Write(packet.Serialize());
             Console.WriteLine($"Send - Type: {packet.Type}; DataType: {packet.Data}");
             client.SendMessage(msg, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendDisconnect()
+        {
+            if (client.ConnectionStatus == NetConnectionStatus.Connected)
+                client.Disconnect("bye");
         }
     }
 }

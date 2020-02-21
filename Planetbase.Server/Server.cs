@@ -221,6 +221,10 @@ namespace PlanetbaseMultiplayer.Server
 			{
 				SendPacketToAll(packet);
 			}
+			if(packet.Type == PacketType.RecycleSelectable)
+			{
+				SendPacketToAll(packet);
+			}
 		}
 
 		public bool SendPacket(Player recipient, Packet packet)
