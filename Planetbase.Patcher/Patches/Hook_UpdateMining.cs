@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Patcher.Patches
@@ -34,7 +33,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
                     {
                         ResourceConstructionData data = new ResourceConstructionData(ResourceTypeList.OreInstance.GetType().Name, ResourceSubtype.None,
                             (Vector3_Serializable)position, (Quaternion_Serializable)__instance.mObject.transform.rotation, Location.Exterior, false);
-                        Globals.LocalClient.OnProductionCompleted_Locally(__instance, ProducerType.Module, new ResourceConstructionData[] { data }, new ResourceDestructionData[] { });
+                        Globals.LocalClient.OnProductionCompleted(__instance, ProducerType.Module, new ResourceConstructionData[] { data }, new ResourceDestructionData[] { });
                     }
                 }
             }

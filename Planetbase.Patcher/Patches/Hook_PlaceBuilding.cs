@@ -20,7 +20,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 			{
 				if (__instance.mActiveModule.isValidPosition())
 				{
-					Globals.LocalClient.OnModulePlaced_Locally(__instance.mActiveModule);
+					Globals.LocalClient.OnModulePlaced(__instance.mActiveModule);
 					__instance.mActiveModule.playSound(SoundList.getInstance().ConstructionPlace);
 					__instance.mActiveModule.destroy();
 					__instance.onModulePlacementEnd();
@@ -43,7 +43,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 			if (!Globals.IsInMultiplayerMode) return true;
 			if(__instance.mMode == GameStateGame.Mode.Idle && Selection.isLinkable())
 			{
-				Globals.LocalClient.OnConnectionPlaced_Locally((Module)Selection.getSelected(), (Module)Selection.getLinkTarget());
+				Globals.LocalClient.OnConnectionPlaced((Module)Selection.getSelected(), (Module)Selection.getLinkTarget());
 				__instance.mMenuSystem.setMainMenu();
 				Selection.getSelected().playSound(SoundList.getInstance().ConnectionPlace);
 				__instance.clearSelection();
@@ -73,7 +73,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 			__instance.cancelComponentPlacement();
 			if (componentType__ != null)
 				__instance.startPlacingComponent(componentType__);
-			Globals.LocalClient.OnComponentPlaced_Locally(parentConstruction, position, rotation, componentType);
+			Globals.LocalClient.OnComponentPlaced(parentConstruction, position, rotation, componentType);
 			return false;
 		}
 	}

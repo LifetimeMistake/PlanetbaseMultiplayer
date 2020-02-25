@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client
@@ -154,6 +153,29 @@ namespace PlanetbaseMultiplayer.Client
             }
             if (selectable != null)
                 selectable.destroy();
+        }
+
+        public static void CharacterStartWalking(CharacterStartWalkingDataPackage pkg)
+        {
+            Character character = Character.find(pkg.CharacterId);
+            if(character == null) { UnityEngine.Debug.LogError("CharacterStartWalking: character was null"); return; }
+            Target target = new Target((Vector3)pkg.TargetPosition, pkg.TargetLocation);
+            Selectable selectable = MultiplayerUtil.FindSelectableFromId(pkg.TargetSelectableId);
+            if (selectable != null) target.mSelectable = selectable;
+            target.mRadius = pkg.TargetRadius;
+            if(!pkg.TargetRotation.IsEmpty)
+                target.mRotation = (Quaternion)pkg.TargetRotation;
+            target.mFlags = pkg.TargetFlags;
+
+            List<Selectable> indirectTargets_list = new List<Selectable>();
+            foreach(int indirectTarget_id in pkg.IndirectTargetIds)
+            {
+                Selectable s = MultiplayerUtil.FindSelectableFromId(indirectTarget_id);
+                if (s != null) indirectTargets_list.Add(s);
+                else UnityEngine.Debug.LogWarning("CharacterStartWalking: s was null");
+            }
+
+            character.MP_startWalking(target, indirectTargets_list.Count == 0 ? null : indirectTargets_list.ToArray());
         }
     }
 }

@@ -109,11 +109,11 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 				GameManager.getInstance().setGameStateLoadGame();
 			}
 			num5 += num6;
-			if(__instance.mGuiRenderer.renderTitleButton(new Rect(menuLocation.x, num5, menuButtonSize.x, menuButtonSize.y), "Multiplayer", FontSize.Huge, true))
+			GUI.enabled = true;
+			if (__instance.mGuiRenderer.renderTitleButton(new Rect(menuLocation.x, num5, menuButtonSize.x, menuButtonSize.y), "Multiplayer", FontSize.Huge, true))
 			{
 				GameManager.getInstance().setNewState(new GameStateMultiplayer(GameManager.getInstance().getGameState()));
 			}
-			GUI.enabled = true;
 			num5 += num6;
 			if (__instance.mGuiRenderer.renderTitleButton(new Rect(menuLocation.x, num5, menuButtonSize.x, menuButtonSize.y), StringList.get("tutorial"), FontSize.Huge, true))
 			{

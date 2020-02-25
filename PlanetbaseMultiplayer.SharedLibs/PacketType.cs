@@ -22,6 +22,7 @@ namespace PlanetbaseMultiplayer.SharedLibs
         ProduceResource = 11,
         RecycleColonyShip = 12,
         RecycleComponent = 13,
-        RecycleSelectable = 14
+        RecycleSelectable = 14,
+        CharacterStartWalking = 15
     }
 }

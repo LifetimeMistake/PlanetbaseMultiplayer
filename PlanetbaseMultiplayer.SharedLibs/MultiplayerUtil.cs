@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PlanetbaseMultiplayer.SharedLibs
 {
@@ -25,6 +24,19 @@ namespace PlanetbaseMultiplayer.SharedLibs
 				subtype = ResourceSubtype.Chicken;
 			}
 			return subtype;
+		}
+		public static Selectable FindSelectableFromId(int selectableId)
+		{
+			Selectable selectable = null;
+			selectable = Construction.find(selectableId);
+			if (selectable != null) return selectable;
+			selectable = Character.find(selectableId);
+			if (selectable != null) return selectable;
+			selectable = Resource.find(selectableId);
+			if (selectable != null) return selectable;
+			selectable = Ship.find(selectableId);
+			if (selectable != null) return selectable;
+			return selectable;
 		}
     }
 }

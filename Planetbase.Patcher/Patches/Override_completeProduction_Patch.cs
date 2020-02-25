@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Patcher.Patches
@@ -72,7 +72,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             }
             // send packet
             UnityEngine.Debug.Log($"{__instance.getComponentType().getName()} produced {producedResources.Count} resources, consumed {consumedResources.Count} resources");
-            Globals.LocalClient.OnProductionCompleted_Locally(__instance, ProducerType.Component, producedResources.ToArray(), consumedResources.ToArray());
+            Globals.LocalClient.OnProductionCompleted(__instance, ProducerType.Component, producedResources.ToArray(), consumedResources.ToArray());
             return false;
         }
         // This function is not yet implemented. The original can be located at Planetbase.ConstructionComponent.produceItem

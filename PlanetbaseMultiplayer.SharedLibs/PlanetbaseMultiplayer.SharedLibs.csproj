@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PlanetbaseMultiplayer.SharedLibs</RootNamespace>
     <AssemblyName>PlanetbaseMultiplayer.SharedLibs</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConcurrentQueue.cs" />
+    <Compile Include="DataPackages\CharacterStartWalkingDataPackage.cs" />
     <Compile Include="DataPackages\ClientStatePackage.cs" />
     <Compile Include="DataPackages\ProduceResourceDataPackage.cs" />
     <Compile Include="DataPackages\GameTimeSpeedPackage.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quaternion_Serializable.cs" />
     <Compile Include="ResourceDataStructures.cs" />
+    <Compile Include="ReversePatches.cs" />
     <Compile Include="Vector3_Serializable.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -132,7 +132,7 @@ namespace PlanetbaseMultiplayer.Server
 								{
 									// The simulation owner is not ready. This forces us to use the server's world data.
 									Console.WriteLine("Simulation owner not ready. Using server's world state instead");
-									SendPacket(sender, new Packet(PacketType.LoadXmlSaveData, new SaveDataPackage(XmlWorld)));
+									SendPacket(sender, new Packet(PacketType.LoadXmlSaveData, new SaveDataPackage(XmlWorld, -1, -1)));
 								}
 								else
 								{
@@ -162,7 +162,7 @@ namespace PlanetbaseMultiplayer.Server
 				File.WriteAllText("received_data.xml", XmlWorld);
 				// Forward the data to every player in the loading queue (if there are any)
 				foreach (Player player in ConnectedPlayers.Where(p => p.ClientState == ClientState.WaitingForSaveData))
-					SendPacket(player, new Packet(PacketType.LoadXmlSaveData, new SaveDataPackage(XmlWorld)));
+					SendPacket(player, packet);
 			}
 			if(packet.Type == PacketType.SetGameTimeSpeed)
 			{
@@ -222,6 +222,10 @@ namespace PlanetbaseMultiplayer.Server
 				SendPacketToAll(packet);
 			}
 			if(packet.Type == PacketType.RecycleSelectable)
+			{
+				SendPacketToAll(packet);
+			}
+			if(packet.Type == PacketType.CharacterStartWalking)
 			{
 				SendPacketToAll(packet);
 			}

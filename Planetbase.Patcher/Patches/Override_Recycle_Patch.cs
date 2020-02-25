@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Patcher.Patches
@@ -59,7 +58,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
                     }
                 }
             }
-            Globals.LocalClient.OnSelectableRecycled_Locally(selectable, created.ToArray());
+            Globals.LocalClient.OnSelectableRecycled(selectable, created.ToArray());
         }
 
         static void Recycle_Component(ConstructionComponent component)
@@ -89,7 +88,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
                     }
                 }
             }
-            Globals.LocalClient.OnComponentRecycled_Locally(component, createdResources.ToArray(), destroyedResources.ToArray());
+            Globals.LocalClient.OnComponentRecycled(component, createdResources.ToArray(), destroyedResources.ToArray());
         }
 
         static ResourceAmounts CalculateBasicAmounts(ConstructionComponent component)
@@ -127,7 +126,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
                 created.Add(new ResourceConstructionData(bioplasticType.GetType().Name, ResourceSubtype.None, (Vector3_Serializable)(colonyShip.getPosition() + MathUtil.randFlatVector(5f).Rounded() * 1.2f),
                     new Quaternion_Serializable(), Location.Exterior, false));
             }
-            Globals.LocalClient.OnColonyShipRecycled_Locally(colonyShip, created.ToArray(), extracted.ToArray());
+            Globals.LocalClient.OnColonyShipRecycled(colonyShip, created.ToArray(), extracted.ToArray());
         }
     }
 }

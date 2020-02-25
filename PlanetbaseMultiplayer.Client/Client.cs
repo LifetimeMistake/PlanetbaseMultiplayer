@@ -132,7 +132,7 @@ namespace PlanetbaseMultiplayer.Client
                 if (!(GameManager.getInstance().getGameState() is GameStateGame)) return;
                 GameStateGame gameState = GameManager.getInstance().getGameState() as GameStateGame;
                 string XmlData = gameState.saveGame_toMemory();
-                SendPacket(new Packet(PacketType.LoadXmlSaveData, new SaveDataPackage(XmlData)));
+                SendPacket(new Packet(PacketType.LoadXmlSaveData, new SaveDataPackage(XmlData, IdGenerator.getInstance().mNextId, IdGenerator.getInstance().mNextBotId)));
             }
             if(packet.Type == PacketType.PlaceModule)
             {
@@ -177,11 +177,17 @@ namespace PlanetbaseMultiplayer.Client
                 RecycleSelectableDataPackage pkg = packet.Data as RecycleSelectableDataPackage;
                 MultiplayerMethods.RecycleSelectable(pkg);
             }
+            if(packet.Type == PacketType.CharacterStartWalking)
+            {
+                CharacterStartWalkingDataPackage pkg = packet.Data as CharacterStartWalkingDataPackage;
+                MultiplayerMethods.CharacterStartWalking(pkg);
+            }
         }
 
         public void OnWorldLoadingFinished()
         {
             if (Globals.LocalPlayer.ClientState != ClientState.LoadingSaveData) return;
+            if (Globals.IdSync_NextId != IdGenerator.getInstance().mNextId) Globals.IdSyncRequired = true;
             Console.WriteLine("Client started");
             if (Globals.LocalPlayer.IsSimulationOwner)
                 Console.WriteLine("IsSimulationOwner");
@@ -196,39 +202,54 @@ namespace PlanetbaseMultiplayer.Client
             Globals.LocalPlayer.ClientState = ClientState.ConnectedReady;
         }
 
-        public void OnTimeSpeedChanged_Locally(GameTimeSpeed speed, bool isPaused)
+        public void OnTimeSpeedChanged(GameTimeSpeed speed, bool isPaused)
         {
             SendPacket(new Packet(PacketType.SetGameTimeSpeed, new GameTimeSpeedPackage(isPaused, speed)));
         }
 
-        public void OnModulePlaced_Locally(Module module)
+        public void OnModulePlaced(Module module)
         {
             SendPacket(new Packet(PacketType.PlaceModule, new PlaceModuleDataPackage(module.getPosition(), module.getSizeIndex(), module.getModuleType().GetType().Name)));
         }
 
-        public void OnConnectionPlaced_Locally(Module m1, Module m2)
+        public void OnConnectionPlaced(Module m1, Module m2)
         {
             SendPacket(new Packet(PacketType.PlaceConnection, new PlaceConnectionDataPackage(m1.mId, m2.mId)));
         }
 
-        public void OnComponentPlaced_Locally(Construction parentConstruction, Vector3 componentPosition, Quaternion componentRotation, string componentType)
+        public void OnComponentPlaced(Construction parentConstruction, Vector3 componentPosition, Quaternion componentRotation, string componentType)
         {
             SendPacket(new Packet(PacketType.PlaceComponent, new PlaceComponentDataPackage(parentConstruction.mId, (Quaternion_Serializable)componentRotation,
                 (Vector3_Serializable)componentPosition, componentType)));
         }
 
-        public void OnColonyShipRecycled_Locally(ColonyShip colonyShip, ResourceConstructionData[] producedResources, ResourceUpdateData[] resourceUpdates)
+        public void OnColonyShipRecycled(ColonyShip colonyShip, ResourceConstructionData[] producedResources, ResourceUpdateData[] resourceUpdates)
         {
             SendPacket(new Packet(PacketType.RecycleColonyShip, new RecycleColonyShipDataPackage(colonyShip.getId(), resourceUpdates, producedResources)));
         }
 
-        public void OnProductionCompleted_Locally(Buildable producer, ProducerType type, ResourceConstructionData[] producedResources, ResourceDestructionData[] consumedResources)
+        public void OnProductionCompleted(Buildable producer, ProducerType type, ResourceConstructionData[] producedResources, ResourceDestructionData[] consumedResources)
         {
             UnityEngine.Debug.Log($"Local produced: {producedResources.Length} {consumedResources.Length}");
             SendPacket(new Packet(PacketType.ProduceResource, new ProduceResourceDataPackage(producer.getId(), type, producedResources, consumedResources)));
         }
 
-        public void OnSelectableRecycled_Locally(Selectable selectable, ResourceConstructionData[] resourceConstructionData)
+        public void OnCharacterStartWalking(Character character, Target target, Selectable[] indirectTargets)
+        {
+            List<int> indirectTargets_ids = new List<int>();
+            if(indirectTargets != null)
+            {
+                foreach (Selectable selectable in indirectTargets)
+                    indirectTargets_ids.Add(selectable.getId());
+            }
+            UnityEngine.Debug.Log("a");
+            CharacterStartWalkingDataPackage pkg = new CharacterStartWalkingDataPackage(character.getId(), target.mFlags, target.mRadius, target.mLocation, (Vector3_Serializable)target.mPosition,
+                target.mRotation == null ? new Quaternion_Serializable() : (Quaternion_Serializable)target.mRotation, target.mSelectable == null ? -1 : target.mSelectable.getId(), indirectTargets_ids.ToArray());
+            UnityEngine.Debug.Log("a");
+            SendPacket(new Packet(PacketType.CharacterStartWalking, pkg));
+        }
+
+        public void OnSelectableRecycled(Selectable selectable, ResourceConstructionData[] resourceConstructionData)
         {
             SendPacket(new Packet(PacketType.RecycleSelectable, new RecycleSelectableDataPackage(selectable.getId(), resourceConstructionData)));
         }
@@ -243,7 +264,7 @@ namespace PlanetbaseMultiplayer.Client
             SendPacket(new Packet(PacketType.IncrementNextBotId, null));
         }
 
-        public void OnComponentRecycled_Locally(ConstructionComponent component, ResourceConstructionData[] resourceConstructionData, ResourceDestructionData[] resourceDestructionData)
+        public void OnComponentRecycled(ConstructionComponent component, ResourceConstructionData[] resourceConstructionData, ResourceDestructionData[] resourceDestructionData)
         {
             SendPacket(new Packet(PacketType.RecycleComponent, new RecycleComponentDataPackage(component.getId(), resourceConstructionData, resourceDestructionData)));
         }

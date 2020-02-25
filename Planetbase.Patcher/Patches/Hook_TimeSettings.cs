@@ -27,7 +27,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             }
             TimeManager timeManager = TimeManager.getInstance();
             if (!Enum.IsDefined(typeof(GameTimeSpeed), timeManager.mScaleIndex + 1)) return false;
-            Globals.LocalClient.OnTimeSpeedChanged_Locally((GameTimeSpeed)timeManager.mScaleIndex + 1, timeManager.mPaused);
+            Globals.LocalClient.OnTimeSpeedChanged((GameTimeSpeed)timeManager.mScaleIndex + 1, timeManager.mPaused);
             return false;
         }
     }
@@ -47,7 +47,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
                 return false;
             }
             TimeManager timeManager = TimeManager.getInstance();
-            Globals.LocalClient.OnTimeSpeedChanged_Locally(GameTimeSpeed.Normal, timeManager.mPaused);
+            Globals.LocalClient.OnTimeSpeedChanged(GameTimeSpeed.Normal, timeManager.mPaused);
             return false;
         }
     }
@@ -68,7 +68,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             }
             TimeManager timeManager = TimeManager.getInstance();
             if (!Enum.IsDefined(typeof(GameTimeSpeed), timeManager.mScaleIndex - 1)) return false;
-            Globals.LocalClient.OnTimeSpeedChanged_Locally((GameTimeSpeed)timeManager.mScaleIndex - 1, timeManager.mPaused);
+            Globals.LocalClient.OnTimeSpeedChanged((GameTimeSpeed)timeManager.mScaleIndex - 1, timeManager.mPaused);
             return false;
         }
     }
