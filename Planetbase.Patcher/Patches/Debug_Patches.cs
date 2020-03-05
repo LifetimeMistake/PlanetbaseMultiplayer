@@ -20,7 +20,24 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             RenderIdIndicator();
             RenderEventLog();
             RenderPacketCounter();
+            RenderMultiplayerInteractions();
 #endif
+        }
+        
+        public static void RenderMultiplayerInteractions()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("MultiplayerId | InteractionType | IsMultiplayer");
+            foreach (Interaction interaction in Interaction.mInteractions)
+            {
+                string id = Globals.InteractionManager.Contains(interaction) ? Globals.InteractionManager.Find(interaction).ToString() : "Empty";
+                sb.AppendLine($"{id} | {interaction.GetType().Name} | {Globals.InteractionManager.Contains(interaction)}");
+            }
+            GUIStyle style = new GUIStyle();
+            style.normal.textColor = Color.white;
+            style.hover.textColor = Color.white;
+            style.active.textColor = Color.white;
+            GUI.Label(new Rect(50, Screen.height - 650, 700, 300), sb.ToString(), style);
         }
 
         public static void RenderIdIndicator()

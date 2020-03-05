@@ -13,7 +13,15 @@ namespace PlanetbaseMultiplayer.Server
         static void Main(string[] args)
         {
             ServerInstance = new Server();
-            Console.ReadLine();
+            while(true)
+            {
+                string cmd = Console.ReadLine();
+                if(cmd == "save")
+                {
+                    ServerInstance.Save();
+                }
+            }
+            
         }
     }
 }

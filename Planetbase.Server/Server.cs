@@ -37,6 +37,20 @@ namespace PlanetbaseMultiplayer.Server
 			Console.WriteLine($"Server running on port {server.Port}");
 		}
 
+		public void Save()
+		{
+			if (ConnectedPlayers.Count == 0)
+			{
+				Console.WriteLine("No players to request save data from. Cannot save.");
+				return;
+			}
+			else
+			{
+				Console.WriteLine("Requesting the latest world state from the simulation owner");
+				SendPacket(GetSimulationOwner(), new Packet(PacketType.RequestXmlSaveData, null));
+			}
+		}
+
 		public void MessageReceived(object peerObj)
 		{
 			NetPeer peer = peerObj as NetPeer;
@@ -44,7 +58,7 @@ namespace PlanetbaseMultiplayer.Server
 			switch (msg.MessageType)
 			{
 				case NetIncomingMessageType.StatusChanged:
-					if(msg.SenderConnection.Status == NetConnectionStatus.Disconnected)
+					if (msg.SenderConnection.Status == NetConnectionStatus.Disconnected)
 					{
 						Player dcdplayer = ConnectedPlayers.First(player => player.UniqueId == msg.SenderConnection.RemoteUniqueIdentifier);
 						if (dcdplayer == null) return;
@@ -54,12 +68,12 @@ namespace PlanetbaseMultiplayer.Server
 							Console.WriteLine($"Client disconnected - ID: {dcdplayer.UniqueId}");
 
 						ConnectedPlayers.Remove(dcdplayer);
-						if(ConnectedPlayers.Count == 0)
+						if (ConnectedPlayers.Count == 0)
 						{
 							Console.WriteLine("All players have left. Simulation paused.");
 							return;
 						}
-						if(ConnectedPlayers.Where(player => player.IsSimulationOwner).Count() == 0)
+						if (ConnectedPlayers.Where(player => player.IsSimulationOwner).Count() == 0)
 						{
 							Player newSimOwner = ConnectedPlayers.First();
 							newSimOwner.IsSimulationOwner = true;
@@ -77,7 +91,7 @@ namespace PlanetbaseMultiplayer.Server
 				case NetIncomingMessageType.ConnectionApproval:
 					Console.WriteLine($"Client connected - ID: {msg.SenderConnection.RemoteUniqueIdentifier}");
 					Player p = new Player(msg.SenderConnection.RemoteUniqueIdentifier, ClientState.ConnectedUnauthorized, (ConnectedPlayers.Count == 0));
-					if(p.IsSimulationOwner)
+					if (p.IsSimulationOwner)
 						Console.WriteLine($"New simulation owner: {p.UniqueId}");
 					ConnectedPlayers.Add(p);
 					msg.SenderConnection.Approve();
@@ -112,10 +126,10 @@ namespace PlanetbaseMultiplayer.Server
 		public void ProcessPacket(Player sender, Packet packet)
 		{
 			Console.WriteLine($"Receive - Type: {packet.Type}; DataType: {packet.Data}");
-			if(packet.Type == PacketType.SetClientState)
+			if (packet.Type == PacketType.SetClientState)
 			{
 				sender.ClientState = ((packet.Data) as ClientStatePackage).State;
-				switch(sender.ClientState)
+				switch (sender.ClientState)
 				{
 					case ClientState.ConnectedWaitingForAuth:
 						Console.WriteLine("Sending config to remote client!");
@@ -155,7 +169,7 @@ namespace PlanetbaseMultiplayer.Server
 				}
 				return;
 			}
-			if(packet.Type == PacketType.LoadXmlSaveData)
+			if (packet.Type == PacketType.LoadXmlSaveData)
 			{
 				Console.WriteLine("Received a new world state from the simulation owner");
 				SaveDataPackage package = packet.Data as SaveDataPackage;
@@ -166,7 +180,7 @@ namespace PlanetbaseMultiplayer.Server
 					SendPacket(player, packet);
 				return;
 			}
-			if(packet.Type == PacketType.SetGameTimeSpeed)
+			if (packet.Type == PacketType.SetGameTimeSpeed)
 			{
 				// Remote client has requested a game speed change
 				if (!sender.IsSimulationOwner)
@@ -175,7 +189,7 @@ namespace PlanetbaseMultiplayer.Server
 					return;
 				}
 
-				if(sender.ClientState != ClientState.ConnectedReady)
+				if (sender.ClientState != ClientState.ConnectedReady)
 				{
 					Console.WriteLine($"Client {sender.UniqueId} (simulation owner) has requested a game speed change and was denied. Reason: Client was in an incorrect state. " +
 						$"Expected ConnectedReady, but was {sender.ClientState} instead.");
@@ -186,32 +200,32 @@ namespace PlanetbaseMultiplayer.Server
 				TimeManager.SetGameSpeed(pkg.GameSpeed, pkg.Paused);
 				return;
 			}
-			if(packet.Type == PacketType.PlaceModule)
+			if (packet.Type == PacketType.PlaceModule)
 			{
 				PlaceModuleDataPackage pkg = packet.Data as PlaceModuleDataPackage;
 				Console.WriteLine($"Build module: {pkg.ModuleType}, size {pkg.SizeIndex}");
 			}
-			if(packet.Type == PacketType.PlaceConnection)
+			if (packet.Type == PacketType.PlaceConnection)
 			{
 				PlaceConnectionDataPackage pkg = packet.Data as PlaceConnectionDataPackage;
 				Console.WriteLine($"Build connection: Link1_Id: {pkg.Module1_Id}, Link2_Id: {pkg.Module2_Id}");
 			}
-			if(packet.Type == PacketType.PlaceComponent)
+			if (packet.Type == PacketType.PlaceComponent)
 			{
 				PlaceComponentDataPackage pkg = packet.Data as PlaceComponentDataPackage;
 				Console.WriteLine($"Build component: Parent module Id: {pkg.ParentModuleId}, Position: {pkg.Position.ToString()}, Rotation: {pkg.Rotation.ToString()}, ComponentType: {pkg.ComponentType}");
 			}
-			if(packet.Type == PacketType.IncrementNextId)
+			if (packet.Type == PacketType.IncrementNextId)
 			{
 				SendPacketToAllExcept(sender, packet);
 				return;
 			}
-			if(packet.Type == PacketType.IncrementNextBotId)
+			if (packet.Type == PacketType.IncrementNextBotId)
 			{
 				SendPacketToAllExcept(sender, packet);
 				return;
 			}
-			if(packet.Type == PacketType.AddInteraction || packet.Type == PacketType.RemoveInteraction)
+			if (packet.Type == PacketType.AddInteraction || packet.Type == PacketType.RemoveInteraction)
 			{
 				SendPacketToAllExcept(sender, packet);
 				return;

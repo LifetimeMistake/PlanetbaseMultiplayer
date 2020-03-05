@@ -67,6 +67,7 @@
     <Compile Include="GameStateMultiplayer.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="MultiplayerInteractionManager.cs" />
+    <Compile Include="MultiplayerResourceManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializeGameInMemory.cs" />

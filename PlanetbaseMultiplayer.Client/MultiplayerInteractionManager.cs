@@ -21,6 +21,12 @@ namespace PlanetbaseMultiplayer.Client
             interactions = new Dictionary<Guid, Interaction>();
         }
 
+        public void AppendMultiplayerId(Interaction interaction, XmlNode parent)
+        {
+            if (!Contains(interaction)) return;
+            Serialization.serializeString(parent, "multiplayer-id", Find(interaction).ToString());
+        }
+
         public void AddInteraction(Interaction interaction)
         {
             Guid guid = Guid.NewGuid();
@@ -54,6 +60,8 @@ namespace PlanetbaseMultiplayer.Client
                 XmlUtils.serializeFloat(xmlDocument, parentNode, "stage-progress", interactionAirlock.mStageProgress);
                 XmlUtils.serializeVector3(xmlDocument, parentNode, "target", interactionAirlock.mTarget);
             }
+            if (Contains(interaction))
+                XmlUtils.serializeString(xmlDocument, parentNode, "multiplayer-id", Find(interaction).ToString());
             string xmlData = "";
             using (StringWriter writer = new StringWriter())
             {
@@ -79,23 +87,23 @@ namespace PlanetbaseMultiplayer.Client
             postInit_method.Invoke(interaction, new object[] { });
             return interaction;
         }
-        private Interaction Find(Guid interactionId)
+        public Interaction Find(Guid interactionId)
         {
             return interactions.FirstOrDefault(i => i.Key == interactionId).Value;
         }
-        private Guid Find(Interaction interaction)
+        public Guid Find(Interaction interaction)
         {
             return interactions.FirstOrDefault(i => i.Value == interaction).Key;
         }
-        private bool Contains(Guid interactionId)
+        public bool Contains(Guid interactionId)
         {
             return (interactions.Where(i => i.Key == interactionId).Count() != 0);
         }
-        private bool Contains(Interaction interaction)
+        public bool Contains(Interaction interaction)
         {
             return (interactions.Where(i => i.Value == interaction).Count() != 0);
         }
-        private Dictionary<Guid, Interaction> GetInteractions()
+        public Dictionary<Guid, Interaction> GetInteractions()
         {
             return interactions;
         }
@@ -151,6 +159,38 @@ namespace PlanetbaseMultiplayer.Client
                 default:
                     Console.WriteLine($"MultiplayerInteractionManager dropped packet: {packet.Type}");
                     break;
+            }
+        }
+        public void DeserializeAll(XmlNode node)
+        {
+            if(node != null)
+            {
+                foreach(object obj in node.ChildNodes)
+                {
+                    XmlNode xmlNode = (XmlNode)obj;
+                    if(xmlNode.Name == "interaction")
+                    {
+                        Type type = Type.GetType($"Planetbase.{Serialization.deserializeType(xmlNode)},Assembly-CSharp");
+                        Interaction interaction = (Interaction)Activator.CreateInstance(type);
+                        System.Reflection.MethodInfo deserialize_method = type.GetMethod("deserialize", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        System.Reflection.MethodInfo postInit_method = type.GetMethod("postInit", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        deserialize_method.Invoke(interaction, new object[] { xmlNode });
+                        postInit_method.Invoke(interaction, new object[] { });
+                        if(node["multiplayer-id"] != null)
+                        {
+                            // Add interaction to the list
+                            AddInteraction_ForReal(new Guid(node["multiplayer-id"].Value), interaction, false);
+                        }
+                        else
+                        {
+                            if (!gameClient.localPlayer.IsSimulationOwner) continue;
+                            // Assign a new multiplayer Id to the interaction
+                            UnityEngine.Debug.LogWarning("Interaction multiplayer Id was null. Creating a new one");
+                            Guid guid = Guid.NewGuid();
+                            AddInteraction_ForReal(guid, interaction, false);
+                        }
+                    }
+                }
             }
         }
         public void UpdateAll(float timeStep)
