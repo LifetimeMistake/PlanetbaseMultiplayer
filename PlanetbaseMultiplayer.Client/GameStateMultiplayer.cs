@@ -24,8 +24,11 @@ namespace PlanetbaseMultiplayer.Client
 				Globals.LocalClient = null;
 				Globals.LocalPlayer = null;
 				Globals.IsInMultiplayerMode = false;
+				Globals.IdSync_NextId = 0;
+				Globals.IdSync_NextBotId = 0;
+				Globals.InteractionManager = null;
 			}
-			serverTarget = "127.0.0.1:8080";
+			serverTarget = "127.0.0.1:8081";
 		}
 
 		public override void onGui()
@@ -64,6 +67,7 @@ namespace PlanetbaseMultiplayer.Client
 			if(mGuiRenderer.renderTitleButton(new Rect(buttonLeftOffset + mRightOffset, num5, menuButtonSize.x, menuButtonSize.y), "Connect", FontSize.Huge, true))
 			{
 				Globals.LocalClient = new Client();
+				Globals.InteractionManager = new MultiplayerInteractionManager(Globals.LocalClient);
 				string[] server_info = serverTarget.Split(':');
 				if (server_info.Length != 2) return;
 				int port = 0;

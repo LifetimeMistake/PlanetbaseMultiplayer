@@ -5,6 +5,7 @@ using PlanetbaseMultiplayer.SharedLibs.DataPackages;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -15,13 +16,21 @@ namespace PlanetbaseMultiplayer.Client
     public class Client
     {
         public NetClient client;
+        public Player localPlayer;
         public ConcurrentQueue<Packet> packetQueue;
+#if DEBUG
+        public List<string> debug_eventList;
+        public int lastTick_PacketCount;
+#endif
         public Client()
         {
             NetPeerConfiguration config = new NetPeerConfiguration("PlanetbaseMultiplayerMod");
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             client = new NetClient(config);
+#if DEBUG
+            debug_eventList = new List<string>();
+#endif
             packetQueue = new ConcurrentQueue<Packet>();
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
             client.RegisterReceivedCallback(new System.Threading.SendOrPostCallback(MessageReceived));
@@ -92,9 +101,43 @@ namespace PlanetbaseMultiplayer.Client
             client.Recycle(msg);
         }
 
+        public void OnExtractResource(int resourceId)
+        {
+            SendPacket(new Packet(PacketType.ExtractResource, new ExtractResourceDataPackage(resourceId)));
+        }
+
+        public void OnCharacterStoreResource(int characterId, int moduleId)
+        {
+            SendPacket(new Packet(PacketType.CharacterStoreResource, new CharacterStoreResourceDataPackage(characterId, moduleId)));
+        }
+
+        public void OnCharacterEmbedResource(int characterId, int componentId, Resource.State resourceState)
+        {
+            SendPacket(new Packet(PacketType.CharacterEmbedResource, new CharacterEmbedResourceDataPackage(characterId, componentId, resourceState)));
+        }
+
+        public void OnCharacterDestroyResource(int characterId)
+        {
+            SendPacket(new Packet(PacketType.CharacterDestroyResource, new CharacterDestroyResourceDataPackage(characterId)));
+        }
+
+        public void OnAddConstructionMaterial(int buildableId, int resourceId)
+        {
+            SendPacket(new Packet(PacketType.AddConstructionMaterial, new AddConstructionMaterialDataPackage(buildableId, resourceId)));
+        }
+
+        public void OnBuildableBuilt(int buildableId)
+        {
+            SendPacket(new Packet(PacketType.BuildableBuilt, new BuildableBuiltDataPackage(buildableId)));
+        }
+
         public void ProcessPacket(Packet packet)
         {
-            Console.WriteLine($"Receive - Type: {packet.Type}; DataType: {packet.Data}");
+            if(packet == null) { Console.WriteLine("[WARNING] Attempted to process a null reference packet"); return; }
+            //Console.WriteLine($"Receive - Type: {packet.Type}; DataType: {packet.Data}");
+#if DEBUG
+            Globals.LocalClient.debug_eventList.Add($"Receive - {packet.Type}");
+#endif
             if(packet.Type == PacketType.SetSimOwnerStatus)
             {
                 if (Globals.LocalPlayer == null) return;
@@ -104,6 +147,7 @@ namespace PlanetbaseMultiplayer.Client
             if(packet.Type == PacketType.PrepareClient)
             {
                 Globals.LocalPlayer = (packet.Data as PrepareClientPackage).Player;
+                localPlayer = Globals.LocalPlayer;
                 SendPacket(new Packet(PacketType.SetClientState, new ClientStatePackage(ClientState.WaitingForSaveData)));
                 Globals.LocalPlayer.ClientState = ClientState.WaitingForSaveData;
                 Console.WriteLine("Client prepared for XmlData!");
@@ -111,7 +155,10 @@ namespace PlanetbaseMultiplayer.Client
             if(packet.Type == PacketType.LoadXmlSaveData)
             {
                 string file = Path.GetTempFileName();
-                File.WriteAllText(file, (packet.Data as SaveDataPackage).XmlData);
+                SaveDataPackage pkg = packet.Data as SaveDataPackage;
+                Globals.IdSync_NextId = pkg.NextId;
+                Globals.IdSync_NextBotId = pkg.NextBotId;
+                File.WriteAllText(file, pkg.XmlData);
                 SaveData save = new SaveData(file, DateTime.Now);
                 GameManager.getInstance().setNewState(new GameStateGame(save.getPath(), save.getPlanetIndex(), null));
                 SendPacket(new Packet(PacketType.SetClientState, new ClientStatePackage(ClientState.LoadingSaveData)));
@@ -131,7 +178,7 @@ namespace PlanetbaseMultiplayer.Client
                 if (!Globals.LocalPlayer.IsSimulationOwner) return;
                 if (!(GameManager.getInstance().getGameState() is GameStateGame)) return;
                 GameStateGame gameState = GameManager.getInstance().getGameState() as GameStateGame;
-                string XmlData = gameState.saveGame_toMemory();
+                string XmlData = SerializeGameInMemory.saveGame_toMemory(GameManager.getInstance().getGameState() as GameStateGame);
                 SendPacket(new Packet(PacketType.LoadXmlSaveData, new SaveDataPackage(XmlData, IdGenerator.getInstance().mNextId, IdGenerator.getInstance().mNextBotId)));
             }
             if(packet.Type == PacketType.PlaceModule)
@@ -182,12 +229,82 @@ namespace PlanetbaseMultiplayer.Client
                 CharacterStartWalkingDataPackage pkg = packet.Data as CharacterStartWalkingDataPackage;
                 MultiplayerMethods.CharacterStartWalking(pkg);
             }
+            if (packet.Type == PacketType.CharacterLoadResource)
+            {
+                CharacterLoadResourceDataPackage pkg = packet.Data as CharacterLoadResourceDataPackage;
+                MultiplayerMethods.CharacterLoadResource(pkg);
+            }
+            if (packet.Type == PacketType.CharacterUnloadResource)
+            {
+                CharacterUnloadResourceDataPackage pkg = packet.Data as CharacterUnloadResourceDataPackage;
+                MultiplayerMethods.CharacterUnloadResource(pkg);
+            }
+
+            if (packet.Type == PacketType.AddConstructionMaterial)
+            {
+                AddConstructionMaterialDataPackage pkg = packet.Data as AddConstructionMaterialDataPackage;
+                MultiplayerMethods.AddConstructionMaterial(pkg);
+            }
+            if (packet.Type == PacketType.CharacterStoreResource)
+            {
+                CharacterStoreResourceDataPackage pkg = packet.Data as CharacterStoreResourceDataPackage;
+                MultiplayerMethods.CharacterStoreResource(pkg);
+            }
+            if (packet.Type == PacketType.CharacterEmbedResource)
+            {
+                CharacterEmbedResourceDataPackage pkg = packet.Data as CharacterEmbedResourceDataPackage;
+                MultiplayerMethods.CharacterEmbedResource(pkg);
+            }
+            if (packet.Type == PacketType.CharacterDestroyResource)
+            {
+                CharacterDestroyResourceDataPackage pkg = packet.Data as CharacterDestroyResourceDataPackage;
+                MultiplayerMethods.CharacterDestroyResource(pkg);
+            }
+            if (packet.Type == PacketType.ExtractResource)
+            {
+                ExtractResourceDataPackage pkg = packet.Data as ExtractResourceDataPackage;
+                MultiplayerMethods.ExtractResource(pkg);
+            }
+            if (packet.Type == PacketType.BuildableBuilt)
+            {
+                BuildableBuiltDataPackage pkg = packet.Data as BuildableBuiltDataPackage;
+                MultiplayerMethods.BuildableBuilt(pkg);
+            }
+            if(packet.Type == PacketType.AddInteraction || packet.Type == PacketType.RemoveInteraction)
+            {
+                Globals.InteractionManager.ProcessPacket(packet);
+            }
+            if (packet.Type == PacketType.BuildableSetEnabled)
+            {
+                BuildableSetEnabledDataPackage pkg = packet.Data as BuildableSetEnabledDataPackage;
+                MultiplayerMethods.BuildableSetEnabled(pkg);
+            }
+            if (packet.Type == PacketType.ConstructionSetPriority)
+            {
+                ConstructionSetPriorityDataPackage pkg = packet.Data as ConstructionSetPriorityDataPackage;
+                MultiplayerMethods.ConstructionSetPriority(pkg);
+            }
+            if (packet.Type == PacketType.DecideNextSandstorm)
+            {
+                DecideNextSandstormDataPackage pkg = packet.Data as DecideNextSandstormDataPackage;
+                MultiplayerMethods.DecideNextSandstorm(pkg);
+            }
+            if (packet.Type == PacketType.EndSandstorm)
+            {
+                MultiplayerMethods.EndSandstorm();
+            }
+            if (packet.Type == PacketType.TriggerSandstorm)
+            {
+                TriggerSandstormDataPackage pkg = packet.Data as TriggerSandstormDataPackage;
+                MultiplayerMethods.TriggerSandstorm(pkg);
+            }
         }
 
         public void OnWorldLoadingFinished()
         {
             if (Globals.LocalPlayer.ClientState != ClientState.LoadingSaveData) return;
             if (Globals.IdSync_NextId != IdGenerator.getInstance().mNextId) Globals.IdSyncRequired = true;
+            Console.WriteLine(Globals.IdSync_NextId);
             Console.WriteLine("Client started");
             if (Globals.LocalPlayer.IsSimulationOwner)
                 Console.WriteLine("IsSimulationOwner");
@@ -234,6 +351,31 @@ namespace PlanetbaseMultiplayer.Client
             SendPacket(new Packet(PacketType.ProduceResource, new ProduceResourceDataPackage(producer.getId(), type, producedResources, consumedResources)));
         }
 
+        public void OnCharacterLoadResource(Character character, Resource resource)
+        {
+            SendPacket(new Packet(PacketType.CharacterLoadResource, new CharacterLoadResourceDataPackage(character.getId(), resource.getId())));
+        }
+
+        public void OnCharacterUnloadResource(Character character, Resource.State resourceState)
+        {
+            SendPacket(new Packet(PacketType.CharacterUnloadResource, new CharacterUnloadResourceDataPackage(character.getId(), resourceState)));
+        }
+
+        public void OnSandstormTrigger(Sandstorm sandstorm)
+        {
+            SendPacket(new Packet(PacketType.TriggerSandstorm, new TriggerSandstormDataPackage(sandstorm.mSandstormTime)));
+        }
+
+        public void OnSandstormEnd()
+        {
+            SendPacket(new Packet(PacketType.EndSandstorm, null));
+        }
+
+        public void OnSandstormDecideNext(Sandstorm sandstorm)
+        {
+            SendPacket(new Packet(PacketType.DecideNextSandstorm, new DecideNextSandstormDataPackage(sandstorm.mTimeToNextSandstorm)));
+        }
+
         public void OnCharacterStartWalking(Character character, Target target, Selectable[] indirectTargets)
         {
             List<int> indirectTargets_ids = new List<int>();
@@ -242,11 +384,28 @@ namespace PlanetbaseMultiplayer.Client
                 foreach (Selectable selectable in indirectTargets)
                     indirectTargets_ids.Add(selectable.getId());
             }
-            UnityEngine.Debug.Log("a");
+            
             CharacterStartWalkingDataPackage pkg = new CharacterStartWalkingDataPackage(character.getId(), target.mFlags, target.mRadius, target.mLocation, (Vector3_Serializable)target.mPosition,
-                target.mRotation == null ? new Quaternion_Serializable() : (Quaternion_Serializable)target.mRotation, target.mSelectable == null ? -1 : target.mSelectable.getId(), indirectTargets_ids.ToArray());
-            UnityEngine.Debug.Log("a");
+                target.mRotation == null ? new Quaternion_Serializable() : (Quaternion_Serializable)target.mRotation, target.mSelectable == null ? -1 : target.mSelectable.getId(), indirectTargets_ids.ToArray(),
+                (Vector3_Serializable)character.getPosition(), (Quaternion_Serializable)character.getRotation());
             SendPacket(new Packet(PacketType.CharacterStartWalking, pkg));
+        }
+
+        public void OnBuildableEnable(Buildable buildable)
+        {
+            SendPacket(new Packet(PacketType.BuildableSetEnabled, new BuildableSetEnabledDataPackage(buildable.getId(), true)));
+        }
+        public void OnBuildableDisable(Buildable buildable)
+        {
+            SendPacket(new Packet(PacketType.BuildableSetEnabled, new BuildableSetEnabledDataPackage(buildable.getId(), false)));
+        }
+        public void OnConstructionPriorityUp(Construction construction)
+        {
+            SendPacket(new Packet(PacketType.ConstructionSetPriority, new ConstructionSetPriorityDataPackage(construction.getId(), true)));
+        }
+        public void OnConstructionPriorityDown(Construction construction)
+        {
+            SendPacket(new Packet(PacketType.ConstructionSetPriority, new ConstructionSetPriorityDataPackage(construction.getId(), false)));
         }
 
         public void OnSelectableRecycled(Selectable selectable, ResourceConstructionData[] resourceConstructionData)
@@ -273,7 +432,10 @@ namespace PlanetbaseMultiplayer.Client
         {
             NetOutgoingMessage msg = client.CreateMessage();
             msg.Write(packet.Serialize());
-            Console.WriteLine($"Send - Type: {packet.Type}; DataType: {packet.Data}");
+            //Console.WriteLine($"Send - Type: {packet.Type}; DataType: {packet.Data}");
+#if DEBUG
+            Globals.LocalClient.debug_eventList.Add($"Send - {packet.Type}");
+#endif
             client.SendMessage(msg, NetDeliveryMethod.ReliableOrdered);
         }
 

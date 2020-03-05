@@ -9,14 +9,15 @@ Parts of the game which are already synced:
 - Placing connections
 - Placing components inside buildings
 - Resource production and mine ore production
-- Recycling (building recycling is still experimental!)
+- Recycling
+- Character walking
+- Interactions
 
 ## To-Do List
-- Character syncing
 - Ship syncing
 - Weather syncing
 - Meteor syncing
-- Trading, colony ships etc.
+- Trading
 
 And much more...
 

@@ -36,6 +36,8 @@ namespace PlanetbaseMultiplayer.SharedLibs
 			if (selectable != null) return selectable;
 			selectable = Ship.find(selectableId);
 			if (selectable != null) return selectable;
+			selectable = ConstructionComponent.find(selectableId);
+			if (selectable != null) return selectable;
 			return selectable;
 		}
     }

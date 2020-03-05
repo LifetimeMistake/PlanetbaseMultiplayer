@@ -153,6 +153,7 @@ namespace PlanetbaseMultiplayer.Server
 							TimeManager.Unpause();
 						break;
 				}
+				return;
 			}
 			if(packet.Type == PacketType.LoadXmlSaveData)
 			{
@@ -163,6 +164,7 @@ namespace PlanetbaseMultiplayer.Server
 				// Forward the data to every player in the loading queue (if there are any)
 				foreach (Player player in ConnectedPlayers.Where(p => p.ClientState == ClientState.WaitingForSaveData))
 					SendPacket(player, packet);
+				return;
 			}
 			if(packet.Type == PacketType.SetGameTimeSpeed)
 			{
@@ -182,53 +184,48 @@ namespace PlanetbaseMultiplayer.Server
 
 				GameTimeSpeedPackage pkg = (packet.Data) as GameTimeSpeedPackage;
 				TimeManager.SetGameSpeed(pkg.GameSpeed, pkg.Paused);
+				return;
 			}
 			if(packet.Type == PacketType.PlaceModule)
 			{
 				PlaceModuleDataPackage pkg = packet.Data as PlaceModuleDataPackage;
 				Console.WriteLine($"Build module: {pkg.ModuleType}, size {pkg.SizeIndex}");
-				SendPacketToAll(packet);
 			}
 			if(packet.Type == PacketType.PlaceConnection)
 			{
 				PlaceConnectionDataPackage pkg = packet.Data as PlaceConnectionDataPackage;
 				Console.WriteLine($"Build connection: Link1_Id: {pkg.Module1_Id}, Link2_Id: {pkg.Module2_Id}");
-				SendPacketToAll(packet);
 			}
 			if(packet.Type == PacketType.PlaceComponent)
 			{
 				PlaceComponentDataPackage pkg = packet.Data as PlaceComponentDataPackage;
 				Console.WriteLine($"Build component: Parent module Id: {pkg.ParentModuleId}, Position: {pkg.Position.ToString()}, Rotation: {pkg.Rotation.ToString()}, ComponentType: {pkg.ComponentType}");
-				SendPacketToAll(packet);
 			}
 			if(packet.Type == PacketType.IncrementNextId)
 			{
 				SendPacketToAllExcept(sender, packet);
+				return;
 			}
 			if(packet.Type == PacketType.IncrementNextBotId)
 			{
 				SendPacketToAllExcept(sender, packet);
+				return;
 			}
-			if(packet.Type == PacketType.ProduceResource)
+			if(packet.Type == PacketType.AddInteraction || packet.Type == PacketType.RemoveInteraction)
 			{
-				SendPacketToAll(packet);
+				SendPacketToAllExcept(sender, packet);
+				return;
 			}
-			if(packet.Type == PacketType.RecycleColonyShip)
+			if (packet.Type == PacketType.BuildableBuilt)
 			{
-				SendPacketToAll(packet);
+				SendPacketToAllExcept(sender, packet);
+				return;
 			}
-			if(packet.Type == PacketType.RecycleComponent)
+			if (packet.Type == PacketType.TriggerSandstorm || packet.Type == PacketType.EndSandstorm || packet.Type == PacketType.DecideNextSandstorm)
 			{
-				SendPacketToAll(packet);
+				SendPacketToAllExcept(sender, packet);
 			}
-			if(packet.Type == PacketType.RecycleSelectable)
-			{
-				SendPacketToAll(packet);
-			}
-			if(packet.Type == PacketType.CharacterStartWalking)
-			{
-				SendPacketToAll(packet);
-			}
+			SendPacketToAll(packet);
 		}
 
 		public bool SendPacket(Player recipient, Packet packet)
@@ -237,7 +234,7 @@ namespace PlanetbaseMultiplayer.Server
 			NetOutgoingMessage msg = server.CreateMessage();
 			msg.Write(packet.Serialize());
 			Console.WriteLine($"Send - Type: {packet.Type}; DataType: {packet.Data}");
-			server.SendMessage(msg, server.Connections.First(p => p.RemoteUniqueIdentifier == recipient.UniqueId), NetDeliveryMethod.ReliableOrdered);
+			server.SendMessage(msg, server.Connections.First(p => p.RemoteUniqueIdentifier == recipient.UniqueId), NetDeliveryMethod.ReliableOrdered, 1);
 			return true;
 		}
 
@@ -246,7 +243,7 @@ namespace PlanetbaseMultiplayer.Server
 			NetOutgoingMessage msg = server.CreateMessage();
 			msg.Write(packet.Serialize());
 			Console.WriteLine($"Send - Type: {packet.Type}; DataType: {packet.Data}");
-			server.SendToAll(msg, NetDeliveryMethod.ReliableOrdered);
+			server.SendToAll(msg, NetDeliveryMethod.ReliableOrdered, 1);
 			return true;
 		}
 

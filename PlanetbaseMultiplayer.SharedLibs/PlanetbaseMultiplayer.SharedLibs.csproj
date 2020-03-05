@@ -34,22 +34,37 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Planetbase-Assembly">
-      <HintPath>..\References\Planetbase-Assembly.dll</HintPath>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\References\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml">
+      <HintPath>..\References\System.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\References\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConcurrentQueue.cs" />
+    <Compile Include="DataPackages\AddConstructionMaterialDataPackage.cs" />
+    <Compile Include="DataPackages\AddInteractionDataPackage.cs" />
+    <Compile Include="DataPackages\BuildableBuiltDataPackage.cs" />
+    <Compile Include="DataPackages\BuildableSetEnabledDataPackage.cs" />
+    <Compile Include="DataPackages\CharacterDestroyResourceDataPackage.cs" />
+    <Compile Include="DataPackages\CharacterEmbedResourceDataPackage.cs" />
+    <Compile Include="DataPackages\CharacterLoadResourcePackage.cs" />
+    <Compile Include="DataPackages\CharacterStoreResourceDataPackage.cs" />
+    <Compile Include="DataPackages\ConstructionSetPriorityDataPackage.cs" />
+    <Compile Include="DataPackages\DecideNextSandstormDataPackage.cs" />
+    <Compile Include="DataPackages\ExtractResourceDataPackage.cs" />
+    <Compile Include="DataPackages\RemoveInteractionDataPackage.cs" />
     <Compile Include="DataPackages\CharacterStartWalkingDataPackage.cs" />
+    <Compile Include="DataPackages\CharacterUnloadResourceDataPackage.cs" />
     <Compile Include="DataPackages\ClientStatePackage.cs" />
     <Compile Include="DataPackages\ProduceResourceDataPackage.cs" />
     <Compile Include="DataPackages\GameTimeSpeedPackage.cs" />
@@ -62,6 +77,7 @@
     <Compile Include="DataPackages\RecycleSelectableDataPackage.cs" />
     <Compile Include="DataPackages\SaveDataPackage.cs" />
     <Compile Include="DataPackages\SetSimOwnerStatusDataPackage.cs" />
+    <Compile Include="DataPackages\TriggerSandstormDataPackage.cs" />
     <Compile Include="GameTimeSpeed.cs" />
     <Compile Include="IDataPackage.cs" />
     <Compile Include="MultiplayerUtil.cs" />
@@ -73,6 +89,8 @@
     <Compile Include="ResourceDataStructures.cs" />
     <Compile Include="ReversePatches.cs" />
     <Compile Include="Vector3_Serializable.cs" />
+    <Compile Include="XmlUtils.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

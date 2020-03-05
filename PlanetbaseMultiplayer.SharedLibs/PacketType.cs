@@ -23,6 +23,21 @@ namespace PlanetbaseMultiplayer.SharedLibs
         RecycleColonyShip = 12,
         RecycleComponent = 13,
         RecycleSelectable = 14,
-        CharacterStartWalking = 15
+        CharacterStartWalking = 15,
+        CharacterLoadResource = 16,
+        CharacterUnloadResource = 17,
+        RemoveInteraction = 18,
+        AddInteraction = 19,
+        AddConstructionMaterial = 20,
+        CharacterStoreResource = 21,
+        CharacterEmbedResource = 22,
+        CharacterDestroyResource = 23,
+        ExtractResource = 24,
+        BuildableBuilt = 25,
+        ConstructionSetPriority = 26,
+        BuildableSetEnabled = 27,
+        DecideNextSandstorm = 28,
+        EndSandstorm = 29,
+        TriggerSandstorm = 30
     }
 }

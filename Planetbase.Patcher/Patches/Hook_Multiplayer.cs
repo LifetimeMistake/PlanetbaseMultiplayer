@@ -30,12 +30,22 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
     [HarmonyPatch(typeof(GameManager), "fixedUpdate", new[] { typeof(float) })]
     class Hook_fixedUpdate
     {
-        static void Postfix(GameManager __instance)
+        static bool Prefix(GameManager __instance)
         {
-            if (!Globals.IsInMultiplayerMode) return;
-            if (Globals.LocalClient.packetQueue.Count == 0) return;
-            Packet packet = Globals.LocalClient.packetQueue.Dequeue();
-            Globals.LocalClient.ProcessPacket(packet);
+            if (!Globals.IsInMultiplayerMode) return true;
+#if DEBUG
+			if (Globals.LocalClient.debug_eventList.Count > 100)
+				while (Globals.LocalClient.debug_eventList.Count > 100)
+					Globals.LocalClient.debug_eventList.RemoveAt(0);
+			Globals.LocalClient.lastTick_PacketCount = Globals.LocalClient.packetQueue.Count;
+#endif
+			while (Globals.LocalClient.packetQueue.Count != 0)
+			{
+				if (Globals.LocalClient.packetQueue.Count == 0) return true;
+				Packet packet = Globals.LocalClient.packetQueue.Dequeue();
+				Globals.LocalClient.ProcessPacket(packet);
+			}
+			return true;
         }
     }
 

@@ -21,7 +21,7 @@ namespace PlanetbaseMultiplayer.SharedLibs
             this.z = z;
         }
 
-        public static explicit operator Vector3_Serializable(Vector3 v) => new Vector3_Serializable(v.x, v.y, v.z);
-        public static explicit operator Vector3(Vector3_Serializable v) => new Vector3(v.x, v.y, v.z);
+        public static implicit operator Vector3_Serializable(Vector3 v) => new Vector3_Serializable(v.x, v.y, v.z);
+        public static implicit operator Vector3(Vector3_Serializable v) => new Vector3(v.x, v.y, v.z);
     }
 }

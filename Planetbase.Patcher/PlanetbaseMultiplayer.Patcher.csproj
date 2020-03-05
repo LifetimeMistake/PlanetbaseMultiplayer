@@ -38,16 +38,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\References\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Security, Version=2.0.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\Mono.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Planetbase-Assembly, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\Planetbase-Assembly.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\Framework\v2.0.50727\System.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -63,8 +66,10 @@
   <ItemGroup>
     <Compile Include="EmptyAi.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Debug_Patches.cs" />
     <Compile Include="Patches\Disable_Character_AI.cs" />
     <Compile Include="Patches\Fix_Id_Desync_Patch.cs" />
+    <Compile Include="Patches\Fix_Interaction_Crashes.cs" />
     <Compile Include="Patches\Hook_PlaceBuilding.cs" />
     <Compile Include="Patches\Hook_TimeSettings.cs" />
     <Compile Include="Patches\Hook_UpdateMining.cs" />
@@ -73,7 +78,12 @@
     <Compile Include="Patches\Hook_Multiplayer.cs" />
     <Compile Include="Patches\Hook_WorldLoadingFinished.cs" />
     <Compile Include="Patches\Override_Recycle_Patch.cs" />
+    <Compile Include="Patches\Sync_BuildableOnBuild.cs" />
+    <Compile Include="Patches\Sync_Buildable_SetEnabled.cs" />
+    <Compile Include="Patches\Sync_Character_Interactions.cs" />
+    <Compile Include="Patches\Sync_Character_Resources.cs" />
     <Compile Include="Patches\Sync_Character_Walking.cs" />
+    <Compile Include="Patches\Sync_Disaster_Sandstorm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client
@@ -175,7 +176,134 @@ namespace PlanetbaseMultiplayer.Client
                 else UnityEngine.Debug.LogWarning("CharacterStartWalking: s was null");
             }
 
+            character.setPosition((Vector3)pkg.StartingPosition);
+            character.setRotation((Quaternion)pkg.StartingRotation);
             character.MP_startWalking(target, indirectTargets_list.Count == 0 ? null : indirectTargets_list.ToArray());
+        }
+
+        public static void CharacterLoadResource(CharacterLoadResourceDataPackage pkg)
+        {
+            Character character = Character.find(pkg.CharacterId);
+            if (character == null) { UnityEngine.Debug.LogError("CharacterLoadResource: character was null"); return; }
+            Resource resource = Resource.find(pkg.ResourceId);
+            if (character == null) { UnityEngine.Debug.LogError("CharacterLoadResource: resource was null"); return; }
+            character.MP_loadResource(resource);
+        }
+        public static void CharacterStoreResource(CharacterStoreResourceDataPackage pkg)
+        {
+            Character character = Character.find(pkg.CharacterId);
+            Module module = (Module)Construction.find(pkg.ModuleId);
+            if (character == null) { UnityEngine.Debug.LogError("CharacterStoreResource: character was null"); return; }
+            if (module == null) { UnityEngine.Debug.LogError("CharacterStoreResource: module was null"); return; }
+            character.MP_storeResource(module);
+        }
+
+        public static void ExtractResource(ExtractResourceDataPackage pkg)
+        {
+            Resource resource = Resource.find(pkg.ResourceId);
+            if (resource == null) { UnityEngine.Debug.LogError("ExtractResource: resource was null"); return; }
+            resource.getGameObject().name = resource.getResourceType().getName();
+            resource.getGameObject().SetActive(true);
+            resource.mContainer.remove(resource);
+            resource.mContainer = null;
+        }
+
+        public static void CharacterEmbedResource(CharacterEmbedResourceDataPackage pkg)
+        {
+            Character character = Character.find(pkg.CharacterId);
+            ConstructionComponent component = ConstructionComponent.find(pkg.ComponentId);
+            if (character == null) { UnityEngine.Debug.LogError("CharacterEmbedResource: character was null"); return; }
+            if (component == null) { UnityEngine.Debug.LogError("CharacterEmbedResource: component was null"); return; }
+            character.MP_embedResource(component, pkg.ResourceState);
+        }
+
+        public static void CharacterDestroyResource(CharacterDestroyResourceDataPackage pkg)
+        {
+            Character character = Character.find(pkg.CharacterId);
+            if (character == null) { UnityEngine.Debug.LogError("CharacterDestroyResource: character was null"); return; }
+            character.MP_destroyResource();
+        }
+
+        public static void AddConstructionMaterial(AddConstructionMaterialDataPackage pkg)
+        {
+            Selectable buildableBase = MultiplayerUtil.FindSelectableFromId(pkg.BuildableId);
+            Resource resource = Resource.find(pkg.ResourceId);
+            if (buildableBase == null) { UnityEngine.Debug.LogError("AddConstructionMaterial: buildableBase was null"); return; }
+            if (resource == null) { UnityEngine.Debug.LogError("AddConstructionMaterial: resource was null"); return; }
+            if (!(buildableBase is Buildable)) { UnityEngine.Debug.LogError("AddConstructionMaterial: cannot cast Selectable to Buildable"); return; }
+            Buildable buildable = (Buildable)buildableBase;
+            if (buildable.mPendingConstructionCosts.containsResourceType(resource.getResourceType()))
+            {
+                if (buildable.mConstructionMaterials == null)
+                {
+                    buildable.mConstructionMaterials = new ResourceArray();
+                }
+                buildable.mConstructionMaterials.add(resource);
+                buildable.mPendingConstructionCosts.remove(resource.getResourceType(), 1);
+            }
+        }
+
+        public static void BuildableBuilt(BuildableBuiltDataPackage pkg)
+        {
+            Selectable buildableBase = MultiplayerUtil.FindSelectableFromId(pkg.BuildableId);
+            if (buildableBase == null) { UnityEngine.Debug.LogError("BuildableBuilt: buildableBase was null"); return; }
+            if (!(buildableBase is Buildable)) { UnityEngine.Debug.LogError("BuildableBuilt: cannot cast Selectable to Buildable"); return; }
+            Buildable buildable = (Buildable)buildableBase;
+            if (buildable.mState != BuildableState.Built)
+            {
+                buildable.mBuildProgress.setValue(1f);
+                buildable.updateBuild(0f);
+                buildable.onBuilt();
+            }
+                
+        }
+
+        public static void DecideNextSandstorm(DecideNextSandstormDataPackage pkg)
+        {
+            DisasterManager.getInstance().getSandstorm().mTimeToNextSandstorm = pkg.mTimeToNextSandstorm;
+        }
+
+        public static void TriggerSandstorm(TriggerSandstormDataPackage pkg)
+        {
+            Sandstorm sandstorm = DisasterManager.getInstance().getSandstorm();
+            sandstorm.mTime = 0f;
+            sandstorm.mSandstormTime = pkg.mSandstormTime;
+            sandstorm.mSandstormInProgress = true;
+            sandstorm.onStart();
+        }
+
+        public static void EndSandstorm()
+        {
+            Sandstorm sandstorm = DisasterManager.getInstance().getSandstorm();
+            sandstorm.mSandstormInProgress = false;
+            Singleton<EnvironmentManager>.getInstance().refreshAmbientSound();
+            sandstorm.destroyParticles();
+        }
+
+        public static void CharacterUnloadResource(CharacterUnloadResourceDataPackage pkg)
+        {
+            Character character = Character.find(pkg.CharacterId);
+            if (character == null) { UnityEngine.Debug.LogError("CharacterUnloadResource: character was null"); return; }
+            if(character.mLoadedResource == null) { UnityEngine.Debug.LogWarning("CharacterUnloadResource: mLoadedResource was null"); return; }
+            character.MP_unloadResource(pkg.ResourceState);
+        }
+        public static void BuildableSetEnabled(BuildableSetEnabledDataPackage pkg)
+        {
+            Selectable buildableBase = MultiplayerUtil.FindSelectableFromId(pkg.BuildableId);
+            if (buildableBase == null) { UnityEngine.Debug.LogError("BuildableSetEnabled: buildableBase was null"); return; }
+            if (!(buildableBase is Buildable)) { UnityEngine.Debug.LogError("BuildableSetEnabled: cannot cast Selectable to Buildable"); return; }
+            Buildable buildable = (Buildable)buildableBase;
+            buildable.setEnabled(pkg.Enabled);
+            if (pkg.Enabled)
+                buildable.playSound(SoundList.getInstance().ConstructionEnable);
+            else
+                buildable.playSound(SoundList.getInstance().ConstructionDisable);
+        }
+        public static void ConstructionSetPriority(ConstructionSetPriorityDataPackage pkg)
+        {
+            Construction construction = Construction.find(pkg.ConstructionId);
+            if (construction == null) { UnityEngine.Debug.LogError("ConstructionSetPriority: construction was null"); return; }
+            construction.setHighPriority(pkg.HighPriority);
         }
     }
 }

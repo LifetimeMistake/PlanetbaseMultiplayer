@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Patcher.Patches
 {
@@ -15,10 +15,16 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
         static void Prefix(GameStateGame __instance)
         {
             if (!Globals.IsInMultiplayerMode) return;
-            if(__instance.mPlacedComponent == null)
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            int layerMask = 4096;
+            RaycastHit raycastHit;
+            if ((Physics.Raycast(ray, out raycastHit, 100f, layerMask)))
             {
-                // The Id is about to be incremented. Sync it with other players.
-                Globals.LocalClient.Send_IncrementId_Packet();
+                if (__instance.mPlacedComponent == null)
+                {
+                    // The Id is about to be incremented. Sync it with other players.
+                    Globals.LocalClient.Send_IncrementId_Packet();
+                }
             }
         }
     }

@@ -17,8 +17,10 @@ namespace PlanetbaseMultiplayer.SharedLibs.DataPackages
         public Quaternion_Serializable TargetRotation;
         public int TargetSelectableId;
         public int[] IndirectTargetIds;
+        public Vector3_Serializable StartingPosition;
+        public Quaternion_Serializable StartingRotation;
 
-        public CharacterStartWalkingDataPackage(int characterId, int targetFlags, float targetRadius, Location targetLocation, Vector3_Serializable targetPosition, Quaternion_Serializable targetRotation, int targetSelectableId, int[] indirectTargetIds)
+        public CharacterStartWalkingDataPackage(int characterId, int targetFlags, float targetRadius, Location targetLocation, Vector3_Serializable targetPosition, Quaternion_Serializable targetRotation, int targetSelectableId, int[] indirectTargetIds, Vector3_Serializable startingPosition, Quaternion_Serializable startingRotation)
         {
             CharacterId = characterId;
             TargetFlags = targetFlags;
@@ -28,6 +30,8 @@ namespace PlanetbaseMultiplayer.SharedLibs.DataPackages
             TargetRotation = targetRotation;
             TargetSelectableId = targetSelectableId;
             IndirectTargetIds = indirectTargetIds;
+            StartingPosition = startingPosition;
+            StartingRotation = startingRotation;
         }
     }
 }

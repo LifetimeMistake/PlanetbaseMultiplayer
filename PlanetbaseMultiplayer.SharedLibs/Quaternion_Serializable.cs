@@ -25,7 +25,7 @@ namespace PlanetbaseMultiplayer.SharedLibs
             is_initialized = true;
         }
 
-        public static explicit operator Quaternion_Serializable(Quaternion v) => new Quaternion_Serializable(v.x, v.y, v.z, v.w);
-        public static explicit operator Quaternion(Quaternion_Serializable v) => new Quaternion(v.x, v.y, v.z, v.w);
+        public static implicit operator Quaternion_Serializable(Quaternion v) => new Quaternion_Serializable(v.x, v.y, v.z, v.w);
+        public static implicit operator Quaternion(Quaternion_Serializable v) => new Quaternion(v.x, v.y, v.z, v.w);
     }
 }

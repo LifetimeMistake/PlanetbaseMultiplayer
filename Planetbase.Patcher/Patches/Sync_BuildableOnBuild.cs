@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using Planetbase;
 using PlanetbaseMultiplayer.Client;
+using PlanetbaseMultiplayer.SharedLibs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,16 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Patcher.Patches
 {
-    [HarmonyPatch(typeof(Character), "startWalking", new[] {  typeof(Target), typeof(Selectable[]) })]
-    class Sync_Character_Walking
+    [HarmonyPatch(typeof(Buildable), "onBuilt")]
+    class Sync_BuildableOnBuild
     {
-        static bool Prefix(Character __instance, Target target, Selectable[] indirectTargets)
+        static bool Prefix(Buildable __instance)
         {
             if (!Globals.IsInMultiplayerMode) return true;
             if (!Globals.LocalPlayer.IsSimulationOwner) return true;
-            Globals.LocalClient.OnCharacterStartWalking(__instance, target, indirectTargets);
-            return false;
+            if (Globals.LocalPlayer.ClientState != ClientState.ConnectedReady) return true;
+            Globals.LocalClient.OnBuildableBuilt(__instance.getId());
+            return true;
         }
     }
 }
