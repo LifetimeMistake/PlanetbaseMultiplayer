@@ -11,6 +11,7 @@ namespace PlanetbaseMultiplayer.Client
         public static Client LocalClient;
         public static Player LocalPlayer;
         public static MultiplayerInteractionManager InteractionManager;
+        public static MultiplayerResourceManager ResourceManager;
         public static bool IsInMultiplayerMode;
         public static bool IdSyncRequired;
         public static int IdSync_NextId;

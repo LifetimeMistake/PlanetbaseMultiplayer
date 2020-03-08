@@ -9,12 +9,10 @@ namespace PlanetbaseMultiplayer.SharedLibs.DataPackages
     public class RecycleSelectableDataPackage : IDataPackage
     {
         public int SelectableId;
-        public ResourceConstructionData[] CreatedResources;
 
-        public RecycleSelectableDataPackage(int selectableId, ResourceConstructionData[] createdResources)
+        public RecycleSelectableDataPackage(int selectableId)
         {
             SelectableId = selectableId;
-            CreatedResources = createdResources;
         }
     }
 }

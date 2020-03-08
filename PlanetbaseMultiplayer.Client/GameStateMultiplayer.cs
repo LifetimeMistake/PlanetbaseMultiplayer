@@ -27,6 +27,7 @@ namespace PlanetbaseMultiplayer.Client
 				Globals.IdSync_NextId = 0;
 				Globals.IdSync_NextBotId = 0;
 				Globals.InteractionManager = null;
+				Globals.ResourceManager = null;
 			}
 			serverTarget = "127.0.0.1:8081";
 		}
@@ -68,6 +69,7 @@ namespace PlanetbaseMultiplayer.Client
 			{
 				Globals.LocalClient = new Client();
 				Globals.InteractionManager = new MultiplayerInteractionManager(Globals.LocalClient);
+				Globals.ResourceManager = new MultiplayerResourceManager(Globals.LocalClient);
 				string[] server_info = serverTarget.Split(':');
 				if (server_info.Length != 2) return;
 				int port = 0;

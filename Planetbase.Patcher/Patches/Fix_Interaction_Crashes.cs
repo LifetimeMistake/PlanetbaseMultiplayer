@@ -20,33 +20,4 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             return true;
         }
     }
-    [HarmonyPatch(typeof(Resource), "destroy")]
-    class Fix_Resource_Crash
-    {
-        static bool Prefix(Resource __instance)
-        {
-            if (!Globals.IsInMultiplayerMode) return true;
-            try
-            {
-                Resource.mResourceDictionary.Remove(__instance.mObject);
-            }
-            catch(Exception) { }
-            try
-            {
-                Resource.mResources.Remove(__instance);
-            }
-            catch (Exception) { }
-            try
-            {
-                Resource.mTypeResources[__instance.mResourceType].Remove(__instance);
-            }
-            catch (Exception) { }
-            try
-            {
-                __instance.end();
-            }
-            catch (Exception) { }
-            return false;
-        }
-    }
 }

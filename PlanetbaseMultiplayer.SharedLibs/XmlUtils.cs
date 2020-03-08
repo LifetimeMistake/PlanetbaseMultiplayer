@@ -53,6 +53,10 @@ namespace PlanetbaseMultiplayer.SharedLibs
 		{
 			serializeString(document, parent, name, value.ToString());
 		}
+		public static void serializeQuaternion(XmlDocument document, XmlNode parent, string name, Quaternion q)
+		{
+			serializeVector3(document, parent, name, q.eulerAngles);
+		}
 		public static void serializeVector3(XmlDocument document, XmlNode parent, string name, Vector3 v)
 		{
 			XmlAttribute xmlAttribute = document.CreateAttribute("x");

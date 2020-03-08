@@ -53,6 +53,7 @@
     <Compile Include="ConcurrentQueue.cs" />
     <Compile Include="DataPackages\AddConstructionMaterialDataPackage.cs" />
     <Compile Include="DataPackages\AddInteractionDataPackage.cs" />
+    <Compile Include="DataPackages\AddResourceDataPackage.cs" />
     <Compile Include="DataPackages\BuildableBuiltDataPackage.cs" />
     <Compile Include="DataPackages\BuildableSetEnabledDataPackage.cs" />
     <Compile Include="DataPackages\CharacterDestroyResourceDataPackage.cs" />
@@ -66,18 +67,16 @@
     <Compile Include="DataPackages\CharacterStartWalkingDataPackage.cs" />
     <Compile Include="DataPackages\CharacterUnloadResourceDataPackage.cs" />
     <Compile Include="DataPackages\ClientStatePackage.cs" />
-    <Compile Include="DataPackages\ProduceResourceDataPackage.cs" />
     <Compile Include="DataPackages\GameTimeSpeedPackage.cs" />
     <Compile Include="DataPackages\PlaceComponentDataPackage.cs" />
     <Compile Include="DataPackages\PlaceConnectionDataPackage.cs" />
     <Compile Include="DataPackages\PlaceModuleDataPackage.cs" />
     <Compile Include="DataPackages\PrepareClientPackage.cs" />
-    <Compile Include="DataPackages\RecycleColonyShipDataPackage.cs" />
-    <Compile Include="DataPackages\RecycleComponentDataPackage.cs" />
     <Compile Include="DataPackages\RecycleSelectableDataPackage.cs" />
     <Compile Include="DataPackages\SaveDataPackage.cs" />
     <Compile Include="DataPackages\SetSimOwnerStatusDataPackage.cs" />
     <Compile Include="DataPackages\TriggerSandstormDataPackage.cs" />
+    <Compile Include="DataPackages\UpdateResourceDataPackage.cs" />
     <Compile Include="GameTimeSpeed.cs" />
     <Compile Include="IDataPackage.cs" />
     <Compile Include="MultiplayerUtil.cs" />

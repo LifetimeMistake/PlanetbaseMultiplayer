@@ -230,6 +230,11 @@ namespace PlanetbaseMultiplayer.Server
 				SendPacketToAllExcept(sender, packet);
 				return;
 			}
+			if (packet.Type == PacketType.AddResource || packet.Type == PacketType.UpdateResource)
+			{
+				SendPacketToAllExcept(sender, packet);
+				return;
+			}
 			if (packet.Type == PacketType.BuildableBuilt)
 			{
 				SendPacketToAllExcept(sender, packet);
@@ -238,6 +243,12 @@ namespace PlanetbaseMultiplayer.Server
 			if (packet.Type == PacketType.TriggerSandstorm || packet.Type == PacketType.EndSandstorm || packet.Type == PacketType.DecideNextSandstorm)
 			{
 				SendPacketToAllExcept(sender, packet);
+				return;
+			}
+			if(packet.Type == PacketType.RecycleSelectable)
+			{
+				SendPacketToAllExcept(sender, packet);
+				return;
 			}
 			SendPacketToAll(packet);
 		}

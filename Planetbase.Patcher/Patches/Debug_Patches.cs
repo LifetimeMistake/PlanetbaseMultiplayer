@@ -21,10 +21,27 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             RenderEventLog();
             RenderPacketCounter();
             RenderMultiplayerInteractions();
+            RenderMultiplayerResources();
 #endif
         }
         
         public static void RenderMultiplayerInteractions()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("MultiplayerId | ResourceType | IsMultiplayer");
+            foreach (Resource resource in Resource.mResources)
+            {
+                string id = Globals.ResourceManager.Contains(resource) ? Globals.ResourceManager.Find(resource).ToString() : "Empty";
+                sb.AppendLine($"{id} | {resource.mResourceType.GetType().Name} | {Globals.ResourceManager.Contains(resource)}");
+            }
+            GUIStyle style = new GUIStyle();
+            style.normal.textColor = Color.white;
+            style.hover.textColor = Color.white;
+            style.active.textColor = Color.white;
+            GUI.Label(new Rect(500, Screen.height - 950, 400, 300), sb.ToString(), style);
+        }
+
+        public static void RenderMultiplayerResources()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("MultiplayerId | InteractionType | IsMultiplayer");
@@ -37,7 +54,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             style.normal.textColor = Color.white;
             style.hover.textColor = Color.white;
             style.active.textColor = Color.white;
-            GUI.Label(new Rect(50, Screen.height - 650, 700, 300), sb.ToString(), style);
+            GUI.Label(new Rect(50, Screen.height - 950, 400, 300), sb.ToString(), style);
         }
 
         public static void RenderIdIndicator()
@@ -60,7 +77,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             style.normal.textColor = Color.white;
             style.hover.textColor = Color.white;
             style.active.textColor = Color.white;
-            GUI.Label(new Rect(50, Screen.height - 350, 700, 300), sb.ToString(), style);
+            GUI.Label(new Rect(50, Screen.height - 350, 400, 300), sb.ToString(), style);
         }
 
         public static void RenderPacketCounter()

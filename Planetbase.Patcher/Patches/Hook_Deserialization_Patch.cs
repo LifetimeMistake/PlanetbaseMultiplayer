@@ -19,4 +19,14 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             return false;
         }
     }
+    [HarmonyPatch(typeof(Resource), "deserializeAll", new[] { typeof(XmlNode) })]
+    class Hook_Deserialization_Patch_Resource
+    {
+        static bool Prefix(XmlNode node)
+        {
+            if (!Globals.IsInMultiplayerMode) return true;
+            Globals.ResourceManager.DeserializeAll(node);
+            return false;
+        }
+    }
 }

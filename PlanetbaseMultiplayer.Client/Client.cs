@@ -204,21 +204,6 @@ namespace PlanetbaseMultiplayer.Client
             {
                 IdGenerator.getInstance().generateBot();
             }
-            if(packet.Type == PacketType.ProduceResource)
-            {
-                ProduceResourceDataPackage pkg = packet.Data as ProduceResourceDataPackage;
-                MultiplayerMethods.CompleteProduction(pkg);
-            }
-            if(packet.Type == PacketType.RecycleColonyShip)
-            {
-                RecycleColonyShipDataPackage pkg = packet.Data as RecycleColonyShipDataPackage;
-                MultiplayerMethods.RecycleColonyShip(pkg);
-            }
-            if (packet.Type == PacketType.RecycleComponent)
-            {
-                RecycleComponentDataPackage pkg = packet.Data as RecycleComponentDataPackage;
-                MultiplayerMethods.RecycleComponent(pkg);
-            }
             if (packet.Type == PacketType.RecycleSelectable)
             {
                 RecycleSelectableDataPackage pkg = packet.Data as RecycleSelectableDataPackage;
@@ -273,6 +258,10 @@ namespace PlanetbaseMultiplayer.Client
             if(packet.Type == PacketType.AddInteraction || packet.Type == PacketType.RemoveInteraction)
             {
                 Globals.InteractionManager.ProcessPacket(packet);
+            }
+            if(packet.Type == PacketType.AddResource || packet.Type == PacketType.UpdateResource)
+            {
+                Globals.ResourceManager.ProcessPacket(packet);
             }
             if (packet.Type == PacketType.BuildableSetEnabled)
             {
@@ -340,17 +329,6 @@ namespace PlanetbaseMultiplayer.Client
                 (Vector3_Serializable)componentPosition, componentType)));
         }
 
-        public void OnColonyShipRecycled(ColonyShip colonyShip, ResourceConstructionData[] producedResources, ResourceUpdateData[] resourceUpdates)
-        {
-            SendPacket(new Packet(PacketType.RecycleColonyShip, new RecycleColonyShipDataPackage(colonyShip.getId(), resourceUpdates, producedResources)));
-        }
-
-        public void OnProductionCompleted(Buildable producer, ProducerType type, ResourceConstructionData[] producedResources, ResourceDestructionData[] consumedResources)
-        {
-            UnityEngine.Debug.Log($"Local produced: {producedResources.Length} {consumedResources.Length}");
-            SendPacket(new Packet(PacketType.ProduceResource, new ProduceResourceDataPackage(producer.getId(), type, producedResources, consumedResources)));
-        }
-
         public void OnCharacterLoadResource(Character character, Resource resource)
         {
             SendPacket(new Packet(PacketType.CharacterLoadResource, new CharacterLoadResourceDataPackage(character.getId(), resource.getId())));
@@ -408,9 +386,9 @@ namespace PlanetbaseMultiplayer.Client
             SendPacket(new Packet(PacketType.ConstructionSetPriority, new ConstructionSetPriorityDataPackage(construction.getId(), false)));
         }
 
-        public void OnSelectableRecycled(Selectable selectable, ResourceConstructionData[] resourceConstructionData)
+        public void OnSelectableRecycled(Selectable selectable)
         {
-            SendPacket(new Packet(PacketType.RecycleSelectable, new RecycleSelectableDataPackage(selectable.getId(), resourceConstructionData)));
+            SendPacket(new Packet(PacketType.RecycleSelectable, new RecycleSelectableDataPackage(selectable.getId())));
         }
         // A fix for Id desync
         public void Send_IncrementId_Packet()
@@ -421,11 +399,6 @@ namespace PlanetbaseMultiplayer.Client
         public void Send_IncrementBotId_Packet()
         {
             SendPacket(new Packet(PacketType.IncrementNextBotId, null));
-        }
-
-        public void OnComponentRecycled(ConstructionComponent component, ResourceConstructionData[] resourceConstructionData, ResourceDestructionData[] resourceDestructionData)
-        {
-            SendPacket(new Packet(PacketType.RecycleComponent, new RecycleComponentDataPackage(component.getId(), resourceConstructionData, resourceDestructionData)));
         }
 
         public void SendPacket(Packet packet)

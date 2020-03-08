@@ -176,10 +176,10 @@ namespace PlanetbaseMultiplayer.Client
                         System.Reflection.MethodInfo postInit_method = type.GetMethod("postInit", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                         deserialize_method.Invoke(interaction, new object[] { xmlNode });
                         postInit_method.Invoke(interaction, new object[] { });
-                        if(node["multiplayer-id"] != null)
+                        if(xmlNode["multiplayer-id"] != null)
                         {
                             // Add interaction to the list
-                            AddInteraction_ForReal(new Guid(node["multiplayer-id"].Value), interaction, false);
+                            AddInteraction_ForReal(new Guid(xmlNode["multiplayer-id"].Attributes[0].Value), interaction, false);
                         }
                         else
                         {

@@ -46,112 +46,11 @@ namespace PlanetbaseMultiplayer.Client
             parentModule.addComponent(component);
             component.onUserPlaced();
         }
-        public static void CompleteProduction(ProduceResourceDataPackage pkg)
-        {
-            Buildable producer = null;
-            if (pkg.ProducerType == ProducerType.Component)
-                producer = ConstructionComponent.find(pkg.ProducerId);
-            else if (pkg.ProducerType == ProducerType.Module)
-                producer = Construction.find(pkg.ProducerId);
-            if (producer == null) { UnityEngine.Debug.LogError("producer was null"); return; }
-
-            foreach (ResourceDestructionData data in pkg.ConsumedResources)
-            {
-                Resource resource = Resource.find(data.ResourceId);
-                if (resource == null) { UnityEngine.Debug.LogWarning("consumedresources: resource was null"); continue; }
-                resource.destroy();
-            }
-            foreach (ResourceConstructionData data in pkg.ProducedResources)
-            {
-                ResourceType resourceType = TypeList<ResourceType, ResourceTypeList>.find(data.Type);
-                if (resourceType == null) { UnityEngine.Debug.LogError($"Could not find the requested resource type: {data.Type}"); continue; }
-                Resource resource = Resource.create(resourceType, data.Subtype, (Vector3)data.Position, data.Location);
-                if (data.Embedded)
-                {
-                    // Embed the resource inside the producer's inventory.
-                    if(pkg.ProducerType == ProducerType.Component)
-                        (producer as ConstructionComponent).embedResource(resource);
-                }
-                else
-                {
-                    if (!data.Rotation.IsEmpty)
-                        resource.setRotation((Quaternion)data.Rotation);
-                    resource.drop(Resource.State.Idle);
-                }
-            }
-            if (pkg.ProducerType == ProducerType.Component)
-                (producer as ConstructionComponent).mProductionProgress.setValue(0f);
-            else if (pkg.ProducerType == ProducerType.Module)
-                (producer as Module).mProductionProgressIndicator.setValue(0f);
-        }
-
-        public static void RecycleColonyShip(RecycleColonyShipDataPackage pkg)
-        {
-            ColonyShip colonyShip = (ColonyShip)Ship.find(pkg.ColonyShipId);
-            foreach(ResourceUpdateData data in pkg.ExtractedResources)
-            {
-                Resource resource = Resource.find(data.ResourceId);
-                switch(data.UpdateAction)
-                {
-                    case ResourceAction.Extract:
-                        resource.onExtract();
-                        resource.setPosition((Vector3)data.Position);
-                        resource.drop(Resource.State.Idle);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            foreach(ResourceConstructionData data in pkg.CreatedResources)
-            {
-                ResourceType resourceType = TypeList<ResourceType, ResourceTypeList>.find(data.Type);
-                if (resourceType == null) { UnityEngine.Debug.LogError($"Could not find the requested resource type: {data.Type}"); continue; }
-                Resource resource = Resource.create(resourceType, data.Subtype, (Vector3)data.Position, data.Location);
-                if (!data.Rotation.IsEmpty)
-                    resource.setRotation((Quaternion)data.Rotation);
-                resource.drop(Resource.State.Idle);
-            }
-            if (colonyShip != null)
-                colonyShip.destroy();
-        }
-
-        public static void RecycleComponent(RecycleComponentDataPackage pkg)
-        {
-            ConstructionComponent component = ConstructionComponent.find(pkg.ComponentId);
-            foreach(ResourceConstructionData data in pkg.CreatedResources)
-            {
-                ResourceType resourceType = TypeList<ResourceType, ResourceTypeList>.find(data.Type);
-                if (resourceType == null) { UnityEngine.Debug.LogError($"Could not find the requested resource type: {data.Type}"); continue; }
-                Resource resource = Resource.create(resourceType, data.Subtype, (Vector3)data.Position, data.Location);
-                if (!data.Rotation.IsEmpty)
-                    resource.setRotation((Quaternion)data.Rotation);
-                resource.drop(Resource.State.Idle);
-            }
-            foreach(ResourceDestructionData data in pkg.DestroyedResources)
-            {
-                Resource resource = Resource.find(data.ResourceId);
-                if (resource == null) { UnityEngine.Debug.LogWarning("recyclecomponent: resource was null"); continue; }
-                resource.destroy();
-            }
-            Console.WriteLine($"{pkg.CreatedResources.Length}   {pkg.DestroyedResources.Length}");
-            if (component != null)
-                component.destroy();
-        }
 
         public static void RecycleSelectable(RecycleSelectableDataPackage pkg)
         {
-            Selectable selectable = Resource.find(pkg.SelectableId);
-            if (selectable == null) selectable = Construction.find(pkg.SelectableId);
+            Selectable selectable = MultiplayerUtil.FindSelectableFromId(pkg.SelectableId);
             if (selectable == null) { UnityEngine.Debug.LogError($"Could not find selectable object with Id: {pkg.SelectableId}"); return; }
-            foreach(ResourceConstructionData data in pkg.CreatedResources)
-            {
-                ResourceType resourceType = TypeList<ResourceType, ResourceTypeList>.find(data.Type);
-                if (resourceType == null) { UnityEngine.Debug.LogError($"Could not find the requested resource type: {data.Type}"); continue; }
-                Resource resource = Resource.create(resourceType, data.Subtype, (Vector3)data.Position, data.Location);
-                if (!data.Rotation.IsEmpty)
-                    resource.setRotation((Quaternion)data.Rotation);
-                resource.drop(Resource.State.Idle);
-            }
             if (selectable != null)
                 selectable.destroy();
         }
