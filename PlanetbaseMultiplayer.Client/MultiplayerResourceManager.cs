@@ -66,6 +66,47 @@ namespace PlanetbaseMultiplayer.Client
             RemoveResource_ForReal(Find(resource), resource, gameClient.localPlayer.IsSimulationOwner);
         }
 
+        public void StoreResource(Character character, Module module)
+        {
+            if (character.getLoadedResource() == null) return;
+            if (!Contains(character.getLoadedResource()))
+            {
+                character.MP_storeResource(module);
+                Console.WriteLine($"Resource stored locally: {character.getLoadedResource()}");
+                return;
+            }
+
+            StoreResource_ForReal(Find(character.getLoadedResource()), character.getLoadedResource(), character, module, gameClient.localPlayer.IsSimulationOwner);
+        }
+
+        public void EmbedResource(Character character, ConstructionComponent component, Resource.State state)
+        {
+            if (character.getLoadedResource() == null) return;
+            if (!Contains(character.getLoadedResource()))
+            {
+                character.MP_embedResource(component, state);
+                Console.WriteLine($"Resource embedded locally: {character.getLoadedResource()}");
+                return;
+            }
+
+            EmbedResource_ForReal(Find(character.getLoadedResource()), character.getLoadedResource(), character, component, state, gameClient.localPlayer.IsSimulationOwner);
+        }
+
+        public void ExtractResource(Resource resource)
+        {
+            if (resource == null) return;
+            if(!Contains(resource))
+            {
+                resource.getGameObject().name = resource.getResourceType().getName();
+                resource.getGameObject().SetActive(true);
+                resource.mContainer.remove(resource);
+                resource.mContainer = null;
+                Console.WriteLine($"Resource extracted locally: {resource}");
+            }
+
+            ExtractResource_ForReal(Find(resource), resource, gameClient.localPlayer.IsSimulationOwner);
+        }
+
         public void LoadResource(Resource resource, Character character)
         {
             if (!Contains(resource))
@@ -88,7 +129,7 @@ namespace PlanetbaseMultiplayer.Client
                 return;
             }
 
-            UnloadResource_ForReal(character, state, gameClient.localPlayer.IsSimulationOwner);
+            UnloadResource_ForReal(Find(character.getLoadedResource()), character.getLoadedResource(), character, state, gameClient.localPlayer.IsSimulationOwner);
         }
 
         public void AddConstructionMaterial(Buildable buildable, Resource resource)
@@ -188,26 +229,26 @@ namespace PlanetbaseMultiplayer.Client
             if(syncWithOthers)
             {
                 ResourceData data = new ResourceData();
-                data.SelectableId = character.getId();
+                data.CharacterId = character.getId();
                 gameClient.SendPacket(new Packet(PacketType.UpdateResource, new UpdateResourceDataPackage(key, ResourceAction.Load, data)));
             }
 
             character.MP_loadResource(value);
         }
 
-        private void UnloadResource_ForReal(Character character, Resource.State state, bool syncWithOthers)
+        private void UnloadResource_ForReal(Guid key, Resource value, Character character, Resource.State state, bool syncWithOthers)
         {
-            if (character.getLoadedResource() == null) return;
+            if (value == null) return;
 #if DEBUG
-            Console.WriteLine($"{Find(character.getLoadedResource())}, {character.getLoadedResource()}, {syncWithOthers}");
-            gameClient.debug_eventList.Add($"UnloadResource_ForReal: {character.getLoadedResource().mResourceType.GetType().Name}");
+            Console.WriteLine($"{Find(value)}, {value}, {syncWithOthers}");
+            gameClient.debug_eventList.Add($"UnloadResource_ForReal: {value.mResourceType.GetType().Name}");
 #endif
             if(syncWithOthers)
             {
                 ResourceData data = new ResourceData();
-                data.SelectableId = character.getId();
+                data.CharacterId = character.getId();
                 data.State = state;
-                gameClient.SendPacket(new Packet(PacketType.UpdateResource, new UpdateResourceDataPackage(Find(character.getLoadedResource()), ResourceAction.Unload, data)));
+                gameClient.SendPacket(new Packet(PacketType.UpdateResource, new UpdateResourceDataPackage(Find(value), ResourceAction.Unload, data)));
             }
 
             character.MP_unloadResource(state);
@@ -238,6 +279,61 @@ namespace PlanetbaseMultiplayer.Client
             }
         }
 
+        private void StoreResource_ForReal(Guid key, Resource value, Character character, Module module, bool syncWithOthers)
+        {
+            if (value == null) return;
+#if DEBUG
+            Console.WriteLine($"{key}, {value}, {syncWithOthers}");
+            gameClient.debug_eventList.Add($"StoreResource_ForReal: {value.mResourceType.GetType()}");
+#endif
+            if(syncWithOthers)
+            {
+                ResourceData data = new ResourceData();
+                data.SelectableId = module.getId();
+                data.CharacterId = character.getId();
+                gameClient.SendPacket(new Packet(PacketType.UpdateResource, new UpdateResourceDataPackage(key, ResourceAction.Store, data)));
+            }
+
+            character.MP_storeResource(module);
+        }
+
+        private void ExtractResource_ForReal(Guid key, Resource value, bool syncWithOthers)
+        {
+            if (value == null) return;
+#if DEBUG
+            Console.WriteLine($"{key}, {value}, {syncWithOthers}");
+            gameClient.debug_eventList.Add($"ExtractResource_ForReal: {value.mResourceType.GetType()}");
+#endif
+            if (syncWithOthers)
+            {
+                gameClient.SendPacket(new Packet(PacketType.UpdateResource, new UpdateResourceDataPackage(key, ResourceAction.Extract, null)));
+            }
+
+            value.getGameObject().name = value.getResourceType().getName();
+            value.getGameObject().SetActive(true);
+            value.mContainer.remove(value);
+            value.mContainer = null;
+        }
+
+        private void EmbedResource_ForReal(Guid key, Resource value, Character character, ConstructionComponent component, Resource.State state, bool syncWithOthers)
+        {
+            if (value == null) return;
+#if DEBUG
+            Console.WriteLine($"{key}, {value}, {syncWithOthers}");
+            gameClient.debug_eventList.Add($"EmbedResource_ForReal: {value.mResourceType.GetType()}");
+#endif
+            if(syncWithOthers)
+            {
+                ResourceData data = new ResourceData();
+                data.CharacterId = character.getId();
+                data.SelectableId = component.getId();
+                data.State = state;
+                gameClient.SendPacket(new Packet(PacketType.UpdateResource, new UpdateResourceDataPackage(key, ResourceAction.Embed, data)));
+            }
+
+            character.MP_embedResource(component, state);
+        }
+
         private void DestroyResource(Resource resource)
         {
             Resource.mResourceDictionary.Remove(resource.mObject);
@@ -266,16 +362,30 @@ namespace PlanetbaseMultiplayer.Client
                             break;
                         case ResourceAction.Load:
                             Console.WriteLine($"Load resource from packet: {updateResourceDataPackage.ResourceId}");
-                            LoadResource_ForReal(updateResourceDataPackage.ResourceId, Find(updateResourceDataPackage.ResourceId), Character.find(updateResourceDataPackage.Data.SelectableId), false);
+                            LoadResource_ForReal(updateResourceDataPackage.ResourceId, Find(updateResourceDataPackage.ResourceId), Character.find(updateResourceDataPackage.Data.CharacterId), false);
                             break;
                         case ResourceAction.Unload:
                             Console.WriteLine($"Unload resource from packet: {updateResourceDataPackage.ResourceId}");
-                            UnloadResource_ForReal(Character.find(updateResourceDataPackage.Data.SelectableId), updateResourceDataPackage.Data.State, false);
+                            UnloadResource_ForReal(updateResourceDataPackage.ResourceId, Find(updateResourceDataPackage.ResourceId), Character.find(updateResourceDataPackage.Data.CharacterId), updateResourceDataPackage.Data.State, false);
                             break;
                         case ResourceAction.AddConstructionMaterial:
                             Console.WriteLine($"Add construction material from packet: {updateResourceDataPackage.ResourceId}");
                             AddConstructionMaterial_ForReal(updateResourceDataPackage.ResourceId, Find(updateResourceDataPackage.ResourceId),
                                 (Buildable)MultiplayerUtil.FindSelectableFromId(updateResourceDataPackage.Data.SelectableId), false);
+                            break;
+                        case ResourceAction.Store:
+                            Console.WriteLine($"Store resource from packet: {updateResourceDataPackage.ResourceId}");
+                            StoreResource_ForReal(updateResourceDataPackage.ResourceId, Find(updateResourceDataPackage.ResourceId), 
+                                Character.find(updateResourceDataPackage.Data.CharacterId), (Module)Construction.find(updateResourceDataPackage.Data.SelectableId), false);
+                            break;
+                        case ResourceAction.Embed:
+                            Console.WriteLine($"Embed resource from packet: {updateResourceDataPackage.ResourceId}");
+                            EmbedResource_ForReal(updateResourceDataPackage.ResourceId, Find(updateResourceDataPackage.ResourceId), Character.find(updateResourceDataPackage.Data.CharacterId),
+                                ConstructionComponent.find(updateResourceDataPackage.Data.SelectableId), updateResourceDataPackage.Data.State, false);
+                            break;
+                        case ResourceAction.Extract:
+                            Console.WriteLine($"Extract resource from packet: {updateResourceDataPackage.ResourceId}");
+                            ExtractResource_ForReal(updateResourceDataPackage.ResourceId, Find(updateResourceDataPackage.ResourceId), false);
                             break;
                     }
                     break;

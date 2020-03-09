@@ -101,31 +101,6 @@ namespace PlanetbaseMultiplayer.Client
             client.Recycle(msg);
         }
 
-        public void OnExtractResource(int resourceId)
-        {
-            SendPacket(new Packet(PacketType.ExtractResource, new ExtractResourceDataPackage(resourceId)));
-        }
-
-        public void OnCharacterStoreResource(int characterId, int moduleId)
-        {
-            SendPacket(new Packet(PacketType.CharacterStoreResource, new CharacterStoreResourceDataPackage(characterId, moduleId)));
-        }
-
-        public void OnCharacterEmbedResource(int characterId, int componentId, Resource.State resourceState)
-        {
-            SendPacket(new Packet(PacketType.CharacterEmbedResource, new CharacterEmbedResourceDataPackage(characterId, componentId, resourceState)));
-        }
-
-        public void OnCharacterDestroyResource(int characterId)
-        {
-            SendPacket(new Packet(PacketType.CharacterDestroyResource, new CharacterDestroyResourceDataPackage(characterId)));
-        }
-
-        public void OnAddConstructionMaterial(int buildableId, int resourceId)
-        {
-            SendPacket(new Packet(PacketType.AddConstructionMaterial, new AddConstructionMaterialDataPackage(buildableId, resourceId)));
-        }
-
         public void OnBuildableBuilt(int buildableId)
         {
             SendPacket(new Packet(PacketType.BuildableBuilt, new BuildableBuiltDataPackage(buildableId)));
@@ -214,42 +189,6 @@ namespace PlanetbaseMultiplayer.Client
                 CharacterStartWalkingDataPackage pkg = packet.Data as CharacterStartWalkingDataPackage;
                 MultiplayerMethods.CharacterStartWalking(pkg);
             }
-            if (packet.Type == PacketType.CharacterLoadResource)
-            {
-                CharacterLoadResourceDataPackage pkg = packet.Data as CharacterLoadResourceDataPackage;
-                MultiplayerMethods.CharacterLoadResource(pkg);
-            }
-            if (packet.Type == PacketType.CharacterUnloadResource)
-            {
-                CharacterUnloadResourceDataPackage pkg = packet.Data as CharacterUnloadResourceDataPackage;
-                MultiplayerMethods.CharacterUnloadResource(pkg);
-            }
-
-            if (packet.Type == PacketType.AddConstructionMaterial)
-            {
-                AddConstructionMaterialDataPackage pkg = packet.Data as AddConstructionMaterialDataPackage;
-                MultiplayerMethods.AddConstructionMaterial(pkg);
-            }
-            if (packet.Type == PacketType.CharacterStoreResource)
-            {
-                CharacterStoreResourceDataPackage pkg = packet.Data as CharacterStoreResourceDataPackage;
-                MultiplayerMethods.CharacterStoreResource(pkg);
-            }
-            if (packet.Type == PacketType.CharacterEmbedResource)
-            {
-                CharacterEmbedResourceDataPackage pkg = packet.Data as CharacterEmbedResourceDataPackage;
-                MultiplayerMethods.CharacterEmbedResource(pkg);
-            }
-            if (packet.Type == PacketType.CharacterDestroyResource)
-            {
-                CharacterDestroyResourceDataPackage pkg = packet.Data as CharacterDestroyResourceDataPackage;
-                MultiplayerMethods.CharacterDestroyResource(pkg);
-            }
-            if (packet.Type == PacketType.ExtractResource)
-            {
-                ExtractResourceDataPackage pkg = packet.Data as ExtractResourceDataPackage;
-                MultiplayerMethods.ExtractResource(pkg);
-            }
             if (packet.Type == PacketType.BuildableBuilt)
             {
                 BuildableBuiltDataPackage pkg = packet.Data as BuildableBuiltDataPackage;
@@ -327,16 +266,6 @@ namespace PlanetbaseMultiplayer.Client
         {
             SendPacket(new Packet(PacketType.PlaceComponent, new PlaceComponentDataPackage(parentConstruction.mId, (Quaternion_Serializable)componentRotation,
                 (Vector3_Serializable)componentPosition, componentType)));
-        }
-
-        public void OnCharacterLoadResource(Character character, Resource resource)
-        {
-            SendPacket(new Packet(PacketType.CharacterLoadResource, new CharacterLoadResourceDataPackage(character.getId(), resource.getId())));
-        }
-
-        public void OnCharacterUnloadResource(Character character, Resource.State resourceState)
-        {
-            SendPacket(new Packet(PacketType.CharacterUnloadResource, new CharacterUnloadResourceDataPackage(character.getId(), resourceState)));
         }
 
         public void OnSandstormTrigger(Sandstorm sandstorm)

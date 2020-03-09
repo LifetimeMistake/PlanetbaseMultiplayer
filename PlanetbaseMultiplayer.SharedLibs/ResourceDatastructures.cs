@@ -14,6 +14,7 @@ namespace PlanetbaseMultiplayer.SharedLibs
         public Quaternion_Serializable Rotation;
         public Location Location;
         public int SelectableId;
+        public int CharacterId;
         public Resource.State State;
         public float Durability;
         public float Condition;
@@ -23,6 +24,9 @@ namespace PlanetbaseMultiplayer.SharedLibs
         Destroy,
         Load,
         Unload,
-        AddConstructionMaterial
+        AddConstructionMaterial,
+        Store,
+        Embed,
+        Extract
     }
 }

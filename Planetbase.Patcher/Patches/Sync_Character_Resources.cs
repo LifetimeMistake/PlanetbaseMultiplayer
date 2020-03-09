@@ -64,7 +64,6 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             return false;
         }
     }
-    /*
     [HarmonyPatch(typeof(Character), "storeResource", new[] { typeof(Module) })]
     class Sync_Character_StoreResource
     {
@@ -72,7 +71,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
         {
             if (!Globals.IsInMultiplayerMode) return true;
             if (!Globals.LocalPlayer.IsSimulationOwner) return false;
-            Globals.LocalClient.OnCharacterStoreResource(__instance.getId(), module.getId());
+            Globals.ResourceManager.StoreResource(__instance, module);
             return false;
         }
     }
@@ -83,7 +82,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
         {
             if (!Globals.IsInMultiplayerMode) return true;
             if (!Globals.LocalPlayer.IsSimulationOwner) return false;
-            Globals.LocalClient.OnCharacterEmbedResource(__instance.getId(), component.getId(), resourceState);
+            Globals.ResourceManager.EmbedResource(__instance, component, resourceState);
             return false;
         }
     }
@@ -94,9 +93,8 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
         {
             if (!Globals.IsInMultiplayerMode) return true;
             if (!Globals.LocalPlayer.IsSimulationOwner) return false;
-            Globals.LocalClient.OnExtractResource(__instance.getId());
+            Globals.ResourceManager.ExtractResource(__instance);
             return false;
         }
     }
-    */
 }
