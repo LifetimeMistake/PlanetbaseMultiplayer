@@ -184,7 +184,6 @@ namespace PlanetbaseMultiplayer.Client
 
         private Resource ResourceFromXml(AddResourceDataPackage pkg)
         {
-            File.WriteAllText($"{Guid.NewGuid().ToString()}.txt", pkg.XmlData);
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(pkg.XmlData);
             Resource resource = Resource.create(doc["root"].FirstChild);
@@ -310,10 +309,10 @@ namespace PlanetbaseMultiplayer.Client
                 gameClient.SendPacket(new Packet(PacketType.UpdateResource, new UpdateResourceDataPackage(key, ResourceAction.Extract, null)));
             }
 
-            value.getGameObject().name = value.getResourceType().getName();
-            value.getGameObject().SetActive(true);
-            value.mContainer.remove(value);
-            value.mContainer = null;
+            try { value.getGameObject().name = value.getResourceType().getName(); } catch(Exception) { }
+            try { value.getGameObject().SetActive(true); } catch(Exception) { }
+            try { value.mContainer.remove(value);  } catch (Exception) { }
+            try { value.mContainer = null;  } catch (Exception) { }
         }
 
         private void EmbedResource_ForReal(Guid key, Resource value, Character character, ConstructionComponent component, Resource.State state, bool syncWithOthers)
