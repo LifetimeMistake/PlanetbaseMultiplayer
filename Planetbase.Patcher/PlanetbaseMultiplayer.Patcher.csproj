@@ -68,7 +68,7 @@
     <Compile Include="Patches\Debug_Patches.cs" />
     <Compile Include="Patches\Disable_Character_AI.cs" />
     <Compile Include="Patches\Fix_Id_Desync_Patch.cs" />
-    <Compile Include="Patches\Fix_Interaction_Crashes.cs" />
+    <Compile Include="Patches\Fix_Crashes.cs" />
     <Compile Include="Patches\Hook_Deserialization_Patch.cs" />
     <Compile Include="Patches\Hook_PlaceBuilding.cs" />
     <Compile Include="Patches\Hook_Serialization_Patch.cs" />

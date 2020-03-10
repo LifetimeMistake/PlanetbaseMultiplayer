@@ -184,6 +184,7 @@ namespace PlanetbaseMultiplayer.Client
 
         private Resource ResourceFromXml(AddResourceDataPackage pkg)
         {
+            File.WriteAllText($"{Guid.NewGuid().ToString()}.txt", pkg.XmlData);
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(pkg.XmlData);
             Resource resource = Resource.create(doc["root"].FirstChild);
