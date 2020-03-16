@@ -27,4 +27,13 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             Globals.ResourceManager.AppendMultiplayerId(__instance, parent.LastChild);
         }
     }
+    [HarmonyPatch(typeof(Buildable), "serialize", new[] { typeof(XmlNode), typeof(string) })]
+    class Hook_Serialization_Patch_Buildable
+    {
+        static void Postfix(Buildable __instance, XmlNode parent)
+        {
+            if (!Globals.IsInMultiplayerMode) return;
+            Globals.ConstructionManager.AppendMultiplayerId(__instance, parent.LastChild);
+        }
+    }
 }

@@ -23,22 +23,34 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 				Globals.LocalPlayer = null;
 				Console.WriteLine("Disconnected.");
 			}
-				
+
 			return true;
 		}
 	}
-    [HarmonyPatch(typeof(GameManager), "fixedUpdate", new[] { typeof(float) })]
-    class Hook_fixedUpdate
-    {
-        static bool Prefix(GameManager __instance)
-        {
-            if (!Globals.IsInMultiplayerMode) return true;
+	[HarmonyPatch(typeof(GameManager), "fixedUpdate", new[] { typeof(float) })]
+	class Hook_fixedUpdate
+	{
+		static bool Prefix(GameManager __instance)
+		{
+			if (!Globals.IsInMultiplayerMode) return true;
 #if DEBUG
 			if (Globals.LocalClient.debug_eventList.Count > 100)
 				while (Globals.LocalClient.debug_eventList.Count > 100)
 					Globals.LocalClient.debug_eventList.RemoveAt(0);
 			Globals.LocalClient.lastTick_PacketCount = Globals.LocalClient.packetQueue.Count;
 #endif
+			if (Globals.LocalPlayer != null)
+				if (Globals.LocalPlayer.ClientState == ClientState.ConnectedReady)
+				{
+					List<int> ids = MultiplayerUtil.GetAllIds();
+					UnityEngine.Debug.Log($"{ids}");
+					if (ids.Count != 0)
+					{
+						ids.Sort();
+						IdGenerator.getInstance().mNextId = ids.Last() + 1;
+					}
+				}
+
 			while (Globals.LocalClient.packetQueue.Count != 0)
 			{
 				if (Globals.LocalClient.packetQueue.Count == 0) return true;
@@ -46,29 +58,29 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 				Globals.LocalClient.ProcessPacket(packet);
 			}
 			return true;
-        }
-    }
+		}
+	}
 
-    [HarmonyPatch(typeof(Util), "captureScreenshot", new[] { typeof(int) })]
-    class override_captureScreenshot
-    {
-        static bool Prefix(ref byte[] __result)
-        {
-            if (Globals.IsInMultiplayerMode)
-            {
-                __result = new byte[0];
-                return false;
-            }
-            else
-                return true;
-        }
-    }
+	[HarmonyPatch(typeof(Util), "captureScreenshot", new[] { typeof(int) })]
+	class override_captureScreenshot
+	{
+		static bool Prefix(ref byte[] __result)
+		{
+			if (Globals.IsInMultiplayerMode)
+			{
+				__result = new byte[0];
+				return false;
+			}
+			else
+				return true;
+		}
+	}
 
-    [HarmonyPatch(typeof(GameStateTitle), "onGui")]
-    class add_MultiplayerButton // will rewrite this later to use the harmony transpiler instead
-    {
-        static bool Prefix(GameStateTitle __instance)
-        {
+	[HarmonyPatch(typeof(GameStateTitle), "onGui")]
+	class add_MultiplayerButton // will rewrite this later to use the harmony transpiler instead
+	{
+		static bool Prefix(GameStateTitle __instance)
+		{
 			if (Input.GetKey(KeyCode.Space))
 			{
 				return false;
@@ -176,6 +188,6 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 			}
 			rect.x += num8 + num9;
 			return false;
-        }
-    }
+		}
+	}
 }

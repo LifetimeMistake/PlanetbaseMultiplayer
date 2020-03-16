@@ -29,6 +29,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
         {
             if (!Globals.IsInMultiplayerMode) return true;
             int num = Serialization.deserializeInt(node);
+            UnityEngine.Debug.Log($"deserialize id: {num}");
             if (Serialization.mIds != null) // Skip check if the hashset is null
             {
                 if (Serialization.mIds.Contains(num))

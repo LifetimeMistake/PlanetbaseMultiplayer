@@ -6,15 +6,15 @@ using System.Text;
 namespace PlanetbaseMultiplayer.SharedLibs.DataPackages
 {
     [Serializable]
-    public class BuildableSetEnabledDataPackage : IDataPackage
+    public class AddBuildableDataPackage : IDataPackage
     {
-        public int BuildableId;
-        public bool Enabled;
+        public Guid BuildableId;
+        public string XmlData;
 
-        public BuildableSetEnabledDataPackage(int buildableId, bool enabled)
+        public AddBuildableDataPackage(Guid buildableId, string xmlData)
         {
             BuildableId = buildableId;
-            Enabled = enabled;
+            XmlData = xmlData;
         }
     }
 }

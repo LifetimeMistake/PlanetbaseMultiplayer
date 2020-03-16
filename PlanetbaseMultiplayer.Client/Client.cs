@@ -156,21 +156,6 @@ namespace PlanetbaseMultiplayer.Client
                 string XmlData = SerializeGameInMemory.saveGame_toMemory(GameManager.getInstance().getGameState() as GameStateGame);
                 SendPacket(new Packet(PacketType.LoadXmlSaveData, new SaveDataPackage(XmlData, IdGenerator.getInstance().mNextId, IdGenerator.getInstance().mNextBotId)));
             }
-            if(packet.Type == PacketType.PlaceModule)
-            {
-                PlaceModuleDataPackage pkg = packet.Data as PlaceModuleDataPackage;
-                MultiplayerMethods.PlaceModule(pkg);
-            }
-            if(packet.Type == PacketType.PlaceConnection)
-            {
-                PlaceConnectionDataPackage pkg = packet.Data as PlaceConnectionDataPackage;
-                MultiplayerMethods.PlaceConnection(pkg);
-            }
-            if(packet.Type == PacketType.PlaceComponent)
-            {
-                PlaceComponentDataPackage pkg = packet.Data as PlaceComponentDataPackage;
-                MultiplayerMethods.PlaceComponent(pkg);
-            }
             if(packet.Type == PacketType.IncrementNextId)
             {
                 IdGenerator.getInstance().generate();
@@ -202,15 +187,9 @@ namespace PlanetbaseMultiplayer.Client
             {
                 Globals.ResourceManager.ProcessPacket(packet);
             }
-            if (packet.Type == PacketType.BuildableSetEnabled)
+            if(packet.Type == PacketType.AddBuildable || packet.Type == PacketType.UpdateBuildable)
             {
-                BuildableSetEnabledDataPackage pkg = packet.Data as BuildableSetEnabledDataPackage;
-                MultiplayerMethods.BuildableSetEnabled(pkg);
-            }
-            if (packet.Type == PacketType.ConstructionSetPriority)
-            {
-                ConstructionSetPriorityDataPackage pkg = packet.Data as ConstructionSetPriorityDataPackage;
-                MultiplayerMethods.ConstructionSetPriority(pkg);
+                Globals.ConstructionManager.ProcessPacket(packet);
             }
             if (packet.Type == PacketType.DecideNextSandstorm)
             {
@@ -252,22 +231,6 @@ namespace PlanetbaseMultiplayer.Client
             SendPacket(new Packet(PacketType.SetGameTimeSpeed, new GameTimeSpeedPackage(isPaused, speed)));
         }
 
-        public void OnModulePlaced(Module module)
-        {
-            SendPacket(new Packet(PacketType.PlaceModule, new PlaceModuleDataPackage(module.getPosition(), module.getSizeIndex(), module.getModuleType().GetType().Name)));
-        }
-
-        public void OnConnectionPlaced(Module m1, Module m2)
-        {
-            SendPacket(new Packet(PacketType.PlaceConnection, new PlaceConnectionDataPackage(m1.mId, m2.mId)));
-        }
-
-        public void OnComponentPlaced(Construction parentConstruction, Vector3 componentPosition, Quaternion componentRotation, string componentType)
-        {
-            SendPacket(new Packet(PacketType.PlaceComponent, new PlaceComponentDataPackage(parentConstruction.mId, (Quaternion_Serializable)componentRotation,
-                (Vector3_Serializable)componentPosition, componentType)));
-        }
-
         public void OnSandstormTrigger(Sandstorm sandstorm)
         {
             SendPacket(new Packet(PacketType.TriggerSandstorm, new TriggerSandstormDataPackage(sandstorm.mSandstormTime)));
@@ -296,23 +259,6 @@ namespace PlanetbaseMultiplayer.Client
                 target.mRotation == null ? new Quaternion_Serializable() : (Quaternion_Serializable)target.mRotation, target.mSelectable == null ? -1 : target.mSelectable.getId(), indirectTargets_ids.ToArray(),
                 (Vector3_Serializable)character.getPosition(), (Quaternion_Serializable)character.getRotation());
             SendPacket(new Packet(PacketType.CharacterStartWalking, pkg));
-        }
-
-        public void OnBuildableEnable(Buildable buildable)
-        {
-            SendPacket(new Packet(PacketType.BuildableSetEnabled, new BuildableSetEnabledDataPackage(buildable.getId(), true)));
-        }
-        public void OnBuildableDisable(Buildable buildable)
-        {
-            SendPacket(new Packet(PacketType.BuildableSetEnabled, new BuildableSetEnabledDataPackage(buildable.getId(), false)));
-        }
-        public void OnConstructionPriorityUp(Construction construction)
-        {
-            SendPacket(new Packet(PacketType.ConstructionSetPriority, new ConstructionSetPriorityDataPackage(construction.getId(), true)));
-        }
-        public void OnConstructionPriorityDown(Construction construction)
-        {
-            SendPacket(new Packet(PacketType.ConstructionSetPriority, new ConstructionSetPriorityDataPackage(construction.getId(), false)));
         }
 
         public void OnSelectableRecycled(Selectable selectable)

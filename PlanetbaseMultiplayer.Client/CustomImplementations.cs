@@ -12,41 +12,6 @@ namespace PlanetbaseMultiplayer.Client
 {
     public static class MultiplayerMethods
     {
-        public static void PlaceModule(PlaceModuleDataPackage pkg)
-        {
-            ModuleType mType = TypeList<ModuleType, ModuleTypeList>.find(pkg.ModuleType);
-            if (mType == null) { UnityEngine.Debug.LogError($"Could not find the requested module type: {pkg.ModuleType}"); return; }
-            Module module = Module.create((Vector3)pkg.Position, pkg.SizeIndex, mType);
-            module.setPositionY(Singleton<TerrainGenerator>.getInstance().getFloorHeight());
-            module.setRenderTop((GameManager.getInstance().getGameState() as GameStateGame).mRenderTops);
-            module.onUserPlaced();
-        }
-        public static void PlaceConnection(PlaceConnectionDataPackage pkg)
-        {
-            Module m1 = (Module)Construction.find(pkg.Module1_Id);
-            Module m2 = (Module)Construction.find(pkg.Module2_Id);
-
-            if (m1 == null) { UnityEngine.Debug.LogError("Could not find m1"); return; }
-            if (m2 == null) { UnityEngine.Debug.LogError("Could not find m2"); return; }
-            Module.linkModules(m1, m2, (GameManager.getInstance().getGameState() as GameStateGame).mRenderTops);
-        }
-        public static void PlaceComponent(PlaceComponentDataPackage pkg)
-        {
-            Construction parentModule = Construction.find(pkg.ParentModuleId);
-            ComponentType componentType = TypeList<ComponentType, ComponentTypeList>.find(pkg.ComponentType);
-
-            if (parentModule == null) { UnityEngine.Debug.LogError("parentModule was null"); return; }
-            if (componentType == null)
-            { UnityEngine.Debug.LogError($"Could not find the requested component type: {pkg.ComponentType}"); return; }
-
-            ConstructionComponent component = ConstructionComponent.create(construction: parentModule, componentType: componentType);
-            component.setRotation(((Quaternion)pkg.Rotation));
-            component.setPosition((Vector3)pkg.Position);
-            component.setPositionY(component.getParentConstruction().getFloorPosition().y);
-            parentModule.addComponent(component);
-            component.onUserPlaced();
-        }
-
         public static void RecycleSelectable(RecycleSelectableDataPackage pkg)
         {
             Selectable selectable = MultiplayerUtil.FindSelectableFromId(pkg.SelectableId);
@@ -92,7 +57,6 @@ namespace PlanetbaseMultiplayer.Client
                 buildable.updateBuild(0f);
                 buildable.onBuilt();
             }
-                
         }
 
         public static void DecideNextSandstorm(DecideNextSandstormDataPackage pkg)
@@ -115,24 +79,6 @@ namespace PlanetbaseMultiplayer.Client
             sandstorm.mSandstormInProgress = false;
             Singleton<EnvironmentManager>.getInstance().refreshAmbientSound();
             sandstorm.destroyParticles();
-        }
-        public static void BuildableSetEnabled(BuildableSetEnabledDataPackage pkg)
-        {
-            Selectable buildableBase = MultiplayerUtil.FindSelectableFromId(pkg.BuildableId);
-            if (buildableBase == null) { UnityEngine.Debug.LogError("BuildableSetEnabled: buildableBase was null"); return; }
-            if (!(buildableBase is Buildable)) { UnityEngine.Debug.LogError("BuildableSetEnabled: cannot cast Selectable to Buildable"); return; }
-            Buildable buildable = (Buildable)buildableBase;
-            buildable.setEnabled(pkg.Enabled);
-            if (pkg.Enabled)
-                buildable.playSound(SoundList.getInstance().ConstructionEnable);
-            else
-                buildable.playSound(SoundList.getInstance().ConstructionDisable);
-        }
-        public static void ConstructionSetPriority(ConstructionSetPriorityDataPackage pkg)
-        {
-            Construction construction = Construction.find(pkg.ConstructionId);
-            if (construction == null) { UnityEngine.Debug.LogError("ConstructionSetPriority: construction was null"); return; }
-            construction.setHighPriority(pkg.HighPriority);
         }
     }
 }

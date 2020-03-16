@@ -29,4 +29,26 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             return false;
         }
     }
+    [HarmonyPatch(typeof(Construction), "deserializeModules")]
+    class Hook_Deserialization_Patch_Modules
+    {
+        static bool Prefix(ref bool __result)
+        {
+            if (!Globals.IsInMultiplayerMode) return true;
+            __result = true;
+            Globals.ConstructionManager.DeserializeModules();
+            return false;
+        }
+    }
+    [HarmonyPatch(typeof(Construction), "deserializeConnections")]
+    class Hook_Deserialization_Patch_Connections
+    {
+        static bool Prefix(ref bool __result)
+        {
+            if (!Globals.IsInMultiplayerMode) return true;
+            __result = true;
+            Globals.ConstructionManager.DeserializeConnections();
+            return false;
+        }
+    }
 }

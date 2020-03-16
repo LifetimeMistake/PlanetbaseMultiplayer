@@ -16,7 +16,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             if (!Globals.IsInMultiplayerMode) return true;
             Buildable selectedBuildable = Selection.getSelectedBuildable();
             if (selectedBuildable != null)
-                Globals.LocalClient.OnBuildableEnable(selectedBuildable);
+                Globals.ConstructionManager.SetEnabled(selectedBuildable, true);
             __instance.setActionMenu();
             return false;
         }
@@ -29,7 +29,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             if (!Globals.IsInMultiplayerMode) return true;
             Buildable selectedBuildable = Selection.getSelectedBuildable();
             if (selectedBuildable != null)
-                Globals.LocalClient.OnBuildableDisable(selectedBuildable);
+                Globals.ConstructionManager.SetEnabled(selectedBuildable, false);
             __instance.setActionMenu();
             return false;
         }

@@ -66,6 +66,7 @@
     <Compile Include="CustomImplementations.cs" />
     <Compile Include="GameStateMultiplayer.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="MultiplayerConstructionManager.cs" />
     <Compile Include="MultiplayerInteractionManager.cs" />
     <Compile Include="MultiplayerResourceManager.cs" />
     <Compile Include="Program.cs" />

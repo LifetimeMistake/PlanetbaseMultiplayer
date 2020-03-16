@@ -200,21 +200,6 @@ namespace PlanetbaseMultiplayer.Server
 				TimeManager.SetGameSpeed(pkg.GameSpeed, pkg.Paused);
 				return;
 			}
-			if (packet.Type == PacketType.PlaceModule)
-			{
-				PlaceModuleDataPackage pkg = packet.Data as PlaceModuleDataPackage;
-				Console.WriteLine($"Build module: {pkg.ModuleType}, size {pkg.SizeIndex}");
-			}
-			if (packet.Type == PacketType.PlaceConnection)
-			{
-				PlaceConnectionDataPackage pkg = packet.Data as PlaceConnectionDataPackage;
-				Console.WriteLine($"Build connection: Link1_Id: {pkg.Module1_Id}, Link2_Id: {pkg.Module2_Id}");
-			}
-			if (packet.Type == PacketType.PlaceComponent)
-			{
-				PlaceComponentDataPackage pkg = packet.Data as PlaceComponentDataPackage;
-				Console.WriteLine($"Build component: Parent module Id: {pkg.ParentModuleId}, Position: {pkg.Position.ToString()}, Rotation: {pkg.Rotation.ToString()}, ComponentType: {pkg.ComponentType}");
-			}
 			if (packet.Type == PacketType.IncrementNextId)
 			{
 				SendPacketToAllExcept(sender, packet);
@@ -231,6 +216,11 @@ namespace PlanetbaseMultiplayer.Server
 				return;
 			}
 			if (packet.Type == PacketType.AddResource || packet.Type == PacketType.UpdateResource)
+			{
+				SendPacketToAllExcept(sender, packet);
+				return;
+			}
+			if (packet.Type == PacketType.AddBuildable || packet.Type == PacketType.UpdateBuildable)
 			{
 				SendPacketToAllExcept(sender, packet);
 				return;

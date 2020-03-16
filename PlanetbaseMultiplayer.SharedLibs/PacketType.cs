@@ -13,9 +13,6 @@ namespace PlanetbaseMultiplayer.SharedLibs
         SetGameTimeSpeed = 2,
         SetClientState = 3,
         RequestXmlSaveData = 4,
-        PlaceModule = 5,
-        PlaceComponent = 6,
-        PlaceConnection = 7,
         SetSimOwnerStatus = 8,
         IncrementNextId = 9,
         IncrementNextBotId = 10,
@@ -30,6 +27,8 @@ namespace PlanetbaseMultiplayer.SharedLibs
         EndSandstorm = 19,
         TriggerSandstorm = 20,
         AddResource = 21,
-        UpdateResource = 22
+        UpdateResource = 22,
+        AddBuildable = 23,
+        UpdateBuildable = 24
     }
 }

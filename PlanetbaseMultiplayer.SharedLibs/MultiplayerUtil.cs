@@ -40,5 +40,26 @@ namespace PlanetbaseMultiplayer.SharedLibs
 			if (selectable != null) return selectable;
 			return selectable;
 		}
+
+		public static List<int> GetAllIds()
+		{
+			List<int> ids = new List<int>();
+			if(Construction.mConstructions != null)
+			foreach (Construction construction in Construction.mConstructions)
+				ids.Add(construction.getId());
+			if (ConstructionComponent.mComponents != null)
+				foreach (ConstructionComponent component in ConstructionComponent.mComponents)
+				ids.Add(component.getId());
+			if (Resource.mResources != null)
+				foreach (Resource resource in Resource.mResources)
+				ids.Add(resource.getId());
+			if (Character.mCharacters != null)
+				foreach (Character character in Character.mCharacters)
+				ids.Add(character.getId());
+			if (Ship.mShips != null)
+				foreach (Ship ship in Ship.mShips)
+				ids.Add(ship.getId());
+			return ids;
+		}
     }
 }

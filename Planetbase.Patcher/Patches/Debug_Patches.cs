@@ -22,6 +22,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             RenderPacketCounter();
             RenderMultiplayerInteractions();
             RenderMultiplayerResources();
+            RenderMultiplayerConstructions();
 #endif
         }
         
@@ -55,6 +56,27 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
             style.hover.textColor = Color.white;
             style.active.textColor = Color.white;
             GUI.Label(new Rect(50, Screen.height - 950, 400, 300), sb.ToString(), style);
+        }
+
+        public static void RenderMultiplayerConstructions()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("MultiplayerId | ConstructionType | ConstructionSubtype | IsMultiplayer");
+            foreach (Construction construction in Construction.mConstructions)
+            {
+                string id = Globals.ConstructionManager.Contains(construction) ? Globals.ConstructionManager.Find(construction).ToString() : "Empty";
+                sb.AppendLine($"{id} | {construction.GetType().Name} | {construction.getName()} | {Globals.ConstructionManager.Contains(construction)}");
+            }
+            foreach (ConstructionComponent component in ConstructionComponent.mComponents)
+            {
+                string id = Globals.ConstructionManager.Contains(component) ? Globals.ConstructionManager.Find(component).ToString() : "Empty";
+                sb.AppendLine($"{id} | {component.GetType().Name} | {component.getComponentType().GetType().Name} | {Globals.ConstructionManager.Contains(component)}");
+            }
+            GUIStyle style = new GUIStyle();
+            style.normal.textColor = Color.white;
+            style.hover.textColor = Color.white;
+            style.active.textColor = Color.white;
+            GUI.Label(new Rect(1050, Screen.height - 950, 400, 300), sb.ToString(), style);
         }
 
         public static void RenderIdIndicator()
