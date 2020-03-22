@@ -164,46 +164,49 @@ namespace PlanetbaseMultiplayer.Client
             {
                 IdGenerator.getInstance().generateBot();
             }
-            if (packet.Type == PacketType.RecycleSelectable)
+            if(localPlayer.ClientState == ClientState.ConnectedReady)
             {
-                RecycleSelectableDataPackage pkg = packet.Data as RecycleSelectableDataPackage;
-                MultiplayerMethods.RecycleSelectable(pkg);
-            }
-            if(packet.Type == PacketType.CharacterStartWalking)
-            {
-                CharacterStartWalkingDataPackage pkg = packet.Data as CharacterStartWalkingDataPackage;
-                MultiplayerMethods.CharacterStartWalking(pkg);
-            }
-            if (packet.Type == PacketType.BuildableBuilt)
-            {
-                BuildableBuiltDataPackage pkg = packet.Data as BuildableBuiltDataPackage;
-                MultiplayerMethods.BuildableBuilt(pkg);
-            }
-            if(packet.Type == PacketType.AddInteraction || packet.Type == PacketType.RemoveInteraction)
-            {
-                Globals.InteractionManager.ProcessPacket(packet);
-            }
-            if(packet.Type == PacketType.AddResource || packet.Type == PacketType.UpdateResource)
-            {
-                Globals.ResourceManager.ProcessPacket(packet);
-            }
-            if(packet.Type == PacketType.AddBuildable || packet.Type == PacketType.UpdateBuildable)
-            {
-                Globals.ConstructionManager.ProcessPacket(packet);
-            }
-            if (packet.Type == PacketType.DecideNextSandstorm)
-            {
-                DecideNextSandstormDataPackage pkg = packet.Data as DecideNextSandstormDataPackage;
-                MultiplayerMethods.DecideNextSandstorm(pkg);
-            }
-            if (packet.Type == PacketType.EndSandstorm)
-            {
-                MultiplayerMethods.EndSandstorm();
-            }
-            if (packet.Type == PacketType.TriggerSandstorm)
-            {
-                TriggerSandstormDataPackage pkg = packet.Data as TriggerSandstormDataPackage;
-                MultiplayerMethods.TriggerSandstorm(pkg);
+                if (packet.Type == PacketType.RecycleSelectable)
+                {
+                    RecycleSelectableDataPackage pkg = packet.Data as RecycleSelectableDataPackage;
+                    MultiplayerMethods.RecycleSelectable(pkg);
+                }
+                if (packet.Type == PacketType.CharacterStartWalking)
+                {
+                    CharacterStartWalkingDataPackage pkg = packet.Data as CharacterStartWalkingDataPackage;
+                    MultiplayerMethods.CharacterStartWalking(pkg);
+                }
+                if (packet.Type == PacketType.BuildableBuilt)
+                {
+                    BuildableBuiltDataPackage pkg = packet.Data as BuildableBuiltDataPackage;
+                    MultiplayerMethods.BuildableBuilt(pkg);
+                }
+                if (packet.Type == PacketType.AddInteraction || packet.Type == PacketType.RemoveInteraction)
+                {
+                    Globals.InteractionManager.ProcessPacket(packet);
+                }
+                if (packet.Type == PacketType.AddResource || packet.Type == PacketType.UpdateResource)
+                {
+                    Globals.ResourceManager.ProcessPacket(packet);
+                }
+                if (packet.Type == PacketType.AddBuildable || packet.Type == PacketType.UpdateBuildable)
+                {
+                    Globals.ConstructionManager.ProcessPacket(packet);
+                }
+                if (packet.Type == PacketType.DecideNextSandstorm)
+                {
+                    DecideNextSandstormDataPackage pkg = packet.Data as DecideNextSandstormDataPackage;
+                    MultiplayerMethods.DecideNextSandstorm(pkg);
+                }
+                if (packet.Type == PacketType.EndSandstorm)
+                {
+                    MultiplayerMethods.EndSandstorm();
+                }
+                if (packet.Type == PacketType.TriggerSandstorm)
+                {
+                    TriggerSandstormDataPackage pkg = packet.Data as TriggerSandstormDataPackage;
+                    MultiplayerMethods.TriggerSandstorm(pkg);
+                }
             }
         }
 

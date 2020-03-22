@@ -336,6 +336,9 @@ namespace PlanetbaseMultiplayer.Client
 
         private void DestroyResource(Resource resource)
         {
+            foreach (Character character in Character.mCharacters)
+                if (character.getLoadedResource() == resource)
+                    character.mLoadedResource = null;
             Resource.mResourceDictionary.Remove(resource.mObject);
             Resource.mResources.Remove(resource);
             Resource.mTypeResources[resource.mResourceType].Remove(resource);

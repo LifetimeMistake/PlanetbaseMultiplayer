@@ -43,11 +43,10 @@ namespace PlanetbaseMultiplayer.Patcher.Patches
 				if (Globals.LocalPlayer.ClientState == ClientState.ConnectedReady)
 				{
 					List<int> ids = MultiplayerUtil.GetAllIds();
-					UnityEngine.Debug.Log($"{ids}");
 					if (ids.Count != 0)
 					{
 						ids.Sort();
-						IdGenerator.getInstance().mNextId = ids.Last() + 1;
+						IdGenerator.getInstance().mNextId = ids.Last() + 2;
 					}
 				}
 
