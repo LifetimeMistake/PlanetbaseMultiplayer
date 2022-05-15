@@ -94,7 +94,7 @@ namespace PlanetbaseMultiplayer.Server
             if (gracefulShutdown)
             {
                 // Add graceful shutdown logic
-                if (RequestSave())
+                if (worldStateManager.RequestWorldData())
                 {
                     // Add logic
                 }
@@ -105,22 +105,6 @@ namespace PlanetbaseMultiplayer.Server
             }
 
             server.Shutdown("The server is shutting down");
-        }
-
-        public bool RequestSave()
-        {
-            WorldDataRequestPacket worldDataRequestPacket = new WorldDataRequestPacket();
-            Player? simulationOwner = simulationManager.GetSimulationOwner();
-            if (simulationOwner == null)
-                return false;
-
-            SendPacketToPlayer(worldDataRequestPacket, simulationOwner.Value.Id);
-            return true;
-        }
-
-        public void OnWorldDataReceived()
-        {
-
         }
 
         public void ProcessMessage(object peerObj)
