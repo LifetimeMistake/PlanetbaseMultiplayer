@@ -44,7 +44,7 @@ namespace PlanetbaseMultiplayer.Server.Players
             if (connectedPlayers.Values.Any(p => p.Name == username))
                 throw new UsernameTakenException();
 
-            Player player = new Player(playerId, username, false, permissions, state);
+            Player player = new Player(playerId, username, permissions, state);
             connectedPlayers.Add(playerId, player);
 
             PlayerJoinedPacket playerJoinedPacket = new PlayerJoinedPacket(player);

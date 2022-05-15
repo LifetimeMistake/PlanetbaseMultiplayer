@@ -10,17 +10,31 @@ namespace PlanetbaseMultiplayer.Model.Players
     {
         public Guid Id;
         public string Name;
-        public bool IsSimulationOwner;
         public PlayerPermissions Permissions;
         public PlayerState State;
 
-        public Player(Guid id, string name, bool isSimulationOwner, PlayerPermissions permissions, PlayerState state)
+        public Player(Guid id, string name, PlayerPermissions permissions, PlayerState state)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            IsSimulationOwner = isSimulationOwner;
             Permissions = permissions;
             State = state;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Player))
+                return false;
+
+            return Id == ((Player)obj).Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(Player p1, Player p2) => p1.Id == p2.Id;
+        public static bool operator !=(Player p1, Player p2) => p1.Id != p2.Id;
     }
 }

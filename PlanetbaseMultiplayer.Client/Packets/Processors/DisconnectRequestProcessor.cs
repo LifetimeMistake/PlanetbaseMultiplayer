@@ -19,8 +19,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
             DisconnectRequestPacket disconnectRequestPacket = (DisconnectRequestPacket)packet;
-
-
+            // todo
         }
     }
 }

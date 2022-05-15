@@ -1,4 +1,5 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets.Time;
+using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Time;
 using System;
 using System.Collections.Generic;
@@ -73,10 +74,12 @@ namespace PlanetbaseMultiplayer.Client.Time
 
         private void SendRequest(float speed, bool paused)
         {
+            Player? simulationOwner = client.SimulationManager.GetSimulationOwner();
+            if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
+                return; // Don't send the packet if we aren't the simulation owner
+
             TimeScaleUpdatePacket timeScaleUpdatePacket = new TimeScaleUpdatePacket(speed, paused);
             client.SendPacket(timeScaleUpdatePacket);
         }
-
-
     }
 }

@@ -2,6 +2,7 @@
 using Planetbase;
 using PlanetbaseMultiplayer.Client.GameStates;
 using PlanetbaseMultiplayer.Client.Players;
+using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Collections;
@@ -34,11 +35,12 @@ namespace PlanetbaseMultiplayer.Client
         private ClientProcessorContext processorContext;
 
         private PlayerManager playerManager;
-
+        private SimulationManager simulationManager;
         private Time.TimeManager timeManager;
 
         public Player LocalPlayer { get { return localPlayer; } }
         public PlayerManager PlayerManager { get { return playerManager; } }
+        public SimulationManager SimulationManager { get { return SimulationManager; } }
         public Time.TimeManager TimeManager { get { return timeManager; } }
 
         public Client(GameStateMultiplayer gameStateMultiplayer)
@@ -60,6 +62,7 @@ namespace PlanetbaseMultiplayer.Client
             client.RegisterReceivedCallback(new SendOrPostCallback(MessageReceived));
 
             playerManager = new PlayerManager(this);
+            simulationManager = new SimulationManager(this);
             timeManager = new Time.TimeManager(this);
             Initialize();
         }
@@ -67,6 +70,7 @@ namespace PlanetbaseMultiplayer.Client
         private void Initialize()
         {
             playerManager.Initialize();
+            simulationManager.Initialize();
             timeManager.Initialize();
         }
 
