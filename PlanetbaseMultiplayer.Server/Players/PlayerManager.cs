@@ -23,7 +23,7 @@ namespace PlanetbaseMultiplayer.Server.Players
 
         public PlayerManager(Server server)
         {
-            this.server = server;
+            this.server = server ?? throw new ArgumentNullException(nameof(server));
             connectedPlayers = new Dictionary<Guid, Player>();
         }
 

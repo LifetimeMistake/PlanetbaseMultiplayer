@@ -8,6 +8,7 @@ using PlanetbaseMultiplayer.Model.Collections;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
+using PlanetbaseMultiplayer.Model.Packets.World;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Session;
 using PlanetbaseMultiplayer.Model.Utils;
@@ -205,10 +206,11 @@ namespace PlanetbaseMultiplayer.Client
         {
             this.localPlayer = localPlayer;
             foreach (Player player in players)
-                playerManager.AddPlayer(player);
+                playerManager.OnPlayerAdded(player); // Sync players
 
             Debug.Log("Sending world data request");
-
+            WorldDataRequestPacket worldDataRequestPacket = new WorldDataRequestPacket();
+            SendPacket(worldDataRequestPacket);
         }
 
         public void OnWorldDataReceived(WorldStateData world)

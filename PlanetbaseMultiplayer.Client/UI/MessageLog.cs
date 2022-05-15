@@ -9,10 +9,14 @@ namespace PlanetbaseMultiplayer.Client.UI
 {
     public static class MessageLog
     {
-        public static void Show(string description, Texture2D icon, MessageLogFlags flags)
+        public static bool Show(string description, Texture2D icon, MessageLogFlags flags)
         {
+            if (!(GameManager.getInstance().getGameState() is GameStateGame))
+                return false;
+
             Message message = new Message(description, icon, (int)flags);
             Planetbase.MessageLog.getInstance().addMessage(message);
+            return true;
         }
     }
 }

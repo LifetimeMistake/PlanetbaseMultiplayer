@@ -14,9 +14,9 @@ namespace PlanetbaseMultiplayer.Client.Players
         private Dictionary<Guid, Player> connectedPlayers;
 
         public bool IsInitialized { get; private set; }
-        public event EventHandler<PlayerEventArgs> PlayerAdded;
-        public event EventHandler<PlayerEventArgs> PlayerUpdated;
-        public event EventHandler<PlayerEventArgs> PlayerRemoved;
+        //public event EventHandler<PlayerEventArgs> PlayerAdded;
+        //public event EventHandler<PlayerEventArgs> PlayerUpdated;
+        //public event EventHandler<PlayerEventArgs> PlayerRemoved;
 
         public PlayerManager(Client client)
         {
@@ -30,29 +30,29 @@ namespace PlanetbaseMultiplayer.Client.Players
             return true;
         }
 
-        public void AddPlayer(Player player)
+        public void OnPlayerAdded(Player player)
         {
             connectedPlayers.Add(player.Id, player);
-            PlayerEventArgs playerEventArgs = new PlayerEventArgs(player.Id);
-            PlayerAdded?.Invoke(this, playerEventArgs);
+            //PlayerEventArgs playerEventArgs = new PlayerEventArgs(player.Id);
+            //PlayerAdded?.Invoke(this, playerEventArgs);
         }
 
-        public bool RemovePlayer(Guid playerId)
+        public bool OnPlayerRemoved(Guid playerId)
         {
-            PlayerEventArgs playerEventArgs = new PlayerEventArgs(playerId);
-            PlayerRemoved?.Invoke(this, playerEventArgs);
+            //PlayerEventArgs playerEventArgs = new PlayerEventArgs(playerId);
+            //PlayerRemoved?.Invoke(this, playerEventArgs);
 
             return connectedPlayers.Remove(playerId);
         }
 
-        public bool UpdatePlayer(Guid playerId, Player player)
+        public bool OnPlayerUpdated(Guid playerId, Player player)
         {
             bool flag = connectedPlayers.ContainsKey(playerId);
             if (flag)
                 connectedPlayers[playerId] = player;
 
-            PlayerEventArgs playerEventArgs = new PlayerEventArgs(playerId);
-            PlayerUpdated?.Invoke(this, playerEventArgs);
+            //PlayerEventArgs playerEventArgs = new PlayerEventArgs(playerId);
+            //PlayerUpdated?.Invoke(this, playerEventArgs);
 
             return flag;
         }

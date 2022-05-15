@@ -6,11 +6,14 @@ using PlanetbaseMultiplayer.Model.Packets.World;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Session;
 using PlanetbaseMultiplayer.Model.Utils;
+using PlanetbaseMultiplayer.Model.World;
 using PlanetbaseMultiplayer.Server.Players;
 using PlanetbaseMultiplayer.Server.Simulation;
+using PlanetbaseMultiplayer.Server.World;
 using PlanetbaseMultiplayer.Server.Time;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -27,15 +30,26 @@ namespace PlanetbaseMultiplayer.Server
 
         private PlayerManager playerManager;
         private SimulationManager simulationManager;
+        private WorldStateManager worldStateManager;
+        private WorldRequestQueueManager worldRequestQueueManager;
         private TimeManager timeManager;
 
         public PlayerManager PlayerManager { get { return playerManager; } }
         public SimulationManager SimulationManager { get { return simulationManager; } }
+        public WorldStateManager WorldStateManager { get { return worldStateManager; } }
+        public WorldRequestQueueManager WorldRequestQueueManager { get { return worldRequestQueueManager; } }
         public TimeManager TimeManager { get { return timeManager; } }
         public ServerSettings Settings { get { return settings; } }
 
         public Server(ServerSettings settings)
         {
+            // Attempt to load world
+            if (!File.Exists(settings.SavePath))
+                throw new FileNotFoundException("Save file not found.");
+
+            string worldData = File.ReadAllText(settings.SavePath);
+            WorldStateData worldStateData = new WorldStateData(worldData);
+
             this.settings = settings;
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
             processorContext = new ServerProcessorContext(this);
@@ -45,9 +59,10 @@ namespace PlanetbaseMultiplayer.Server
                 router.RegisterPacketProcessor(packetProcessor);
 
             playerConnections = new Dictionary<Guid, long>();
-
             playerManager = new PlayerManager(this);
             simulationManager = new SimulationManager(this);
+            worldStateManager = new WorldStateManager(this, worldStateData);
+            worldRequestQueueManager = new WorldRequestQueueManager(this);
             timeManager = new TimeManager(this);
             Initialize();
         }
@@ -56,6 +71,8 @@ namespace PlanetbaseMultiplayer.Server
         {
             playerManager.Initialize();
             simulationManager.Initialize();
+            worldStateManager.Initialize();
+            worldRequestQueueManager.Initialize();
             timeManager.Initialize();
         }
 
