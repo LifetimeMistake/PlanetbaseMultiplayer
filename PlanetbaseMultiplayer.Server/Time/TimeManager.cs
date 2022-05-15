@@ -32,14 +32,20 @@ namespace PlanetbaseMultiplayer.Server.Time
 
         public void SetSpeed(float speed)
         {
-            timeScale = speed;
-            SendUpdate();
+            SetTimescale(speed, isPaused);
         }
 
         public void SetPausedState(bool paused)
         {
+            SetTimescale(timeScale, paused);
+        }
+
+        public void SetTimescale(float speed, bool paused)
+        {
+            timeScale = speed;
             isPaused = paused;
-            SendUpdate();
+            TimeScaleUpdatePacket timeScaleUpdatedPacket = new TimeScaleUpdatePacket(timeScale, isPaused);
+            server.SendPacketToAll(timeScaleUpdatedPacket);
         }
 
         public void Pause()
@@ -67,10 +73,5 @@ namespace PlanetbaseMultiplayer.Server.Time
             return (float)Math.Sqrt(timeScale);
         }
 
-        private void SendUpdate()
-        {
-            TimeScaleUpdatePacket timeScaleUpdatedPacket = new TimeScaleUpdatePacket(timeScale, isPaused);
-            server.SendPacketToAll(timeScaleUpdatedPacket);
-        }
     }
 }
