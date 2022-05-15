@@ -51,6 +51,7 @@
     <Compile Include="Collections\ConcurrentQueue.cs" />
     <Compile Include="EventArgs\PlayerEventArgs.cs" />
     <Compile Include="EventArgs\SimulationOwnerUpdatedEventArgs.cs" />
+    <Compile Include="Packets\Time\TimeScaleUpdatePacket.cs" />
     <Compile Include="Session\DisconnectReason.cs" />
     <Compile Include="IManager.cs" />
     <Compile Include="Packets\ChannelType.cs" />

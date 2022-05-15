@@ -49,6 +49,7 @@
     <Compile Include="Packets\Processors\AuthenticateRequestProcessor.cs" />
     <Compile Include="Packets\Processors\DisconnectRequestProcessor.cs" />
     <Compile Include="Packets\Processors\SessionDataRequestProcessor.cs" />
+    <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />
     <Compile Include="Players\PlayerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="ServerProcessorContext.cs" />
     <Compile Include="ServerSettings.cs" />
     <Compile Include="Simulation\SimulationManager.cs" />
+    <Compile Include="Time\TimeManager.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

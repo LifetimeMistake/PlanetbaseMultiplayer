@@ -8,6 +8,7 @@ using PlanetbaseMultiplayer.Model.Session;
 using PlanetbaseMultiplayer.Model.Utils;
 using PlanetbaseMultiplayer.Server.Players;
 using PlanetbaseMultiplayer.Server.Simulation;
+using PlanetbaseMultiplayer.Server.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +27,11 @@ namespace PlanetbaseMultiplayer.Server
 
         private PlayerManager playerManager;
         private SimulationManager simulationManager;
+        private TimeManager timeManager;
 
         public PlayerManager PlayerManager { get { return playerManager; } }
         public SimulationManager SimulationManager { get { return simulationManager; } }
+        public TimeManager TimeManager { get { return timeManager; } }
         public ServerSettings Settings { get { return settings; } }
 
         public Server(ServerSettings settings)
@@ -45,6 +48,7 @@ namespace PlanetbaseMultiplayer.Server
 
             playerManager = new PlayerManager(this);
             simulationManager = new SimulationManager(this);
+            timeManager = new TimeManager(this);
             Initialize();
         }
 
@@ -52,6 +56,7 @@ namespace PlanetbaseMultiplayer.Server
         {
             playerManager.Initialize();
             simulationManager.Initialize();
+            timeManager.Initialize();
         }
 
         public void Start()

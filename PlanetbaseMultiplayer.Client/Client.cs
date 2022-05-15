@@ -34,8 +34,11 @@ namespace PlanetbaseMultiplayer.Client
 
         private PlayerManager playerManager;
 
+        private Time.TimeManager timeManager;
+
         public Player LocalPlayer { get { return localPlayer; } }
         public PlayerManager PlayerManager { get { return playerManager; } }
+        public Time.TimeManager TimeManager { get { return timeManager; } }
 
         public Client(GameStateMultiplayer gameStateMultiplayer)
         {
@@ -56,12 +59,14 @@ namespace PlanetbaseMultiplayer.Client
             client.RegisterReceivedCallback(new SendOrPostCallback(MessageReceived));
 
             playerManager = new PlayerManager(this);
+            timeManager = new Time.TimeManager(this);
             Initialize();
         }
 
         private void Initialize()
         {
             playerManager.Initialize();
+            timeManager.Initialize();
         }
 
         public bool Connect(ConnectionOptions connectionOptions)
