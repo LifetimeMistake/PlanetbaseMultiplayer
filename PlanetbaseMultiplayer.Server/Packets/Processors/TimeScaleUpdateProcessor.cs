@@ -17,7 +17,10 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
 
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
         {
-            
+            TimeScaleUpdatePacket timeScaleUpdatePacket = (TimeScaleUpdatePacket)packet;
+            ServerProcessorContext processorContext = (ServerProcessorContext)context;
+            processorContext.Server.TimeManager.SetSpeed(timeScaleUpdatePacket.TimeScale);
+            processorContext.Server.TimeManager.SetPausedState(timeScaleUpdatePacket.IsPaused);
         }
     }
 }
