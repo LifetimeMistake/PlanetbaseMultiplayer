@@ -10,6 +10,7 @@ namespace PlanetbaseMultiplayer.Model.Time
         void SetNormalSpeed();
         void SetSpeed(float speed);
         void SetPausedState(bool paused);
+        void SetTimescale(float speed, bool paused);
         void Pause();
         void Unpause();
         bool IsPaused();

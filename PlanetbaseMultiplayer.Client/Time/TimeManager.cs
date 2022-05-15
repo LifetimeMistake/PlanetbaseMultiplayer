@@ -39,12 +39,22 @@ namespace PlanetbaseMultiplayer.Client.Time
 
         public void SetSpeed(float speed)
         {
-            SendRequest(speed, isPaused);
+            SetTimescale(speed, isPaused);
         }
 
         public void SetPausedState(bool paused)
         {
-            SendRequest(timeScale, paused);
+            SetTimescale(timeScale, paused);
+        }
+
+        public void SetTimescale(float speed, bool paused)
+        {
+            Player? simulationOwner = client.SimulationManager.GetSimulationOwner();
+            if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
+                return; // Don't send the packet if we aren't the simulation owner
+
+            TimeScaleUpdatePacket timeScaleUpdatePacket = new TimeScaleUpdatePacket(speed, paused);
+            client.SendPacket(timeScaleUpdatePacket);
         }
 
         public void Pause()
@@ -72,14 +82,5 @@ namespace PlanetbaseMultiplayer.Client.Time
             return (float)Math.Sqrt(timeScale);
         }
 
-        private void SendRequest(float speed, bool paused)
-        {
-            Player? simulationOwner = client.SimulationManager.GetSimulationOwner();
-            if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
-                return; // Don't send the packet if we aren't the simulation owner
-
-            TimeScaleUpdatePacket timeScaleUpdatePacket = new TimeScaleUpdatePacket(speed, paused);
-            client.SendPacket(timeScaleUpdatePacket);
-        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Time;
+using PlanetbaseMultiplayer.Model.Players;
+using PlanetbaseMultiplayer.Server.Simulation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +21,14 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         {
             TimeScaleUpdatePacket timeScaleUpdatePacket = (TimeScaleUpdatePacket)packet;
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            processorContext.Server.TimeManager.SetSpeed(timeScaleUpdatePacket.TimeScale);
-            processorContext.Server.TimeManager.SetPausedState(timeScaleUpdatePacket.IsPaused);
+            SimulationManager simulationManager = processorContext.Server.SimulationManager;
+            Player? simulationOwner = simulationManager.GetSimulationOwner();
+            if (simulationOwner == null || sourcePlayerId != simulationOwner.Value.Id) 
+            {
+                //Deny request if client isn't the simulation owner
+                return;
+            }
+            processorContext.Server.TimeManager.SetTimescale(timeScaleUpdatePacket.TimeScale, timeScaleUpdatePacket.IsPaused);
         }
     }
 }
