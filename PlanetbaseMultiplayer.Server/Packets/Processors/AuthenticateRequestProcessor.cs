@@ -26,6 +26,8 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             PlayerManager playerManager = processorContext.Server.PlayerManager;
 
             AuthenticatePacket authenticateResponsePacket;
+            if (playerManager.PlayerExists(sourcePlayerId))
+                return; // Player already authenticated
 
             // Will fail if the requested username contains disallowed characters/does not meet length requirements/etc.
             if (!playerManager.IsUsernameAllowed(authenticateRequestPacket.Username))

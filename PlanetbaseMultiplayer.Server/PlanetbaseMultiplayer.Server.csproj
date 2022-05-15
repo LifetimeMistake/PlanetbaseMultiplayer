@@ -39,6 +39,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -50,6 +53,7 @@
     <Compile Include="Packets\Processors\DisconnectRequestProcessor.cs" />
     <Compile Include="Packets\Processors\SessionDataRequestProcessor.cs" />
     <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />
+    <Compile Include="Packets\Processors\WorldDataRequestProcessor.cs" />
     <Compile Include="Players\PlayerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,7 +65,9 @@
     <Compile Include="World\WorldStateManager.cs" />
     <Compile Include="Time\TimeManager.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlanetbaseMultiplayer.Model\PlanetbaseMultiplayer.Model.csproj">
       <Project>{C993E29D-57F9-40C2-AEE1-F9623F46076A}</Project>

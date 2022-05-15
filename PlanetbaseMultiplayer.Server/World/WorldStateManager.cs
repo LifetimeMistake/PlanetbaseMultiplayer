@@ -41,6 +41,7 @@ namespace PlanetbaseMultiplayer.Server.World
             if (dataRequestInProgress)
                 return true;
 
+            dataRequestInProgress = true;
             WorldDataRequestPacket worldDataRequestPacket = new WorldDataRequestPacket();
             server.SendPacketToPlayer(worldDataRequestPacket, player.Value.Id);
             return true;

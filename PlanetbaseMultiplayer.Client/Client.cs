@@ -5,7 +5,6 @@ using PlanetbaseMultiplayer.Client.Players;
 using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model;
-using PlanetbaseMultiplayer.Model.Collections;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
@@ -15,6 +14,7 @@ using PlanetbaseMultiplayer.Model.Session;
 using PlanetbaseMultiplayer.Model.Utils;
 using PlanetbaseMultiplayer.Model.World;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -226,9 +226,9 @@ namespace PlanetbaseMultiplayer.Client
         // This has to be done to avoid race condition crashes
         public void ProcessPackets()
         {
-            while(packetQueue.Count > 0)
+            Packet packet;
+            while(packetQueue.TryDequeue(out packet))
             {
-                Packet packet = packetQueue.Dequeue();
                 if(!router.ProcessPacket(Guid.Empty, packet))
                 {
                     Debug.Log("Unhandled packet received: " + packet.GetType().FullName);

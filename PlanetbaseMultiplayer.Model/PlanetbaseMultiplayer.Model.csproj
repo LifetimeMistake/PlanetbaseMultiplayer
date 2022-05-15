@@ -48,7 +48,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\ConcurrentQueue.cs" />
     <Compile Include="EventArgs\PlayerEventArgs.cs" />
     <Compile Include="EventArgs\SimulationOwnerUpdatedEventArgs.cs" />
     <Compile Include="Packets\Session\ClientReadyPacket.cs" />
