@@ -1,5 +1,6 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
+using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Server.Players;
 using PlanetbaseMultiplayer.Server.Time;
@@ -14,7 +15,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
     {
         public override Type GetProcessedPacketType()
         {
-            throw new NotImplementedException();
+            return typeof(ClientReadyPacket);
         }
 
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
