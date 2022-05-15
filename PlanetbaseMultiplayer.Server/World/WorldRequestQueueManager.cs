@@ -26,6 +26,7 @@ namespace PlanetbaseMultiplayer.Server.World
         {
             server.WorldStateManager.WorldDataUpdated += OnWorldDataUpdated;
             server.WorldStateManager.WorldDataRequestFailed += OnWorldDataRequestFailed;
+            server.PlayerManager.PlayerRemoved += OnPlayerRemoved;
             IsInitialized = true;
             return true;
         }
@@ -66,6 +67,11 @@ namespace PlanetbaseMultiplayer.Server.World
             }
 
             playerQueue.Clear();
+        }
+
+        private void OnPlayerRemoved(object sender, EventArgs.PlayerEventArgs e)
+        {
+            playerQueue.TryRemove(e.PlayerId, out _);
         }
     }
 }
