@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="EventArgs\PlayerEventArgs.cs" />
     <Compile Include="EventArgs\SimulationOwnerUpdatedEventArgs.cs" />
+    <Compile Include="Packets\Session\ClientLoadingStartedPacket.cs" />
     <Compile Include="Packets\Session\ClientReadyPacket.cs" />
     <Compile Include="Packets\Time\TimeScaleUpdatePacket.cs" />
     <Compile Include="Session\DisconnectReason.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="Weather\DisasterType.cs" />
     <Compile Include="Weather\IDisasterManager.cs" />
     <Compile Include="Weather\IEnvironmentManager.cs" />
-    <Compile Include="World\IWorldSaveManager.cs" />
+    <Compile Include="World\IWorldStateManager.cs" />
     <Compile Include="World\WorldStateData.cs" />
     <Compile Include="Utils\XmlSerializerUtils.cs" />
   </ItemGroup>

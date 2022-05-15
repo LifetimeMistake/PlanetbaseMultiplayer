@@ -5,6 +5,7 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Model.World
 {
+    [Serializable]
     public class WorldStateData
     {
         public string XmlData;

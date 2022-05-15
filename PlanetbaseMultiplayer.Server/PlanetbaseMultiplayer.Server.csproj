@@ -50,6 +50,8 @@
   <ItemGroup>
     <Compile Include="Exceptions\UsernameTakenException.cs" />
     <Compile Include="Packets\Processors\AuthenticateRequestProcessor.cs" />
+    <Compile Include="Packets\Processors\ClientLoadingStartedProcessor.cs" />
+    <Compile Include="Packets\Processors\ClientReadyProcessor.cs" />
     <Compile Include="Packets\Processors\DisconnectRequestProcessor.cs" />
     <Compile Include="Packets\Processors\SessionDataRequestProcessor.cs" />
     <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />

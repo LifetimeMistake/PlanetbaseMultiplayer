@@ -5,6 +5,7 @@ using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.World;
 using PlanetbaseMultiplayer.Server.Players;
 using PlanetbaseMultiplayer.Server.Simulation;
+using PlanetbaseMultiplayer.Server.Time;
 using PlanetbaseMultiplayer.Server.World;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
             PlayerManager playerManager = processorContext.Server.PlayerManager;
             SimulationManager simulationManager = processorContext.Server.SimulationManager;
+            TimeManager timeManager = processorContext.Server.TimeManager;
             WorldRequestQueueManager worldRequestQueueManager = processorContext.Server.WorldRequestQueueManager;
             WorldStateManager worldStateManager = processorContext.Server.WorldStateManager;
 
@@ -41,6 +43,9 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
                 // Invalid state
                 return;
             }
+
+            // We pause the game and lock time management until everyone has finished loading
+            timeManager.PauseAndLockTime();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner != null && simulationOwner.Value != sourcePlayer && worldStateManager.RequestWorldData())

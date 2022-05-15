@@ -1,5 +1,7 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets.Time;
+using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Time;
+using PlanetbaseMultiplayer.Server.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ namespace PlanetbaseMultiplayer.Server.Time
         public bool IsInitialized { get; private set; }
         private float timeScale;
         private bool isPaused;
+        private bool timeLocked;
         
         public TimeManager(Server server)
         {
@@ -48,6 +51,24 @@ namespace PlanetbaseMultiplayer.Server.Time
             server.SendPacketToAll(timeScaleUpdatedPacket);
         }
 
+        public void PauseAndLockTime()
+        {
+            if (timeLocked)
+                return;
+
+            SetPausedState(true);
+            timeLocked = true;
+        }
+
+        public void UnlockTime()
+        {
+            if (!timeLocked)
+                return;
+
+            SetPausedState(isPaused);
+            timeLocked = false;
+        }
+
         public void Pause()
         {
             SetPausedState(true);
@@ -63,6 +84,11 @@ namespace PlanetbaseMultiplayer.Server.Time
             return isPaused;
         }
 
+        public bool IsTimeLocked()
+        {
+            return timeLocked;
+        }
+
         public float GetCurrentSpeed()
         {
             return timeScale;
@@ -73,5 +99,9 @@ namespace PlanetbaseMultiplayer.Server.Time
             return (float)Math.Sqrt(timeScale);
         }
 
+        private void OnWorldDataRequestSent(object sender, System.EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

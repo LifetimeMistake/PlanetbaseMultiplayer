@@ -16,6 +16,7 @@ namespace PlanetbaseMultiplayer.Server.World
         private bool dataRequestInProgress;
         public bool IsInitialized { get; private set; }
 
+        public event EventHandler WorldDataRequestSent;
         public event EventHandler WorldDataUpdated;
         public event EventHandler WorldDataRequestFailed;
 
@@ -41,6 +42,7 @@ namespace PlanetbaseMultiplayer.Server.World
             if (dataRequestInProgress)
                 return true;
 
+            WorldDataRequestSent?.Invoke(this, new System.EventArgs());
             dataRequestInProgress = true;
             WorldDataRequestPacket worldDataRequestPacket = new WorldDataRequestPacket();
             server.SendPacketToPlayer(worldDataRequestPacket, player.Value.Id);

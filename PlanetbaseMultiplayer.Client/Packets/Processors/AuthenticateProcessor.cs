@@ -1,13 +1,17 @@
 ﻿using Planetbase;
+using PlanetbaseMultiplayer.Client.Players;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
+using PlanetbaseMultiplayer.Model.Packets.World;
+using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client.Packets.Processors
 {
@@ -22,6 +26,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
             AuthenticatePacket authenticatePacket = (AuthenticatePacket)packet;
+            PlayerManager playerManager = processorContext.Client.PlayerManager;
 
             if(!authenticatePacket.AuthenticationSuccessful)
             {
@@ -42,7 +47,13 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
                 return;
             }
 
-            processorContext.Client.OnAuthenticationSuccessful(authenticatePacket.LocalPlayer.Value, authenticatePacket.Players);
+            processorContext.Client.LocalPlayer = authenticatePacket.LocalPlayer.Value;
+            foreach (Player player in authenticatePacket.Players)
+                playerManager.OnPlayerAdded(player); // Sync players
+
+            Debug.Log("Sending world data request");
+            WorldDataRequestPacket worldDataRequestPacket = new WorldDataRequestPacket();
+            processorContext.Client.SendPacket(worldDataRequestPacket);
         }
     }
 }

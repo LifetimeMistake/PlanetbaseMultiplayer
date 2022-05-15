@@ -4,6 +4,7 @@ using PlanetbaseMultiplayer.Client.GameStates;
 using PlanetbaseMultiplayer.Client.Players;
 using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.UI;
+using PlanetbaseMultiplayer.Client.World;
 using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
@@ -37,11 +38,13 @@ namespace PlanetbaseMultiplayer.Client
         private PlayerManager playerManager;
         private SimulationManager simulationManager;
         private Time.TimeManager timeManager;
+        private WorldStateManager worldStateManager;
 
-        public Player LocalPlayer { get { return localPlayer; } }
+        public Player LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
         public PlayerManager PlayerManager { get { return playerManager; } }
         public SimulationManager SimulationManager { get { return SimulationManager; } }
         public Time.TimeManager TimeManager { get { return timeManager; } }
+        public WorldStateManager WorldStateManager { get { return worldStateManager; } }
 
         public Client(GameStateMultiplayer gameStateMultiplayer)
         {
@@ -64,6 +67,7 @@ namespace PlanetbaseMultiplayer.Client
             playerManager = new PlayerManager(this);
             simulationManager = new SimulationManager(this);
             timeManager = new Time.TimeManager(this);
+            worldStateManager = new WorldStateManager(this);
             Initialize();
         }
 
@@ -72,6 +76,7 @@ namespace PlanetbaseMultiplayer.Client
             playerManager.Initialize();
             simulationManager.Initialize();
             timeManager.Initialize();
+            worldStateManager.Initialize();
         }
 
         public bool Connect(ConnectionOptions connectionOptions)
@@ -204,22 +209,6 @@ namespace PlanetbaseMultiplayer.Client
 
             Debug.Log("Sending authenticate request");
             SendPacket(authenticateRequestPacket);
-        }
-
-        public void OnAuthenticationSuccessful(Player localPlayer, Player[] players)
-        {
-            this.localPlayer = localPlayer;
-            foreach (Player player in players)
-                playerManager.OnPlayerAdded(player); // Sync players
-
-            Debug.Log("Sending world data request");
-            WorldDataRequestPacket worldDataRequestPacket = new WorldDataRequestPacket();
-            SendPacket(worldDataRequestPacket);
-        }
-
-        public void OnWorldDataReceived(WorldStateData world)
-        {
-
         }
 
         // Called by a patch in FixedUpdate, processes all packets currently in the queue

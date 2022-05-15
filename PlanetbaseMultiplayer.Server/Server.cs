@@ -152,7 +152,11 @@ namespace PlanetbaseMultiplayer.Server
                 // Player has not sent a DisconnectRequestPacket before closing the connection
                 // The reason of their disconnect is unknown, presumably lost connection
                 if (playerManager.PlayerExists(playerId))
+                {
                     playerManager.DestroyPlayer(playerId, DisconnectReason.ConnectionLost);
+                    if (playerManager.GetPlayers().Count(p => p.State == PlayerState.ConnectedLoadingData) == 0)
+                        timeManager.UnlockTime();
+                }
 
                 playerConnections.Remove(playerId);
                 Console.WriteLine($"Player connection {id} closed ungracefully");

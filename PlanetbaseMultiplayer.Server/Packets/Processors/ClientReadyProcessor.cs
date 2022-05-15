@@ -1,8 +1,6 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
-using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Players;
-using PlanetbaseMultiplayer.Model.Session;
 using PlanetbaseMultiplayer.Server.Players;
 using PlanetbaseMultiplayer.Server.Time;
 using System;
@@ -12,11 +10,11 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Server.Packets.Processors
 {
-    public class DisconnectRequestProcessor : PacketProcessor
+    public class ClientReadyProcessor : PacketProcessor
     {
         public override Type GetProcessedPacketType()
         {
-            return typeof(DisconnectRequestProcessor);
+            throw new NotImplementedException();
         }
 
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
@@ -25,12 +23,12 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             PlayerManager playerManager = processorContext.Server.PlayerManager;
             TimeManager timeManager = processorContext.Server.TimeManager;
 
-            Console.WriteLine($"Player {sourcePlayerId} requested a graceful disconnect");
-            playerManager.DestroyPlayer(sourcePlayerId, DisconnectReason.DisconnectRequest);
+            if (!playerManager.PlayerExists(sourcePlayerId))
+                return; // what
 
-            // We reply with another disconnect request to let the client know that we're ready for a graceful disconnect
-            DisconnectRequestPacket disconnectReply = new DisconnectRequestPacket(DisconnectReason.DisconnectRequestResponse);
-            processorContext.Server.SendPacketToPlayer(disconnectReply, sourcePlayerId);
+            Player player = playerManager.GetPlayer(sourcePlayerId);
+            player.State = PlayerState.ConnectedReady;
+            playerManager.UpdatePlayer(player);
 
             if (playerManager.GetPlayers().Count(p => p.State == PlayerState.ConnectedLoadingData) == 0)
                 timeManager.UnlockTime();
