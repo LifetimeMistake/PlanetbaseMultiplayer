@@ -21,17 +21,15 @@ namespace PlanetbaseMultiplayer.Server.Simulation
 
         public SimulationManager(Server server)
         {
-            this.server = server;
+            this.server = server ?? throw new ArgumentNullException(nameof(server));
         }
 
         public bool Initialize()
         {
-            if (server.PlayerManager == null)
-                return false;
-
             server.PlayerManager.PlayerCreated += OnPlayerUpdated;
             server.PlayerManager.PlayerUpdated += OnPlayerUpdated;
             server.PlayerManager.PlayerRemoved += OnPlayerDestroyed;
+            IsInitialized = true;
             return true;
         }
 

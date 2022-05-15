@@ -56,6 +56,8 @@
     <Compile Include="ServerProcessorContext.cs" />
     <Compile Include="ServerSettings.cs" />
     <Compile Include="Simulation\SimulationManager.cs" />
+    <Compile Include="World\WorldRequestQueueManager.cs" />
+    <Compile Include="World\WorldStateManager.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

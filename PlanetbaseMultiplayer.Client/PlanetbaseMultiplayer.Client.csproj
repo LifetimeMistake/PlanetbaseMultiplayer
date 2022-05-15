@@ -58,8 +58,10 @@
     <Compile Include="Packets\Processors\SessionDataProcessor.cs" />
     <Compile Include="Players\PlayerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Simulation\SimulationManager.cs" />
     <Compile Include="UI\MessageLog.cs" />
     <Compile Include="UI\MessageLogFlags.cs" />
+    <Compile Include="UI\MessageToast.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlanetbaseMultiplayer.Model\PlanetbaseMultiplayer.Model.csproj">
@@ -67,5 +69,6 @@
       <Name>PlanetbaseMultiplayer.Model</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
