@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client.Packets.Processors
 {
@@ -21,6 +22,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             TimeScaleUpdatePacket timeScaleUpdatedPacket = (TimeScaleUpdatePacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
             processorContext.Client.TimeManager.OnTimeScaleUpdated(timeScaleUpdatedPacket.TimeScale, timeScaleUpdatedPacket.IsPaused);
+            Debug.Log($"Send packet - timescale: {timeScaleUpdatedPacket.TimeScale}, paused: {timeScaleUpdatedPacket.IsPaused}");
         }
     }
 }

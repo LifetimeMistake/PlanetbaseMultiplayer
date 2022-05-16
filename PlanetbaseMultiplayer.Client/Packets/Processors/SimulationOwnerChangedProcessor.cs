@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client.Packets.Processors
 {
@@ -27,6 +28,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
 
             if(simulationOwnerChangedPacket.PlayerId != null)
             {
+                Debug.Log($"Setting new simulation owner to {simulationOwnerChangedPacket.PlayerId.Value}");
                 Player player = playerManager.GetPlayer(simulationOwnerChangedPacket.PlayerId.Value);
                 simulationManager.OnSimulationOwnerUpdated(player);
             }
@@ -34,6 +36,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             {
                 // No simulation owner
                 simulationManager.OnSimulationOwnerUpdated(null);
+                Debug.Log("Setting new simulation owner to none");
             }
         }
     }
