@@ -57,6 +57,7 @@
     <Compile Include="Packets\Processors\SessionDataRequestProcessor.cs" />
     <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />
     <Compile Include="Packets\Processors\UpdateEnvironmentDataProcessor.cs" />
+    <Compile Include="Packets\Processors\WorldDataProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataRequestProcessor.cs" />
     <Compile Include="Players\PlayerManager.cs" />
     <Compile Include="Program.cs" />

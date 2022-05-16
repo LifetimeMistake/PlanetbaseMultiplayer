@@ -29,7 +29,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             else
                 flags = MessageLogFlags.MessageSoundNormal;
 
-            MessageLog.Show("Player is joining game: {playerJoinedPacket.Player.Name}", null, flags);
+            MessageLog.Show($"Player is joining game: {playerJoinedPacket.Player.Name}", null, flags);
         }
     }
 }

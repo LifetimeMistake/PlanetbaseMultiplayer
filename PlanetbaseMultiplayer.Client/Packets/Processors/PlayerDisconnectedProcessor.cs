@@ -23,8 +23,6 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             PlayerDisconnectedPacket playerDisconnectedPacket = (PlayerDisconnectedPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
 
-            processorContext.Client.PlayerManager.OnPlayerRemoved(playerDisconnectedPacket.PlayerId);
-
             if (processorContext.Client.LocalPlayer.HasValue)
             {
                 if (processorContext.Client.LocalPlayer.Value.Id != playerDisconnectedPacket.PlayerId)
@@ -42,6 +40,8 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
                     processorContext.Client.LocalPlayer = null;
                 }
             }
+
+            processorContext.Client.PlayerManager.OnPlayerRemoved(playerDisconnectedPacket.PlayerId);
         }
     }
 }
