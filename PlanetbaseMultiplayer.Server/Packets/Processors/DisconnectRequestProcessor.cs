@@ -16,7 +16,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
     {
         public override Type GetProcessedPacketType()
         {
-            return typeof(DisconnectRequestProcessor);
+            return typeof(DisconnectRequestPacket);
         }
 
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
