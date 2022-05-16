@@ -33,12 +33,14 @@ namespace PlanetbaseMultiplayer.Server.World
 
         public bool EnqueuePlayer(Player player)
         {
+            Console.WriteLine($"Adding player {player.Id} to world state request queue...");
             return playerQueue.TryAdd(player.Id, player);
         }
 
         // Removes the player from the queue without sending data
         public bool DropPlayer(Player player)
         {
+            Console.WriteLine($"Dropping player {player.Id} from world state request queue...");
             return playerQueue.TryRemove(player.Id, out _);
         }
 
@@ -59,6 +61,7 @@ namespace PlanetbaseMultiplayer.Server.World
 
         private void DeliverWorldData()
         {
+            Console.WriteLine("Delivering world data...");
             WorldStateData worldStateData = server.WorldStateManager.GetWorldData();
             WorldDataPacket worldDataPacket = new WorldDataPacket(worldStateData);
             foreach (KeyValuePair<Guid, Player> kvp in playerQueue)

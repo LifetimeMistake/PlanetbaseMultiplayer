@@ -48,6 +48,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             }
 
             processorContext.Client.LocalPlayer = authenticatePacket.LocalPlayer.Value;
+            processorContext.Client.SimulationManager.OnSimulationOwnerUpdated(authenticatePacket.SimulationOwner);
             foreach (Player player in authenticatePacket.Players)
                 playerManager.OnPlayerAdded(player); // Sync players
 

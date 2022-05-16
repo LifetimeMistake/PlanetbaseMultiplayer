@@ -42,6 +42,7 @@ namespace PlanetbaseMultiplayer.Server.World
             if (dataRequestInProgress)
                 return true;
 
+            Console.WriteLine("Requesting world data...");
             WorldDataRequestSent?.Invoke(this, new System.EventArgs());
             dataRequestInProgress = true;
             WorldDataRequestPacket worldDataRequestPacket = new WorldDataRequestPacket();
@@ -79,6 +80,7 @@ namespace PlanetbaseMultiplayer.Server.World
             if (!RequestWorldData())
             {
                 // If there are no simulation owners present, we let event listeners know that the previous request failed.
+                Console.WriteLine("World data request failed");
                 WorldDataRequestFailed?.Invoke(this, new System.EventArgs());
             }
         }

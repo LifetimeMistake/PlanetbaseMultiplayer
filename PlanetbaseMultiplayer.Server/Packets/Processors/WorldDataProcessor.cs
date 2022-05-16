@@ -28,7 +28,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
                 return;
             }
 
-            processorContext.Server.WorldStateManager.UpdateWorldData(worldDataPacket.World);
+            processorContext.Server.WorldStateManager.OnWorldDataReceived(worldDataPacket.World);
         }
     }
 }

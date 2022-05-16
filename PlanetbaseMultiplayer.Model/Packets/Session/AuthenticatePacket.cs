@@ -15,13 +15,15 @@ namespace PlanetbaseMultiplayer.Model.Packets.Session
         public AuthenticationErrorReason? ErrorReason;
         public Player? LocalPlayer;
         public Player[] Players;
+        public Player? SimulationOwner;
 
-        public AuthenticatePacket(bool authenticationSuccessful, AuthenticationErrorReason? errorReason, Player? localPlayer, Player[] players)
+        public AuthenticatePacket(bool authenticationSuccessful, AuthenticationErrorReason? errorReason, Player? localPlayer, Player[] players, Player? simulationOwner)
         {
             AuthenticationSuccessful = authenticationSuccessful;
             ErrorReason = errorReason;
             LocalPlayer = localPlayer;
             Players = players;
+            SimulationOwner = simulationOwner;
         }
     }
 }

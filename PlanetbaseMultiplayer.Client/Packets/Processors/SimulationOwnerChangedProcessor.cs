@@ -1,5 +1,6 @@
 ﻿using PlanetbaseMultiplayer.Client.Players;
 using PlanetbaseMultiplayer.Client.Simulation;
+using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
@@ -31,6 +32,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
                 Debug.Log($"Setting new simulation owner to {simulationOwnerChangedPacket.PlayerId.Value}");
                 Player player = playerManager.GetPlayer(simulationOwnerChangedPacket.PlayerId.Value);
                 simulationManager.OnSimulationOwnerUpdated(player);
+                MessageLog.Show($"New simulation owner: {player.Name}", null, MessageLogFlags.MessageSoundNormal);
             }
             else
             {
