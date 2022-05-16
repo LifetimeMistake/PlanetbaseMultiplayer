@@ -94,7 +94,7 @@ namespace PlanetbaseMultiplayer.Server
             Console.WriteLine($"Server running on port {server.Port}");
         }
 
-        public void Stop(bool gracefulShutdown = true)
+        public void Shutdown(bool gracefulShutdown = true)
         {
             if (gracefulShutdown)
             {

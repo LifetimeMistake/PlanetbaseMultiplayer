@@ -66,6 +66,7 @@
     <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />
     <Compile Include="Packets\Processors\UpdateEnvironmentDataProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataProcessor.cs" />
+    <Compile Include="Packets\Processors\WorldDataRequestProcessor.cs" />
     <Compile Include="Players\PlayerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulation\SimulationManager.cs" />
