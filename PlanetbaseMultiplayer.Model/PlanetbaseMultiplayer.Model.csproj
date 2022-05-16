@@ -39,10 +39,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml">
+      <HintPath>..\References\System.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\References\UnityEngine.dll</HintPath>
     </Reference>
@@ -89,6 +90,7 @@
     <Compile Include="Weather\IDisasterManager.cs" />
     <Compile Include="Weather\IEnvironmentManager.cs" />
     <Compile Include="World\IWorldStateManager.cs" />
+    <Compile Include="World\WorldSerializer.cs" />
     <Compile Include="World\WorldStateData.cs" />
     <Compile Include="Utils\XmlSerializerUtils.cs" />
   </ItemGroup>

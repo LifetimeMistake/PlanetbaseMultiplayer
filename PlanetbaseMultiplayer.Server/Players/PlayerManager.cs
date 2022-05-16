@@ -46,6 +46,7 @@ namespace PlanetbaseMultiplayer.Server.Players
 
             Player player = new Player(playerId, username, permissions, state);
             connectedPlayers.Add(playerId, player);
+            Console.WriteLine($"Player created: {playerId}");
 
             PlayerJoinedPacket playerJoinedPacket = new PlayerJoinedPacket(player);
             server.SendPacketToAllExcept(playerJoinedPacket, playerId);
@@ -63,13 +64,14 @@ namespace PlanetbaseMultiplayer.Server.Players
 
         public bool UpdatePlayer(Guid playerId, Player player)
         {
-            PlayerDataUpdatedPacket playerDataUpdatedPacket = new PlayerDataUpdatedPacket(playerId, player);
-            server.SendPacketToAll(playerDataUpdatedPacket);
-
-
             bool flag = connectedPlayers.ContainsKey(playerId);
             if (flag)
                 connectedPlayers[playerId] = player;
+
+            Console.WriteLine($"Player updated: {playerId}");
+
+            PlayerDataUpdatedPacket playerDataUpdatedPacket = new PlayerDataUpdatedPacket(playerId, player);
+            server.SendPacketToAll(playerDataUpdatedPacket);
 
             PlayerEventArgs playerEventArgs = new PlayerEventArgs(playerId);
             PlayerUpdated?.Invoke(this, playerEventArgs);
@@ -84,13 +86,15 @@ namespace PlanetbaseMultiplayer.Server.Players
 
         public bool DestroyPlayer(Guid playerId, DisconnectReason reason)
         {
+            bool removed = connectedPlayers.Remove(playerId);
+            Console.WriteLine($"Player destroyed: {playerId}");
+
             PlayerDisconnectedPacket playerDisconnectedPacket = new PlayerDisconnectedPacket(playerId, reason);
             server.SendPacketToAll(playerDisconnectedPacket);
 
             PlayerEventArgs playerEventArgs = new PlayerEventArgs(playerId);
             PlayerRemoved?.Invoke(this, playerEventArgs);
-
-            return connectedPlayers.Remove(playerId);
+            return removed;
         }
 
         public Player GetPlayer(Guid playerId)

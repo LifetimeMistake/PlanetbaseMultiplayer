@@ -1,4 +1,5 @@
-﻿using PlanetbaseMultiplayer.Model.Packets.Time;
+﻿
+using PlanetbaseMultiplayer.Model.Packets.Time;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Time;
 using PlanetbaseMultiplayer.Server.Players;
@@ -20,6 +21,8 @@ namespace PlanetbaseMultiplayer.Server.Time
         public TimeManager(Server server)
         {
             this.server = server;
+            timeScale = 1f;
+            isPaused = false;
         }
 
         public bool Initialize()
