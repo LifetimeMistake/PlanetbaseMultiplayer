@@ -1,10 +1,13 @@
-﻿using PlanetbaseMultiplayer.Model.Packets.Time;
+﻿using PlanetbaseMultiplayer.Model;
+using PlanetbaseMultiplayer.Model.Packets.Time;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client.Time
 {
@@ -29,7 +32,25 @@ namespace PlanetbaseMultiplayer.Client.Time
         {
             this.timeScale = timeScale;
             isPaused = paused;
-            //chuja daje
+
+            FieldInfo mPaused;
+            MethodInfo OnTimeScaleChanged;
+
+            Planetbase.TimeManager timeManager = Planetbase.TimeManager.getInstance();
+            if (!Reflection.TryGetPrivateField(timeManager.GetType(), "mPaused", true, out mPaused)) 
+            {
+                Debug.LogError("Failed to find \"mPaused\"");
+                return;
+            }
+
+            if (!Reflection.TryGetPrivateMethod(timeManager.GetType(), "onTimeScaleChanged", true, out OnTimeScaleChanged))
+            {
+                Debug.LogError("Failed to find \"onTimeScaleChanged\"");
+                return;
+            }
+
+            Reflection.SetInstanceFieldValue(timeManager, mPaused, isPaused);
+            Reflection.InvokeInstanceMethod(timeManager, OnTimeScaleChanged, new object[] { });
         }
 
         public void SetNormalSpeed()
