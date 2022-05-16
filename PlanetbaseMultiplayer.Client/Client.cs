@@ -42,7 +42,7 @@ namespace PlanetbaseMultiplayer.Client
 
         public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
         public PlayerManager PlayerManager { get { return playerManager; } }
-        public SimulationManager SimulationManager { get { return SimulationManager; } }
+        public SimulationManager SimulationManager { get { return simulationManager; } }
         public Time.TimeManager TimeManager { get { return timeManager; } }
         public WorldStateManager WorldStateManager { get { return worldStateManager; } }
 
