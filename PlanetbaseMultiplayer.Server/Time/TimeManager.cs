@@ -45,28 +45,32 @@ namespace PlanetbaseMultiplayer.Server.Time
 
         public void SetTimescale(float speed, bool paused)
         {
+            if (timeLocked)
+                return;
+
             timeScale = speed;
             isPaused = paused;
             TimeScaleUpdatePacket timeScaleUpdatedPacket = new TimeScaleUpdatePacket(timeScale, isPaused);
             server.SendPacketToAll(timeScaleUpdatedPacket);
         }
 
-        public void PauseAndLockTime()
+        public void FreezeTime()
         {
             if (timeLocked)
                 return;
 
-            SetPausedState(true);
+            TimeScaleUpdatePacket timeScaleUpdatedPacket = new TimeScaleUpdatePacket(timeScale, true);
+            server.SendPacketToAll(timeScaleUpdatedPacket);
             timeLocked = true;
         }
 
-        public void UnlockTime()
+        public void UnfreezeTime()
         {
             if (!timeLocked)
                 return;
 
-            SetPausedState(isPaused);
             timeLocked = false;
+            SetPausedState(isPaused);
         }
 
         public void Pause()
@@ -97,11 +101,6 @@ namespace PlanetbaseMultiplayer.Server.Time
         public float GetReducedSpeed()
         {
             return (float)Math.Sqrt(timeScale);
-        }
-
-        private void OnWorldDataRequestSent(object sender, System.EventArgs e)
-        {
-            throw new NotImplementedException();
         }
     }
 }
