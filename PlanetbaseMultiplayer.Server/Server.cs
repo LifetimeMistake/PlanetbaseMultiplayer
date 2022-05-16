@@ -155,7 +155,7 @@ namespace PlanetbaseMultiplayer.Server
                 {
                     playerManager.DestroyPlayer(playerId, DisconnectReason.ConnectionLost);
                     if (playerManager.GetPlayers().Count(p => p.State == PlayerState.ConnectedLoadingData) == 0)
-                        timeManager.UnlockTime();
+                        timeManager.UnfreezeTime();
                 }
 
                 playerConnections.Remove(playerId);

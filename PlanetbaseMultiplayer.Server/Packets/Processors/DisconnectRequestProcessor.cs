@@ -33,7 +33,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             processorContext.Server.SendPacketToPlayer(disconnectReply, sourcePlayerId);
 
             if (playerManager.GetPlayers().Count(p => p.State == PlayerState.ConnectedLoadingData) == 0)
-                timeManager.UnlockTime();
+                timeManager.UnfreezeTime();
         }
     }
 }

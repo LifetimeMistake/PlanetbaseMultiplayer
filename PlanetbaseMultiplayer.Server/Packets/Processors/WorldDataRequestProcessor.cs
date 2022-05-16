@@ -45,7 +45,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             }
 
             // We pause the game and lock time management until everyone has finished loading
-            timeManager.PauseAndLockTime();
+            timeManager.FreezeTime();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner != null && simulationOwner.Value != sourcePlayer && worldStateManager.RequestWorldData())
