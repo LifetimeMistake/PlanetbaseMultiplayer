@@ -19,7 +19,7 @@ namespace PlanetbaseMultiplayer.Server.World
         public WorldRequestQueueManager(Server server)
         {
             this.server = server ?? throw new ArgumentNullException(nameof(server));
-            this.playerQueue = new ConcurrentDictionary<Guid, Player>();
+            playerQueue = new ConcurrentDictionary<Guid, Player>();
         }
 
         public bool Initialize()
