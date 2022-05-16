@@ -51,6 +51,8 @@
     <Compile Include="Patcher.cs" />
     <Compile Include="Patches\Core\GameFixedUpdate.cs" />
     <Compile Include="Patches\Core\OnExitMultiplayerGame.cs" />
+    <Compile Include="Patches\Time\DecreaseSpeed.cs" />
+    <Compile Include="Patches\Time\IncreaseSpeed.cs" />
     <Compile Include="Patches\Time\TimeScaleUpdate.cs" />
     <Compile Include="Patches\UI\MainMenuAddMultiplayerButton.cs" />
     <Compile Include="Patches\World\OnWorldLoadingFinished.cs" />
