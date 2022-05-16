@@ -58,6 +58,9 @@
     <Compile Include="Multiplayer.cs" />
     <Compile Include="Packets\Processors\AuthenticateProcessor.cs" />
     <Compile Include="Packets\Processors\DisconnectRequestProcessor.cs" />
+    <Compile Include="Packets\Processors\PlayerDataUpdatedProcessor.cs" />
+    <Compile Include="Packets\Processors\PlayerDisconnectedProcessor.cs" />
+    <Compile Include="Packets\Processors\PlayerJoinedProcessor.cs" />
     <Compile Include="Packets\Processors\SessionDataProcessor.cs" />
     <Compile Include="Packets\Processors\SimulationOwnerChangedProcessor.cs" />
     <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />

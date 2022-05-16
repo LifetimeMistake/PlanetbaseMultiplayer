@@ -50,8 +50,10 @@
   <ItemGroup>
     <Compile Include="Patcher.cs" />
     <Compile Include="Patches\Core\GameFixedUpdate.cs" />
+    <Compile Include="Patches\Core\OnExitMultiplayerGame.cs" />
     <Compile Include="Patches\Time\TimeScaleUpdate.cs" />
     <Compile Include="Patches\UI\MainMenuAddMultiplayerButton.cs" />
+    <Compile Include="Patches\World\OnWorldLoadingFinished.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -67,8 +69,6 @@
       <Name>PlanetbaseMultiplayer.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Patches\World\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

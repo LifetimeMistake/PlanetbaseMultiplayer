@@ -31,7 +31,7 @@ namespace PlanetbaseMultiplayer.Client
         private ConnectionOptions connectionOptions;
         private NetClient client;
         private ConcurrentQueue<Packet> packetQueue;
-        private Player localPlayer;
+        private Player? localPlayer;
         private PacketRouter router;
         private ClientProcessorContext processorContext;
 
@@ -40,7 +40,7 @@ namespace PlanetbaseMultiplayer.Client
         private Time.TimeManager timeManager;
         private WorldStateManager worldStateManager;
 
-        public Player LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
+        public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
         public PlayerManager PlayerManager { get { return playerManager; } }
         public SimulationManager SimulationManager { get { return SimulationManager; } }
         public Time.TimeManager TimeManager { get { return timeManager; } }

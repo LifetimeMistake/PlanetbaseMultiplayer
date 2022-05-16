@@ -83,6 +83,7 @@
     <Compile Include="Time\ITimeManager.cs" />
     <Compile Include="Math\Vector3D.cs" />
     <Compile Include="Utils\ChannelTypeUtils.cs" />
+    <Compile Include="Utils\DisconnectReasonUtils.cs" />
     <Compile Include="Weather\Disaster.cs" />
     <Compile Include="Weather\DisasterType.cs" />
     <Compile Include="Weather\IDisasterManager.cs" />

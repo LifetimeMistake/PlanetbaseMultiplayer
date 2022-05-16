@@ -7,6 +7,7 @@ namespace PlanetbaseMultiplayer.Client.UI
 {
     public enum MessageLogFlags
     {
+        MessageSoundNormal = 0,
         MessageSoundAlert = 1,
         MessageSoundPowerDown = 2,
         LongMessageDuration = 4,

@@ -1,6 +1,8 @@
-﻿using PlanetbaseMultiplayer.Model.Packets;
+﻿using Planetbase;
+using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
+using PlanetbaseMultiplayer.Model.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +21,6 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
             DisconnectRequestPacket disconnectRequestPacket = (DisconnectRequestPacket)packet;
-            // todo
         }
     }
 }
