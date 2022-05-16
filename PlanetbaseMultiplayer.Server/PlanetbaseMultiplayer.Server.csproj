@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Environment\EnvironmentManager.cs" />
     <Compile Include="Exceptions\UsernameTakenException.cs" />
     <Compile Include="Packets\Processors\AuthenticateRequestProcessor.cs" />
     <Compile Include="Packets\Processors\ClientLoadingStartedProcessor.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Packets\Processors\DisconnectRequestProcessor.cs" />
     <Compile Include="Packets\Processors\SessionDataRequestProcessor.cs" />
     <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />
+    <Compile Include="Packets\Processors\UpdateEnvironmentDataProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataRequestProcessor.cs" />
     <Compile Include="Players\PlayerManager.cs" />
     <Compile Include="Program.cs" />

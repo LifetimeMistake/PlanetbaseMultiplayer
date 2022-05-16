@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using PlanetbaseMultiplayer.Server.Environment;
 
 namespace PlanetbaseMultiplayer.Server
 {
@@ -33,12 +34,14 @@ namespace PlanetbaseMultiplayer.Server
         private WorldStateManager worldStateManager;
         private WorldRequestQueueManager worldRequestQueueManager;
         private TimeManager timeManager;
+        private EnvironmentManager environmentManager;
 
         public PlayerManager PlayerManager { get { return playerManager; } }
         public SimulationManager SimulationManager { get { return simulationManager; } }
         public WorldStateManager WorldStateManager { get { return worldStateManager; } }
         public WorldRequestQueueManager WorldRequestQueueManager { get { return worldRequestQueueManager; } }
         public TimeManager TimeManager { get { return timeManager; } }
+        public EnvironmentManager EnvironmentManager { get { return environmentManager; } }
         public ServerSettings Settings { get { return settings; } }
 
         public Server(ServerSettings settings)
@@ -64,6 +67,7 @@ namespace PlanetbaseMultiplayer.Server
             worldStateManager = new WorldStateManager(this, worldStateData);
             worldRequestQueueManager = new WorldRequestQueueManager(this);
             timeManager = new TimeManager(this);
+            environmentManager = new EnvironmentManager(this);
             Initialize();
         }
 
@@ -74,6 +78,7 @@ namespace PlanetbaseMultiplayer.Server
             worldStateManager.Initialize();
             worldRequestQueueManager.Initialize();
             timeManager.Initialize();
+            environmentManager.Initialize();
         }
 
         public void Start()

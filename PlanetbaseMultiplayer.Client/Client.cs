@@ -39,12 +39,14 @@ namespace PlanetbaseMultiplayer.Client
         private SimulationManager simulationManager;
         private Time.TimeManager timeManager;
         private WorldStateManager worldStateManager;
+        private Environment.EnvironmentManager environmentManager;
 
         public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
         public PlayerManager PlayerManager { get { return playerManager; } }
         public SimulationManager SimulationManager { get { return simulationManager; } }
         public Time.TimeManager TimeManager { get { return timeManager; } }
         public WorldStateManager WorldStateManager { get { return worldStateManager; } }
+        public Environment.EnvironmentManager EnvironmentManager { get { return environmentManager; } }
 
         public Client(GameStateMultiplayer gameStateMultiplayer)
         {
@@ -68,6 +70,7 @@ namespace PlanetbaseMultiplayer.Client
             simulationManager = new SimulationManager(this);
             timeManager = new Time.TimeManager(this);
             worldStateManager = new WorldStateManager(this);
+            environmentManager = new Environment.EnvironmentManager(this);
             Initialize();
         }
 
@@ -77,6 +80,7 @@ namespace PlanetbaseMultiplayer.Client
             simulationManager.Initialize();
             timeManager.Initialize();
             worldStateManager.Initialize();
+            environmentManager.Initialize();
         }
 
         public bool Connect(ConnectionOptions connectionOptions)

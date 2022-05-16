@@ -64,6 +64,7 @@
     <Compile Include="Packets\Processors\SessionDataProcessor.cs" />
     <Compile Include="Packets\Processors\SimulationOwnerChangedProcessor.cs" />
     <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />
+    <Compile Include="Packets\Processors\UpdateEnvironmentDataProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataProcessor.cs" />
     <Compile Include="Players\PlayerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="UI\MessageLog.cs" />
     <Compile Include="UI\MessageLogFlags.cs" />
     <Compile Include="UI\MessageToast.cs" />
+    <Compile Include="Environment\EnvironmentManager.cs" />
     <Compile Include="World\WorldStateManager.cs" />
   </ItemGroup>
   <ItemGroup>

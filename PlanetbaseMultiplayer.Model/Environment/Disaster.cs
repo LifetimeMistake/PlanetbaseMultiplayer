@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PlanetbaseMultiplayer.Model.Weather
+namespace PlanetbaseMultiplayer.Model.Environment
 {
     public struct Disaster
     {
