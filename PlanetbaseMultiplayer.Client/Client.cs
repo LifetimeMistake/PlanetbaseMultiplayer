@@ -80,6 +80,7 @@ namespace PlanetbaseMultiplayer.Client
         {
             timer = new TimerActionManager(processorContext);
             timer.RegisterAction(new ProcessPacketsAction(), 1);
+            timer.RegisterAction(new SyncEnvironmentDataAction(), 30);
         }
 
         private void InitializeManagers()

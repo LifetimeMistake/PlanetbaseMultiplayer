@@ -1,6 +1,7 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
+using PlanetbaseMultiplayer.Model.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,12 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             UpdateEnvironmentDataPacket updateEnvironmentDataPacket = (UpdateEnvironmentDataPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            processorContext.Client.EnvironmentManager.OnUpdateEnvironmentData(updateEnvironmentDataPacket.Time, updateEnvironmentDataPacket.WindLevel);
+
+            Player? simulationOwner = processorContext.Client.SimulationManager.GetSimulationOwner();
+            if (simulationOwner != null && sourcePlayerId == simulationOwner.Value.Id)
+                return;
+
+            processorContext.Client.EnvironmentManager.OnUpdateEnvironmentData(updateEnvironmentDataPacket.Time, updateEnvironmentDataPacket.WindLevel, updateEnvironmentDataPacket.WindDirection);
         }
     }
 }

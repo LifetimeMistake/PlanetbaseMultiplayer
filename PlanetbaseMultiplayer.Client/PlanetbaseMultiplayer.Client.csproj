@@ -72,6 +72,7 @@
     <Compile Include="Simulation\SimulationManager.cs" />
     <Compile Include="Timers\Actions\Abstract\TimerAction.cs" />
     <Compile Include="Timers\Actions\ProcessPacketsAction.cs" />
+    <Compile Include="Timers\Actions\SyncEnvironmentDataAction.cs" />
     <Compile Include="Timers\TimerActionManager.cs" />
     <Compile Include="Time\TimeManager.cs" />
     <Compile Include="UI\MessageLog.cs" />

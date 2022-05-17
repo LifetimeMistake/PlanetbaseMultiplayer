@@ -1,10 +1,13 @@
-﻿using PlanetbaseMultiplayer.Model.Environment;
+﻿using Planetbase;
+using PlanetbaseMultiplayer.Model;
+using PlanetbaseMultiplayer.Model.Environment;
 using PlanetbaseMultiplayer.Model.Math;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
 using PlanetbaseMultiplayer.Model.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 
@@ -41,11 +44,42 @@ namespace PlanetbaseMultiplayer.Client.Environment
             UpdateEnvironmentData(time, windLevel, windDirection);
         }
 
-        public void OnUpdateEnvironmentData(float time, float windLevel)
+        public void OnUpdateEnvironmentData(float time, float windLevel, Vector3D windDirection)
         {
             this.time = time;
             this.windLevel = windLevel;
-            // do stuff
+            this.windDirection = windDirection; //ta? to zajebiście
+
+            FieldInfo mTimeIndicator;
+            FieldInfo mWindIndicator;
+            FieldInfo mWindDirection;
+
+            Planetbase.EnvironmentManager environmentManager = Planetbase.EnvironmentManager.getInstance();
+            if (!Reflection.TryGetPrivateField(environmentManager.GetType(), "mTimeIndicator", true, out mTimeIndicator))
+            {
+                Debug.LogError("Failed to find \"mTimeIndicator\"");
+                return;
+            }
+
+            if (!Reflection.TryGetPrivateField(environmentManager.GetType(), "mWindIndicator", true, out mWindIndicator))
+            {
+                Debug.LogError("Failed to find \"mWindIndicator\"");
+                return;
+            }
+
+            if (!Reflection.TryGetPrivateField(environmentManager.GetType(), "mWindDirection", true, out mWindDirection))
+            {
+                Debug.LogError("Failed to find \"mWindDirection\"");
+                return;
+            }
+
+            Indicator timeIndicator = (Indicator)Reflection.GetInstanceFieldValue(environmentManager, mTimeIndicator);
+            Indicator windIndicator = (Indicator)Reflection.GetInstanceFieldValue(environmentManager, mWindIndicator);
+
+            timeIndicator.setValue(time);
+            windIndicator.setValue(windLevel);
+            Reflection.SetInstanceFieldValue(environmentManager, mWindDirection, (Vector3)windDirection);
+
         }
 
         public void UpdateEnvironmentData(float time, float windLevel, Vector3D windDirection)
