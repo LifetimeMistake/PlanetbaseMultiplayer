@@ -32,7 +32,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
                 return;
             }
 
-            environmentManager.UpdateEnvironmentData(updateEnvironmentDataPacket.Time, updateEnvironmentDataPacket.WindLevel);
+            environmentManager.UpdateEnvironmentData(updateEnvironmentDataPacket.Time, updateEnvironmentDataPacket.WindLevel, updateEnvironmentDataPacket.WindDirection);
         }
     }
 }
