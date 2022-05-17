@@ -215,9 +215,12 @@ namespace PlanetbaseMultiplayer.Client
             SendPacket(authenticateRequestPacket);
         }
 
-        // Called by a patch in FixedUpdate, processes all packets currently in the queue
-        // This has to be done to avoid race condition crashes
-        public void ProcessPackets()
+        public void OnFixedUpdate()
+        {
+            ProcessPackets();
+        }
+
+        private void ProcessPackets()
         {
             Packet packet;
             while(packetQueue.TryDequeue(out packet))

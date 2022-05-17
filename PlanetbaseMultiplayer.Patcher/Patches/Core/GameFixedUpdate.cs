@@ -16,7 +16,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Core
             if (Multiplayer.Client == null)
                 return true; // Not in multiplayer mode
 
-            Multiplayer.Client.ProcessPackets();
+            Multiplayer.Client.OnFixedUpdate();
             return true;
         }
     }
