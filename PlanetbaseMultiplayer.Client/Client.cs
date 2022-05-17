@@ -3,6 +3,8 @@ using Planetbase;
 using PlanetbaseMultiplayer.Client.GameStates;
 using PlanetbaseMultiplayer.Client.Players;
 using PlanetbaseMultiplayer.Client.Simulation;
+using PlanetbaseMultiplayer.Client.Timers;
+using PlanetbaseMultiplayer.Client.Timers.Actions;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Client.World;
 using PlanetbaseMultiplayer.Model;
@@ -33,6 +35,7 @@ namespace PlanetbaseMultiplayer.Client
         private ConcurrentQueue<Packet> packetQueue;
         private Player? localPlayer;
         private PacketRouter router;
+        private TimerActionManager timer;
         private ClientProcessorContext processorContext;
 
         private PlayerManager playerManager;
@@ -54,28 +57,39 @@ namespace PlanetbaseMultiplayer.Client
             packetQueue = new ConcurrentQueue<Packet>();
             processorContext = new ClientProcessorContext(this);
 
-            router = new PacketRouter(processorContext);
-            foreach (PacketProcessor packetProcessor in PacketProcessor.GetProcessors())
-                router.RegisterPacketProcessor(packetProcessor);
-
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-
             NetPeerConfiguration config = new NetPeerConfiguration("PlanetbaseMultiplayer");
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             client = new NetClient(config);
             client.RegisterReceivedCallback(new SendOrPostCallback(MessageReceived));
 
+            InitializeProcessors();
+            InitializeActions();
+            InitializeManagers();
+        }
+
+        private void InitializeProcessors()
+        {
+            router = new PacketRouter(processorContext);
+            foreach (PacketProcessor packetProcessor in PacketProcessor.GetProcessors())
+                router.RegisterPacketProcessor(packetProcessor);
+        }
+
+        private void InitializeActions()
+        {
+            timer = new TimerActionManager(processorContext);
+            timer.RegisterAction(new ProcessPacketsAction(), 1);
+        }
+
+        private void InitializeManagers()
+        {
             playerManager = new PlayerManager(this);
             simulationManager = new SimulationManager(this);
             timeManager = new Time.TimeManager(this);
             worldStateManager = new WorldStateManager(this);
             environmentManager = new Environment.EnvironmentManager(this);
-            Initialize();
-        }
 
-        private void Initialize()
-        {
             playerManager.Initialize();
             simulationManager.Initialize();
             timeManager.Initialize();
@@ -217,10 +231,11 @@ namespace PlanetbaseMultiplayer.Client
 
         public void OnFixedUpdate()
         {
-            ProcessPackets();
+            // Update timers
+            timer.OnTick();
         }
 
-        private void ProcessPackets()
+        public void ProcessPackets()
         {
             Packet packet;
             while(packetQueue.TryDequeue(out packet))

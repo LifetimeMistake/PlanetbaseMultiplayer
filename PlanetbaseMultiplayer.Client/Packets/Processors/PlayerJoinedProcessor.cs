@@ -24,7 +24,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             processorContext.Client.PlayerManager.OnPlayerAdded(playerJoinedPacket.Player);
 
             MessageLogFlags flags;
-            if (playerJoinedPacket.Player.Name == "freddy")
+            if (playerJoinedPacket.Player.Name.ToLower() == "freddy")
                 flags = MessageLogFlags.MessageSoundPowerDown;
             else
                 flags = MessageLogFlags.MessageSoundNormal;
