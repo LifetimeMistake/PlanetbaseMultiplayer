@@ -1,4 +1,5 @@
 ﻿using PlanetbaseMultiplayer.Model.Environment;
+using PlanetbaseMultiplayer.Model.Packets.Environment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,9 @@ namespace PlanetbaseMultiplayer.Server.Environment
         {
             this.time = time;
             this.windLevel = windLevel;
+
+            UpdateEnvironmentDataPacket updateEnvironmentDataPacket = new UpdateEnvironmentDataPacket(time, windLevel);
+            server.SendPacketToAll(updateEnvironmentDataPacket);
         }
 
         public float GetWindLevel()

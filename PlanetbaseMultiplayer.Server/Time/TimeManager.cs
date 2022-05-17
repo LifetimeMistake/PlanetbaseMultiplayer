@@ -53,6 +53,7 @@ namespace PlanetbaseMultiplayer.Server.Time
 
             timeScale = speed;
             isPaused = paused;
+
             TimeScaleUpdatePacket timeScaleUpdatedPacket = new TimeScaleUpdatePacket(timeScale, isPaused);
             server.SendPacketToAll(timeScaleUpdatedPacket);
         }
