@@ -27,6 +27,15 @@ namespace PlanetbaseMultiplayer.Model
             return (methodInfo != null);
         }
 
+        public static MethodInfo GetPrivateMethodOrThrow(Type obj, string methodName, bool instance)
+        {
+            MethodInfo methodInfo = GetPrivateMethod(obj, methodName, instance);
+            if (methodInfo == null)
+                throw new MissingMethodException($"Could not find \"{methodName}\"");
+
+            return methodInfo;
+        }
+
         public static FieldInfo GetPrivateField(Type obj, string fieldName, bool instance)
         {
             try
@@ -40,9 +49,18 @@ namespace PlanetbaseMultiplayer.Model
             }
         }
 
-        public static bool TryGetPrivateField(Type obj, string methodName, bool instance, out FieldInfo fieldInfo)
+        public static FieldInfo GetPrivateFieldOrThrow(Type obj, string fieldName, bool instance)
         {
-            fieldInfo = GetPrivateField(obj, methodName, instance);
+            FieldInfo fieldInfo = GetPrivateField(obj, fieldName, instance);
+            if (fieldInfo == null)
+                throw new MissingMethodException($"Could not find \"{fieldName}\"");
+
+            return fieldInfo;
+        }
+
+        public static bool TryGetPrivateField(Type obj, string fieldName, bool instance, out FieldInfo fieldInfo)
+        {
+            fieldInfo = GetPrivateField(obj, fieldName, instance);
             return (fieldInfo != null);
         }
 
