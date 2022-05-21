@@ -21,55 +21,15 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.UI
 				return false;
 			}
 
-			FieldInfo mGuiRendererInfo;
-			FieldInfo mAlphaInfo;
-			FieldInfo mRightOffsetInfo;
-			FieldInfo mConfirmWindowInfo;
-			FieldInfo mAnySavegamesInfo;
-			MethodInfo canAlreadyPlayInfo;
-			MethodInfo renderTutorialRequestWindowInfo;
+			Type instanceType = __instance.GetType();
 
-			if (!Reflection.TryGetPrivateField(__instance.GetType(), "mGuiRenderer", true, out mGuiRendererInfo))
-			{
-				Debug.LogError("Failed to find \"mGuiRenderer\", disabling MainMenuAddMultiplayerButton patch");
-				return true;
-			}
-
-			if (!Reflection.TryGetPrivateField(__instance.GetType(), "mAlpha", true, out mAlphaInfo))
-			{
-				Debug.LogError("Failed to find \"mAlpha\", disabling MainMenuAddMultiplayerButton patch");
-				return true;
-			}
-
-			if (!Reflection.TryGetPrivateField(__instance.GetType(), "mRightOffset", true, out mRightOffsetInfo))
-			{
-				Debug.LogError("Failed to find \"mRightOffset\", disabling MainMenuAddMultiplayerButton patch");
-				return true;
-			}
-
-			if (!Reflection.TryGetPrivateField(__instance.GetType(), "mConfirmWindow", true, out mConfirmWindowInfo))
-			{
-				Debug.LogError("Failed to find \"mConfirmWindow\", disabling MainMenuAddMultiplayerButton patch");
-				return true;
-			}
-
-			if (!Reflection.TryGetPrivateField(__instance.GetType(), "mAnySavegames", true, out mAnySavegamesInfo))
-			{
-				Debug.LogError("Failed to find \"mAnySavegames\", disabling MainMenuAddMultiplayerButton patch");
-				return true;
-			}
-
-			if (!Reflection.TryGetPrivateMethod(__instance.GetType(), "canAlreadyPlay", true, out canAlreadyPlayInfo))
-			{
-				Debug.LogError("Failed to find \"canAlreadyPlay\", disabling MainMenuAddMultiplayerButton patch");
-				return true;
-			}
-
-			if (!Reflection.TryGetPrivateMethod(__instance.GetType(), "renderTutorialRequestWindow", true, out renderTutorialRequestWindowInfo))
-			{
-				Debug.LogError("Failed to find \"renderTutorialRequestWindow\", disabling MainMenuAddMultiplayerButton patch");
-				return true;
-			}
+			FieldInfo mGuiRendererInfo = Reflection.GetPrivateFieldOrThrow(instanceType, "mGuiRenderer", true);
+			FieldInfo mAlphaInfo = Reflection.GetPrivateFieldOrThrow(instanceType, "mAlpha", true);
+			FieldInfo mRightOffsetInfo = Reflection.GetPrivateFieldOrThrow(instanceType, "mRightOffset", true);
+			FieldInfo mConfirmWindowInfo = Reflection.GetPrivateFieldOrThrow(instanceType, "mConfirmWindow", true);
+			FieldInfo mAnySavegamesInfo = Reflection.GetPrivateFieldOrThrow(instanceType, "mAnySavegames", true);
+			MethodInfo canAlreadyPlayInfo = Reflection.GetPrivateMethodOrThrow(instanceType, "canAlreadyPlay", true);
+			MethodInfo renderTutorialRequestWindowInfo = Reflection.GetPrivateMethodOrThrow(instanceType, "renderTutorialRequestWindow", true);
 
 			GuiRenderer mGuiRenderer = (GuiRenderer)Reflection.GetInstanceFieldValue(__instance, mGuiRendererInfo);
 

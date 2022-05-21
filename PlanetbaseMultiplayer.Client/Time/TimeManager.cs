@@ -33,21 +33,10 @@ namespace PlanetbaseMultiplayer.Client.Time
             this.timeScale = timeScale;
             isPaused = paused;
 
-            FieldInfo mPaused;
-            MethodInfo OnTimeScaleChanged;
-
             Planetbase.TimeManager timeManager = Planetbase.TimeManager.getInstance();
-            if (!Reflection.TryGetPrivateField(timeManager.GetType(), "mPaused", true, out mPaused)) 
-            {
-                Debug.LogError("Failed to find \"mPaused\"");
-                return;
-            }
 
-            if (!Reflection.TryGetPrivateMethod(timeManager.GetType(), "onTimeScaleChanged", true, out OnTimeScaleChanged))
-            {
-                Debug.LogError("Failed to find \"onTimeScaleChanged\"");
-                return;
-            }
+            FieldInfo mPaused = Reflection.GetPrivateFieldOrThrow(timeManager.GetType(), "mPaused", true);
+            MethodInfo OnTimeScaleChanged = Reflection.GetPrivateMethodOrThrow(timeManager.GetType(), "onTimeScaleChanged", true);
 
             Reflection.SetInstanceFieldValue(timeManager, mPaused, isPaused);
             Reflection.InvokeInstanceMethod(timeManager, OnTimeScaleChanged, new object[] { });

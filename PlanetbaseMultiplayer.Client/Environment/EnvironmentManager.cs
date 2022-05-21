@@ -48,30 +48,14 @@ namespace PlanetbaseMultiplayer.Client.Environment
         {
             this.time = time;
             this.windLevel = windLevel;
-            this.windDirection = windDirection; //ta? to zajebiście
-
-            FieldInfo mTimeIndicator;
-            FieldInfo mWindIndicator;
-            FieldInfo mWindDirection;
+            this.windDirection = windDirection;
 
             Planetbase.EnvironmentManager environmentManager = Planetbase.EnvironmentManager.getInstance();
-            if (!Reflection.TryGetPrivateField(environmentManager.GetType(), "mTimeIndicator", true, out mTimeIndicator))
-            {
-                Debug.LogError("Failed to find \"mTimeIndicator\"");
-                return;
-            }
+            Type environmentManagerType = environmentManager.GetType();
 
-            if (!Reflection.TryGetPrivateField(environmentManager.GetType(), "mWindIndicator", true, out mWindIndicator))
-            {
-                Debug.LogError("Failed to find \"mWindIndicator\"");
-                return;
-            }
-
-            if (!Reflection.TryGetPrivateField(environmentManager.GetType(), "mWindDirection", true, out mWindDirection))
-            {
-                Debug.LogError("Failed to find \"mWindDirection\"");
-                return;
-            }
+            FieldInfo mTimeIndicator = Reflection.GetPrivateFieldOrThrow(environmentManagerType, "mTimeIndicator", true);
+            FieldInfo mWindIndicator = Reflection.GetPrivateFieldOrThrow(environmentManagerType, "mWindIndicator", true);
+            FieldInfo mWindDirection = Reflection.GetPrivateFieldOrThrow(environmentManagerType, "mWindDirection", true);
 
             Indicator timeIndicator = (Indicator)Reflection.GetInstanceFieldValue(environmentManager, mTimeIndicator);
             Indicator windIndicator = (Indicator)Reflection.GetInstanceFieldValue(environmentManager, mWindIndicator);

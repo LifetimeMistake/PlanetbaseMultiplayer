@@ -180,12 +180,7 @@ namespace PlanetbaseMultiplayer.Client
                 if (GameManager.getInstance().getGameState() is GameStateGame)
                 {
                     GameStateGame state = GameManager.getInstance().getGameState() as GameStateGame;
-                    MethodInfo onExitGameForRealInfo;
-                    if (!Reflection.TryGetPrivateMethod(state.GetType(), "onExitGameForReal", true, out onExitGameForRealInfo))
-                    {
-                        Debug.LogError("Failed to find \"onExitGameForReal\"");
-                        return;
-                    }
+                    MethodInfo onExitGameForRealInfo = Reflection.GetPrivateMethodOrThrow(state.GetType(), "onExitGameForReal", true);
 
                     void wrapper(object parameter)
                     {
