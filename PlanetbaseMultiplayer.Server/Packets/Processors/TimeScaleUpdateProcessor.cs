@@ -11,7 +11,7 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Server.Packets.Processors
 {
-    class TimeScaleUpdateProcessor : PacketProcessor
+    public class TimeScaleUpdateProcessor : PacketProcessor
     {
         public override Type GetProcessedPacketType()
         {

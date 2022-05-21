@@ -51,7 +51,9 @@
     <Compile Include="Patcher.cs" />
     <Compile Include="Patches\Core\GameFixedUpdate.cs" />
     <Compile Include="Patches\Core\OnExitMultiplayerGame.cs" />
-    <Compile Include="Patches\Environment\DisableWindUpdate.cs" />
+    <Compile Include="Patches\Environment\Sandstorm\EndSandstorm.cs" />
+    <Compile Include="Patches\Environment\Sandstorm\TriggerSandstorm.cs" />
+    <Compile Include="Patches\Environment\Sandstorm\UpdateSandstorm.cs" />
     <Compile Include="Patches\Time\DecreaseSpeed.cs" />
     <Compile Include="Patches\Time\IncreaseSpeed.cs" />
     <Compile Include="Patches\Time\TimeScaleUpdate.cs" />
@@ -72,8 +74,6 @@
       <Name>PlanetbaseMultiplayer.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Patches\Environment\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

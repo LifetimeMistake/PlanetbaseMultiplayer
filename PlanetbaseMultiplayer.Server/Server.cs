@@ -35,6 +35,7 @@ namespace PlanetbaseMultiplayer.Server
         private WorldRequestQueueManager worldRequestQueueManager;
         private TimeManager timeManager;
         private EnvironmentManager environmentManager;
+        private DisasterManager disasterManager;
 
         public PlayerManager PlayerManager { get { return playerManager; } }
         public SimulationManager SimulationManager { get { return simulationManager; } }
@@ -42,6 +43,7 @@ namespace PlanetbaseMultiplayer.Server
         public WorldRequestQueueManager WorldRequestQueueManager { get { return worldRequestQueueManager; } }
         public TimeManager TimeManager { get { return timeManager; } }
         public EnvironmentManager EnvironmentManager { get { return environmentManager; } }
+        public DisasterManager DisasterManager { get { return disasterManager; } }
         public ServerSettings Settings { get { return settings; } }
 
         public Server(ServerSettings settings)
@@ -68,6 +70,7 @@ namespace PlanetbaseMultiplayer.Server
             worldRequestQueueManager = new WorldRequestQueueManager(this);
             timeManager = new TimeManager(this);
             environmentManager = new EnvironmentManager(this);
+            disasterManager = new DisasterManager(this);
             Initialize();
         }
 
@@ -79,6 +82,7 @@ namespace PlanetbaseMultiplayer.Server
             worldRequestQueueManager.Initialize();
             timeManager.Initialize();
             environmentManager.Initialize();
+            disasterManager.Initialize();
         }
 
         public void Start()

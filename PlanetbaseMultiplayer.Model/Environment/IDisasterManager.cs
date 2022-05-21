@@ -5,15 +5,14 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Model.Environment
 {
-    public interface IDisasterManager
+    public interface IDisasterManager : IManager
     {
-        Disaster? CurrentDisaster { get; set; }
-
         bool AnyDisasterInProgress();
         Disaster? GetDisasterInProgress();
+        float GetCurrentTime();
         void CreateDisaster(Disaster disaster);
-        void CreateDisaster(DisasterType disasterType, float disasterLength, float instensity);
-        void UpdateDisaster(float timeScale);
+        void CreateDisaster(DisasterType disasterType, float disasterLength, float currentTime);
+        void UpdateDisaster(float currentTime);
         void EndDisaster();
     }
 }

@@ -48,14 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Environment\DisasterManager.cs" />
     <Compile Include="Environment\EnvironmentManager.cs" />
     <Compile Include="Exceptions\UsernameTakenException.cs" />
     <Compile Include="Packets\Processors\AuthenticateRequestProcessor.cs" />
     <Compile Include="Packets\Processors\ClientLoadingStartedProcessor.cs" />
     <Compile Include="Packets\Processors\ClientReadyProcessor.cs" />
+    <Compile Include="Packets\Processors\CreateDisasterProcessor.cs" />
     <Compile Include="Packets\Processors\DisconnectRequestProcessor.cs" />
+    <Compile Include="Packets\Processors\EndDisasterProcessor.cs" />
     <Compile Include="Packets\Processors\SessionDataRequestProcessor.cs" />
     <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />
+    <Compile Include="Packets\Processors\UpdateDisasterProcessor.cs" />
     <Compile Include="Packets\Processors\UpdateEnvironmentDataProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataRequestProcessor.cs" />

@@ -51,6 +51,9 @@
   <ItemGroup>
     <Compile Include="EventArgs\PlayerEventArgs.cs" />
     <Compile Include="EventArgs\SimulationOwnerUpdatedEventArgs.cs" />
+    <Compile Include="Packets\Environment\CreateDisasterPacket.cs" />
+    <Compile Include="Packets\Environment\EndDisasterPacket.cs" />
+    <Compile Include="Packets\Environment\UpdateDisasterPacket.cs" />
     <Compile Include="Packets\Environment\UpdateEnvironmentDataPacket.cs" />
     <Compile Include="Packets\Session\ClientLoadingStartedPacket.cs" />
     <Compile Include="Packets\Session\ClientReadyPacket.cs" />

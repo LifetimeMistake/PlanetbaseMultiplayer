@@ -7,15 +7,15 @@ namespace PlanetbaseMultiplayer.Model.Environment
 {
     public struct Disaster
     {
-        public float TimeRemaining;
-        public float Intensity;
+        public float CurrentTime;
+        public float DisasterLength;
         public DisasterType Type;
 
-        public Disaster(float timeRemaining, float intensity, DisasterType type)
+        public Disaster(DisasterType type, float disasterLength, float currentTime)
         {
-            TimeRemaining = timeRemaining;
-            Intensity = intensity;
+            DisasterLength = disasterLength;
             Type = type;
+            CurrentTime = currentTime;
         }
     }
 }

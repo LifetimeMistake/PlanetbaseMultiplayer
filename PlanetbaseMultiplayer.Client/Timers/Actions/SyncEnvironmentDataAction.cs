@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client.Timers.Actions
 {
-    internal class SyncEnvironmentDataAction : TimerAction
+    public class SyncEnvironmentDataAction : TimerAction
     {
         public override void ProcessAction(ulong currentTick, ClientProcessorContext context)
         {
