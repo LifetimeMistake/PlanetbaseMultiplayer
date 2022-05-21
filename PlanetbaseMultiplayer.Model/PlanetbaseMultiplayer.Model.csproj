@@ -51,10 +51,16 @@
   <ItemGroup>
     <Compile Include="EventArgs\PlayerEventArgs.cs" />
     <Compile Include="EventArgs\SimulationOwnerUpdatedEventArgs.cs" />
+    <Compile Include="Location.cs" />
     <Compile Include="Packets\Environment\UpdateEnvironmentDataPacket.cs" />
     <Compile Include="Packets\Session\ClientLoadingStartedPacket.cs" />
     <Compile Include="Packets\Session\ClientReadyPacket.cs" />
     <Compile Include="Packets\Time\TimeScaleUpdatePacket.cs" />
+    <Compile Include="Resources\IResourceManager.cs" />
+    <Compile Include="Resources\Resource.cs" />
+    <Compile Include="Resources\ResourceDurability.cs" />
+    <Compile Include="Resources\ResourceState.cs" />
+    <Compile Include="Resources\ResourceSubtype.cs" />
     <Compile Include="Session\DisconnectReason.cs" />
     <Compile Include="IManager.cs" />
     <Compile Include="Packets\ChannelType.cs" />
