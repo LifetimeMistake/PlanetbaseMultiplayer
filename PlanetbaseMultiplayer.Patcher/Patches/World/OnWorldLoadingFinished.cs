@@ -23,12 +23,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.World
             if (!(GameManager.getInstance().getGameState() is GameStateGame)) return;
 
             GameManager gameManager = GameManager.getInstance();
-            FieldInfo mStateInfo;
-            if (!Reflection.TryGetPrivateField(gameManager.GetType(), "mState", true, out mStateInfo))
-            {
-                Debug.LogError("Unable to find \"mState\"");
-                return;
-            }
+            FieldInfo mStateInfo = Reflection.GetPrivateFieldOrThrow(gameManager.GetType(), "mState", true);
 
             GameManager.State currentState = (GameManager.State)Reflection.GetInstanceFieldValue(gameManager, mStateInfo);
             if (previousState == currentState) return;

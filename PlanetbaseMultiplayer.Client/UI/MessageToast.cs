@@ -17,12 +17,7 @@ namespace PlanetbaseMultiplayer.Client.UI
                 return false;
 
             GameStateGame gameState = GameManager.getInstance().getGameState() as GameStateGame;
-            MethodInfo addToastInfo;
-            if (!Reflection.TryGetPrivateMethod(gameState.GetType(), "addToast", true, out addToastInfo))
-            {
-                Debug.LogError("Failed to find method \"addToast\"");
-                return false;
-            }
+            MethodInfo addToastInfo = Reflection.GetPrivateMethodOrThrow(gameState.GetType(), "addToast", true);
 
             Reflection.InvokeInstanceMethod(gameState, addToastInfo, new object[] { message, time });
             return true;

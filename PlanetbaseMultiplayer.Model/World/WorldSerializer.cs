@@ -44,19 +44,8 @@ namespace PlanetbaseMultiplayer.Model.World
 		}
 		private static XmlNode BeginSerialize(string rootNodeName)
 		{
-			FieldInfo mDocumentInfo;
-			FieldInfo mRootNodeInfo;
-			if (!Reflection.TryGetPrivateField(typeof(Serialization), "mDocument", false, out mDocumentInfo))
-            {
-				Debug.LogError("Failed to find \"mDocument\"");
-				return null;
-			}
-
-			if (!Reflection.TryGetPrivateField(typeof(Serialization), "mRootNode", false, out mRootNodeInfo))
-            {
-				Debug.LogError("Failed to find \"mRootNode\"");
-				return null;
-            }
+			FieldInfo mDocumentInfo = Reflection.GetPrivateFieldOrThrow(typeof(Serialization), "mDocument", false);
+			FieldInfo mRootNodeInfo = Reflection.GetPrivateFieldOrThrow(typeof(Serialization), "mRootNode", false);
 
 			Reflection.SetStaticFieldValue(mDocumentInfo, new XmlDocument());
 			XmlDocument mDocument = Reflection.GetStaticFieldValue(mDocumentInfo) as XmlDocument;
@@ -70,19 +59,8 @@ namespace PlanetbaseMultiplayer.Model.World
 		}
 		private static string EndSerialize()
 		{
-			FieldInfo mDocumentInfo;
-			FieldInfo mPathInfo;
-			if (!Reflection.TryGetPrivateField(typeof(Serialization), "mDocument", false, out mDocumentInfo))
-			{
-				Debug.LogError("Failed to find \"mDocument\"");
-				return null;
-			}
-
-			if (!Reflection.TryGetPrivateField(typeof(Serialization), "mPath", false, out mPathInfo))
-			{
-				Debug.LogError("Failed to find \"mPath\"");
-				return null;
-			}
+			FieldInfo mDocumentInfo = Reflection.GetPrivateFieldOrThrow(typeof(Serialization), "mDocument", false);
+			FieldInfo mPathInfo = Reflection.GetPrivateFieldOrThrow(typeof(Serialization), "mPath", false);
 
 			XmlDocument mDocument = Reflection.GetStaticFieldValue(mDocumentInfo) as XmlDocument;
 
