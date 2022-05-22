@@ -6,7 +6,6 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Model.Environment
 {
-    [Serializable]
     public interface IEnvironmentManager : IManager
     {
         float GetTimeOfDay();
