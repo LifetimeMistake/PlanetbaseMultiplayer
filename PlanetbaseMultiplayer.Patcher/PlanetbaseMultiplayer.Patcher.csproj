@@ -62,7 +62,6 @@
     <Compile Include="Patches\Environment\SolarFlare\EndSolarFlare.cs" />
     <Compile Include="Patches\Environment\SolarFlare\TriggerSolarFlare.cs" />
     <Compile Include="Patches\Environment\SolarFlare\UpdateSolarFlare.cs" />
-    <Compile Include="Patches\Temp\PlanetAvailable.cs" />
     <Compile Include="Patches\Time\OnDecreaseSpeed.cs" />
     <Compile Include="Patches\Time\OnIncreaseSpeed.cs" />
     <Compile Include="Patches\Time\OnSetNormalSpeed.cs" />
