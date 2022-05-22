@@ -57,9 +57,9 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
 			onStartInfo = Reflection.GetPrivateMethodOrThrow(sandstorm.GetType(), "onStart", true);
 			updatePositionInfo = Reflection.GetPrivateMethodOrThrow(sandstorm.GetType(), "updatePositon", true);
 
+			this.sandstorm = sandstorm;
 			Time = time;
             DisasterLength = disasterLength;
-            this.sandstorm = sandstorm;
 		}
 
         public void StartDisaster()
