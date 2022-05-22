@@ -25,17 +25,11 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
                 return false; // Player isn't the simulation owner
 
             PlanetbaseMultiplayer.Client.Environment.DisasterManager disasterManager = Multiplayer.Client.DisasterManager;
-            Type instance = __instance.GetType();
 
-            FieldInfo mSandstormTimeInfo = Reflection.GetPrivateFieldOrThrow(instance, "mSandstormTime", true);
-            FieldInfo mTimeInfo = Reflection.GetPrivateFieldOrThrow(instance, "mTime", true);
+            float disasterLength = UnityEngine.Random.Range(90f, 180f);
+            float currentTime = 0f;
 
-            float disasterLength = (float)Reflection.GetInstanceFieldValue(__instance, mSandstormTimeInfo);
-            float currentTime = (float)Reflection.GetInstanceFieldValue(__instance, mTimeInfo);
-
-            DisasterType disasterType = 0;
-
-            disasterManager.CreateDisaster(disasterType, disasterLength, currentTime);
+            disasterManager.CreateDisaster(DisasterType.Sandstorm, disasterLength, currentTime);
 
             return false;
         }
