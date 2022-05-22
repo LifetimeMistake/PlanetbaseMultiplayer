@@ -13,7 +13,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
     {
         public override Type GetProcessedPacketType()
         {
-            return typeof(UpdateDisasterProcessor);
+            return typeof(UpdateDisasterPacket);
         }
 
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
