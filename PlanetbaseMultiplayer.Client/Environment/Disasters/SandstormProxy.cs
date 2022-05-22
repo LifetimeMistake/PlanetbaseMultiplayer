@@ -80,6 +80,7 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
 
         public void UpdateDisaster(float timeStep)
         {
+			Debug.Log($"TimeStep: {timeStep}");
 			Planet currentPlanet = PlanetManager.getCurrentPlanet();
 			if (currentPlanet.getSandstormRisk() != Planet.Quantity.None)
 			{
@@ -103,6 +104,8 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
 					Intensity = 1f;
 				}
 
+				Debug.Log($"New time: {Time}");
+				Debug.Log($"New computed disaster intensity: {Intensity}");
 				mParticleSystem.emissionRate = mOriginalEmissionRate * Intensity;
 			}
 		}

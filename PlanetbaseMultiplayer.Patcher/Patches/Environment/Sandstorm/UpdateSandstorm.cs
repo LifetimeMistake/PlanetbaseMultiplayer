@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
 {
@@ -33,11 +34,15 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
                 FieldInfo mSandstormTimeInfo = Reflection.GetPrivateFieldOrThrow(sandstormType, "mSandstormTime", true);
                 MethodInfo onEndInfo = Reflection.GetPrivateMethodOrThrow(sandstormType, "onEnd", true);
 
-                float mTime = (float)Reflection.GetInstanceFieldValue(__instance, mTimeInfo);
+                float mTime = (float)Reflection.GetInstanceFieldValue(__instance, mTimeInfo) + timeStep;
+                Reflection.SetInstanceFieldValue(__instance, mTimeInfo, mTime);
                 float mSandstormTime = (float)Reflection.GetInstanceFieldValue(__instance, mSandstormTimeInfo);
+
+                Debug.Log($"Local sandstorm time: {mTime}/{mSandstormTime}");
 
                 if (mTime > mSandstormTime)
                 {
+                    Debug.Log("Ending sandstorm");
                     // End sandstorm
                     Reflection.InvokeInstanceMethod(__instance, onEndInfo, new object[] { });
                 }
@@ -50,11 +55,14 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
                 FieldInfo mTimeToNextSandstorminfo = Reflection.GetPrivateFieldOrThrow(sandstormType, "mTimeToNextSandstorm", true);
                 float mTimeToNextSandstorm = (float)Reflection.GetInstanceFieldValue(__instance, mTimeToNextSandstorminfo);
 
+                Debug.Log("Local time to next sandstorm: " + mTimeToNextSandstorm);
+
                 Reflection.InvokeInstanceMethod(__instance, updateDetectionInfo, new object[] { mTimeToNextSandstorm, timeStep });
                 mTimeToNextSandstorm -= timeStep;
                 Reflection.SetInstanceFieldValue(__instance, mTimeToNextSandstorminfo, mTimeToNextSandstorm);
                 if (mTimeToNextSandstorm < 0f)
                 {
+                    Debug.Log("Triggering sandstorm");
                     // Trigger sandstorm
                     __instance.trigger();
                     Reflection.InvokeInstanceMethod(__instance, decideNextSandstormInfo, new object[] { });
