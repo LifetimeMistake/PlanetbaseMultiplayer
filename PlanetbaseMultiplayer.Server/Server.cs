@@ -27,7 +27,7 @@ namespace PlanetbaseMultiplayer.Server
         private ServerSettings settings;
         private ServerProcessorContext processorContext;
         private PacketRouter router;
-        private Dictionary<Guid, long> playerConnections;
+        public Dictionary<Guid, long> playerConnections;
 
         private PlayerManager playerManager;
         private SimulationManager simulationManager;
@@ -37,6 +37,8 @@ namespace PlanetbaseMultiplayer.Server
         private EnvironmentManager environmentManager;
         private DisasterManager disasterManager;
 
+        public ServerSettings Settings { get { return settings; } }
+        //public Dictionary<Guid, long> PlayerConnections { get { return playerConnections; } }
         public PlayerManager PlayerManager { get { return playerManager; } }
         public SimulationManager SimulationManager { get { return simulationManager; } }
         public WorldStateManager WorldStateManager { get { return worldStateManager; } }
@@ -44,7 +46,6 @@ namespace PlanetbaseMultiplayer.Server
         public TimeManager TimeManager { get { return timeManager; } }
         public EnvironmentManager EnvironmentManager { get { return environmentManager; } }
         public DisasterManager DisasterManager { get { return disasterManager; } }
-        public ServerSettings Settings { get { return settings; } }
 
         public Server(ServerSettings settings)
         {
@@ -150,14 +151,15 @@ namespace PlanetbaseMultiplayer.Server
             if (msg.SenderConnection.Status == NetConnectionStatus.Disconnecting || msg.SenderConnection.Status == NetConnectionStatus.Disconnected)
             {
                 long id = msg.SenderConnection.RemoteUniqueIdentifier;
-                KeyValuePair<Guid, long>? kvp = playerConnections.FirstOrDefault(p => p.Value == id);
-                if (kvp == null)
+                if (!playerConnections.Values.Any(connectionId => connectionId == id))
                 {
                     Console.WriteLine("Player connection closed gracefully.");
                     return;
                 }
 
-                Guid playerId = kvp.Value.Key;
+                KeyValuePair<Guid, long> kvp = playerConnections.First(p => p.Value == id);
+
+                Guid playerId = kvp.Key;
                 // Player has not sent a DisconnectRequestPacket before closing the connection
                 // The reason of their disconnect is unknown, presumably lost connection
                 if (playerManager.PlayerExists(playerId))
@@ -168,7 +170,6 @@ namespace PlanetbaseMultiplayer.Server
                 }
 
                 playerConnections.Remove(playerId);
-                Console.WriteLine($"Player connection {id} closed ungracefully");
             }
         }
 

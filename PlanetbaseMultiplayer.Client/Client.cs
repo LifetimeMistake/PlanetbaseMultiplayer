@@ -44,7 +44,9 @@ namespace PlanetbaseMultiplayer.Client
         private WorldStateManager worldStateManager;
         private Environment.EnvironmentManager environmentManager;
         private Environment.DisasterManager disasterManager;
+#if DEBUG
         private Debugging.DebugManager debugManager;
+#endif
 
         public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
         public PlayerManager PlayerManager { get { return playerManager; } }
@@ -53,7 +55,9 @@ namespace PlanetbaseMultiplayer.Client
         public WorldStateManager WorldStateManager { get { return worldStateManager; } }
         public Environment.EnvironmentManager EnvironmentManager { get { return environmentManager; } }
         public Environment.DisasterManager DisasterManager { get { return disasterManager; } }
+#if DEBUG
         public Debugging.DebugManager DebugManager { get { return debugManager; } }
+#endif
 
         public Client(GameStateMultiplayer gameStateMultiplayer)
         {
@@ -96,7 +100,9 @@ namespace PlanetbaseMultiplayer.Client
             worldStateManager = new WorldStateManager(this);
             environmentManager = new Environment.EnvironmentManager(this);
             disasterManager = new Environment.DisasterManager(this);
+#if DEBUG
             debugManager = new Debugging.DebugManager(this);
+#endif
 
             playerManager.Initialize();
             simulationManager.Initialize();
@@ -104,7 +110,9 @@ namespace PlanetbaseMultiplayer.Client
             worldStateManager.Initialize();
             environmentManager.Initialize();
             disasterManager.Initialize();
+#if DEBUG
             debugManager.Initialize();
+#endif
         }
 
         public bool Connect(ConnectionOptions connectionOptions)
@@ -130,6 +138,8 @@ namespace PlanetbaseMultiplayer.Client
 
             if (client.Status == NetPeerStatus.Running)
                 client.Shutdown("Disconnected");
+
+            gameStateMultiplayer.OnClientDisconnected();
         }
 
         // Handle incoming messages
@@ -179,21 +189,18 @@ namespace PlanetbaseMultiplayer.Client
                 SendPacket(sessionDataRequestPacket);
                 Debug.Log("Sending session data request");
             }
-            if (client.ConnectionStatus == NetConnectionStatus.Disconnected)
+            if (client.ConnectionStatus == NetConnectionStatus.Disconnected && GameManager.getInstance().getGameState() is GameStateGame)
             {
                 Debug.Log("Lost connection with the game server!");
-                if (GameManager.getInstance().getGameState() is GameStateGame)
+                void OnExitConfirm(object parameter)
                 {
-                    GameStateGame state = GameManager.getInstance().getGameState() as GameStateGame;
-                    MethodInfo onExitGameForRealInfo = Reflection.GetPrivateMethodOrThrow(state.GetType(), "onExitGameForReal", true);
-
-                    void wrapper(object parameter)
-                    {
-                        onExitGameForRealInfo.Invoke(state, new object[] { parameter });
-                    }
-
-                    ShowMessageBox(new GuiDefinitions.Callback(wrapper), "Connection terminated", "Lost connection with the game server.");
+                    GameManager.getInstance().setGameStateTitle();
+                    Disconnect();
                 }
+
+                GuiDefinitions.Callback callback = new GuiDefinitions.Callback(OnExitConfirm);
+                if (!MessageBoxOk.Show(callback, "Disconnected from server", "Lost connection with the game server."))
+                    OnExitConfirm(null); // Failed to show message box
             }
         }
 
@@ -261,11 +268,6 @@ namespace PlanetbaseMultiplayer.Client
 #endif
             NetDeliveryMethod deliveryMethod = ChannelTypeUtils.ChannelTypeToLidgren(channelType);
             client.SendMessage(msg, deliveryMethod);
-        }
-
-        public void ShowMessageBox(GuiDefinitions.Callback callback, string title, string text)
-        {
-            gameStateMultiplayer.ShowMessageBox(callback, title, text);
         }
     }
 }

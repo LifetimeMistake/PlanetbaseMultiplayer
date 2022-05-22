@@ -32,6 +32,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             DisconnectRequestPacket disconnectReply = new DisconnectRequestPacket(DisconnectReason.DisconnectRequestResponse);
             processorContext.Server.SendPacketToPlayer(disconnectReply, sourcePlayerId);
 
+            processorContext.Server.playerConnections.Remove(sourcePlayerId);
             if (playerManager.GetPlayers().Count(p => p.State == PlayerState.ConnectedLoadingData) == 0)
                 timeManager.UnfreezeTime();
         }

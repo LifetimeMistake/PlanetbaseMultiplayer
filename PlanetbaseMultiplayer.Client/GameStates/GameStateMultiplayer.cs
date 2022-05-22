@@ -200,5 +200,10 @@ namespace PlanetbaseMultiplayer.Client.GameStates
 				Multiplayer.Client = null;
 			}
 		}
+
+		public void OnClientDisconnected()
+        {
+			Multiplayer.Client = null;
+        }
 	}
 }
