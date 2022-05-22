@@ -51,7 +51,7 @@ namespace PlanetbaseMultiplayer.Client
         public Time.TimeManager TimeManager { get { return timeManager; } }
         public WorldStateManager WorldStateManager { get { return worldStateManager; } }
         public Environment.EnvironmentManager EnvironmentManager { get { return environmentManager; } }
-        public Environment.DisasterManager DisasterManager { get { return DisasterManager; } }
+        public Environment.DisasterManager DisasterManager { get { return disasterManager; } }
 
         public Client(GameStateMultiplayer gameStateMultiplayer)
         {
