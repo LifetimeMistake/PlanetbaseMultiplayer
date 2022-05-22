@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client.Timers
 {
@@ -24,7 +25,7 @@ namespace PlanetbaseMultiplayer.Client.Timers
                 throw new ArgumentNullException(nameof(action));
 
 #if DEBUG
-            Console.WriteLine($"Registered timer action {action.GetType().FullName} with activation interval {activationInterval}");
+            Debug.Log($"Registered timer action {action.GetType().FullName} with activation interval {activationInterval}");
 #endif
 
             timerActions.Add(action, activationInterval);

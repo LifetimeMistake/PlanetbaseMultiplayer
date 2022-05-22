@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="ClientProcessorContext.cs" />
     <Compile Include="ConnectionOptions.cs" />
+    <Compile Include="Debugging\DebugManager.cs" />
     <Compile Include="Environment\DisasterManager.cs" />
     <Compile Include="Environment\Disasters\IDisasterProxy.cs" />
     <Compile Include="Environment\Disasters\SandstormProxy.cs" />

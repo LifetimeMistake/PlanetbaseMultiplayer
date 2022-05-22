@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Patcher.cs" />
+    <Compile Include="Patches\Core\DebugLog.cs" />
     <Compile Include="Patches\Core\GameFixedUpdate.cs" />
     <Compile Include="Patches\Core\OnExitMultiplayerGame.cs" />
     <Compile Include="Patches\Environment\DisableWindUpdate.cs" />
