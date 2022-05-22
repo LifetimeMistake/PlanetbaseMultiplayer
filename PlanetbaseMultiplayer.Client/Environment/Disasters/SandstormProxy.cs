@@ -55,7 +55,7 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
 			mParticleSystemInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mParticleSystem", true);
 			mOriginalEmissionRateInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mOriginalEmissionRate", true);
 			onStartInfo = Reflection.GetPrivateMethodOrThrow(sandstorm.GetType(), "onStart", true);
-			updatePositionInfo = Reflection.GetPrivateMethodOrThrow(sandstorm.GetType(), "updatePosition", true);
+			updatePositionInfo = Reflection.GetPrivateMethodOrThrow(sandstorm.GetType(), "updatePositon", true);
 
 			Time = time;
             DisasterLength = disasterLength;
