@@ -52,6 +52,9 @@
     <Compile Include="Patches\Core\GameFixedUpdate.cs" />
     <Compile Include="Patches\Core\OnExitMultiplayerGame.cs" />
     <Compile Include="Patches\Environment\DisableWindUpdate.cs" />
+    <Compile Include="Patches\Environment\Sandstorm\EndSandstorm.cs" />
+    <Compile Include="Patches\Environment\Sandstorm\TriggerSandstorm.cs" />
+    <Compile Include="Patches\Environment\Sandstorm\UpdateSandstorm.cs" />
     <Compile Include="Patches\Time\OnDecreaseSpeed.cs" />
     <Compile Include="Patches\Time\OnIncreaseSpeed.cs" />
     <Compile Include="Patches\Time\OnSetNormalSpeed.cs" />

@@ -1,4 +1,6 @@
-﻿using PlanetbaseMultiplayer.Client.Timers.Actions.Abstract;
+﻿using PlanetbaseMultiplayer.Client.Environment;
+using PlanetbaseMultiplayer.Client.Environment.Disasters;
+using PlanetbaseMultiplayer.Client.Timers.Actions.Abstract;
 using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Players;
 using System;
@@ -14,10 +16,16 @@ namespace PlanetbaseMultiplayer.Client.Timers.Actions
         public override void ProcessAction(ulong currentTick, ClientProcessorContext context)
         {
             Player? simulationOwner = context.Client.SimulationManager.GetSimulationOwner();
-            if (simulationOwner != null && simulationOwner.Value == context.Client.LocalPlayer)
-            {
-                Planetbase.DisasterManager disasterManager = Planetbase.DisasterManager.getInstance();
-            }
+            if (simulationOwner == null || simulationOwner.Value != context.Client.LocalPlayer)
+                return;
+
+            DisasterManager disasterManager = context.Client.DisasterManager;
+            if (!disasterManager.AnyDisasterInProgress())
+                return;
+
+            // Pull the current time from our disaster proxy
+            IDisasterProxy disasterProxy = disasterManager.GetCurrentDisasterProxy();
+            disasterManager.UpdateDisaster(disasterProxy.Time);
         }
     }
 }

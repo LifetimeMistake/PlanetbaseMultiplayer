@@ -66,7 +66,7 @@ namespace PlanetbaseMultiplayer.Server
             playerConnections = new Dictionary<Guid, long>();
             playerManager = new PlayerManager(this);
             simulationManager = new SimulationManager(this);
-            worldStateManager = new WorldStateManager(this, worldStateData);
+            worldStateManager = new WorldStateManager(this, settings.SavePath, worldStateData);
             worldRequestQueueManager = new WorldRequestQueueManager(this);
             timeManager = new TimeManager(this);
             environmentManager = new EnvironmentManager(this);

@@ -25,10 +25,28 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
 		private ParticleSystem mParticleSystem;
 		private Sandstorm sandstorm;
 
-        public float Time { get; set; }
-        public float DisasterLength { get; set; }
+        public float Time
+        {
+			get => (float)Reflection.GetInstanceFieldValue(sandstorm, mTimeInfo);
+			set => Reflection.SetInstanceFieldValue(sandstorm, mTimeInfo, value);
+        }
+        public float DisasterLength
+		{
+			get => (float)Reflection.GetInstanceFieldValue(sandstorm, mSandstormTimeInfo);
+			set => Reflection.SetInstanceFieldValue(sandstorm, mSandstormTimeInfo, value);
+		}
+		public float Intensity
+        {
+			get => (float)Reflection.GetInstanceFieldValue(sandstorm, mIntensityInfo);
+			set => Reflection.SetInstanceFieldValue(sandstorm, mIntensityInfo, value);
+        }
+		public bool SandstormInProgress
+		{
+			get => (bool)Reflection.GetInstanceFieldValue(sandstorm, mSandstormInProgressInfo);
+			set => Reflection.SetInstanceFieldValue(sandstorm, mSandstormInProgressInfo, value);
+		}
 
-        public SandstormProxy(float time, float disasterLength, Sandstorm sandstorm)
+		public SandstormProxy(float time, float disasterLength, Sandstorm sandstorm)
         {
 			mTimeInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mTime", true);
 			mSandstormTimeInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mSandstormTime", true);
@@ -46,9 +64,7 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
 
         public void StartDisaster()
         {
-            Reflection.SetInstanceFieldValue(sandstorm, mTimeInfo, Time);
-            Reflection.SetInstanceFieldValue(sandstorm, mSandstormTimeInfo, DisasterLength);
-            Reflection.SetInstanceFieldValue(sandstorm, mSandstormInProgressInfo, true);
+			SandstormInProgress = true;
             Reflection.InvokeInstanceMethod(sandstorm, onStartInfo, new object[] { });
 			mOriginalEmissionRate = (float)Reflection.GetInstanceFieldValue(sandstorm, mOriginalEmissionRateInfo);
 			mParticleSystem = (ParticleSystem)Reflection.GetInstanceFieldValue(sandstorm, mParticleSystemInfo);
@@ -57,11 +73,9 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
         public void EndDisaster()
         {
             MethodInfo destroyParticlesInfo = Reflection.GetPrivateMethodOrThrow(sandstorm.GetType(), "destroyParticles", true);
-
             Singleton<Planetbase.EnvironmentManager>.getInstance().refreshAmbientSound();
             Reflection.InvokeInstanceMethod(sandstorm, destroyParticlesInfo, new object[] { });
-
-			Reflection.SetInstanceFieldValue(sandstorm, mSandstormInProgressInfo, false);
+			SandstormInProgress = false;
         }
 
         public void UpdateDisaster(float timeStep)
@@ -78,18 +92,18 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
 				float num = Time / DisasterLength;
 				if (num < 0.25f)
 				{
-					Reflection.SetInstanceFieldValue(sandstorm, mIntensityInfo, Mathf.Clamp01(4f * num));
+					Intensity = Mathf.Clamp01(4f * num);
 				}
 				else if (num > 0.75f)
 				{
-					Reflection.SetInstanceFieldValue(sandstorm, mIntensityInfo, Mathf.Clamp01(4f * (1f - num)));
+					Intensity = Mathf.Clamp01(4f * (1f - num));
 				}
 				else
 				{
-					Reflection.SetInstanceFieldValue(sandstorm, mIntensityInfo, 1f);
+					Intensity = 1f;
 				}
-				float mIntensity = (float)Reflection.GetInstanceFieldValue(sandstorm, mIntensityInfo);
-				mParticleSystem.emissionRate = mOriginalEmissionRate * mIntensity;
+
+				mParticleSystem.emissionRate = mOriginalEmissionRate * Intensity;
 			}
 		}
     }

@@ -20,11 +20,6 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             CreateDisasterPacket createDisasterPacket = (CreateDisasterPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
-
-            Player? simulationOwner = processorContext.Client.SimulationManager.GetSimulationOwner();
-            if (simulationOwner != null && sourcePlayerId == simulationOwner.Value.Id)
-                return;
-
             processorContext.Client.DisasterManager.OnCreateDisaster(createDisasterPacket.Disaster);
         }
     }

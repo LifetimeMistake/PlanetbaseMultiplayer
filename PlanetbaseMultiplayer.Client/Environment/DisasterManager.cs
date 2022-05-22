@@ -41,6 +41,11 @@ namespace PlanetbaseMultiplayer.Client.Environment
             return disaster;
         }
 
+        public IDisasterProxy GetCurrentDisasterProxy()
+        {
+            return disasterProxy;
+        }
+
         public float GetCurrentTime()
         {
             if (disaster == null)
@@ -91,7 +96,7 @@ namespace PlanetbaseMultiplayer.Client.Environment
 
         public void OnUpdateDisaster(float currentTime)
         {
-            if (this.disaster == null)
+            if (this.disaster == null || this.disasterProxy == null)
                 return;
 
             Disaster disaster = this.disaster.Value;

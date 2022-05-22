@@ -18,24 +18,24 @@ namespace PlanetbaseMultiplayer.Client.Timers.Actions
         public override void ProcessAction(ulong currentTick, ClientProcessorContext context)
         {
             Player? simulationOwner = context.Client.SimulationManager.GetSimulationOwner();
-            if (simulationOwner != null && simulationOwner.Value == context.Client.LocalPlayer)
-            {
-                Planetbase.EnvironmentManager environmentManager = Planetbase.EnvironmentManager.getInstance();
-                Type environmentManagerType = environmentManager.GetType();
+            if (simulationOwner == null || simulationOwner.Value != context.Client.LocalPlayer)
+                return;
 
-                FieldInfo mTimeIndicator = Reflection.GetPrivateFieldOrThrow(environmentManagerType, "mTimeIndicator", true);
-                FieldInfo mWindIndicator = Reflection.GetPrivateFieldOrThrow(environmentManagerType, "mWindIndicator", true);
-                FieldInfo mWindDirection = Reflection.GetPrivateFieldOrThrow(environmentManagerType, "mWindDirection", true);
+            Planetbase.EnvironmentManager environmentManager = Planetbase.EnvironmentManager.getInstance();
+            Type environmentManagerType = environmentManager.GetType();
 
-                Indicator timeIndicator = (Indicator)Reflection.GetInstanceFieldValue(environmentManager, mTimeIndicator);
-                Indicator windIndicator = (Indicator)Reflection.GetInstanceFieldValue(environmentManager, mWindIndicator);
+            FieldInfo mTimeIndicator = Reflection.GetPrivateFieldOrThrow(environmentManagerType, "mTimeIndicator", true);
+            FieldInfo mWindIndicator = Reflection.GetPrivateFieldOrThrow(environmentManagerType, "mWindIndicator", true);
+            FieldInfo mWindDirection = Reflection.GetPrivateFieldOrThrow(environmentManagerType, "mWindDirection", true);
 
-                float time = timeIndicator.getValue();
-                float windLevel = windIndicator.getValue();
-                Vector3 windDirection = (Vector3)Reflection.GetInstanceFieldValue(environmentManager, mWindDirection);
+            Indicator timeIndicator = (Indicator)Reflection.GetInstanceFieldValue(environmentManager, mTimeIndicator);
+            Indicator windIndicator = (Indicator)Reflection.GetInstanceFieldValue(environmentManager, mWindIndicator);
 
-                context.Client.EnvironmentManager.UpdateEnvironmentData(time, windLevel, windDirection);
-            }
+            float time = timeIndicator.getValue();
+            float windLevel = windIndicator.getValue();
+            Vector3 windDirection = (Vector3)Reflection.GetInstanceFieldValue(environmentManager, mWindDirection);
+
+            context.Client.EnvironmentManager.UpdateEnvironmentData(time, windLevel, windDirection);
         }
     }
 }

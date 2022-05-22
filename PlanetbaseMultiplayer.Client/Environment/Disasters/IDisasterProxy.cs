@@ -9,6 +9,7 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
     {
         float Time { get; set; }
         float DisasterLength { get; set; }
+        float Intensity { get; set; }
         void StartDisaster();
         void EndDisaster();
         void UpdateDisaster(float timeStep);

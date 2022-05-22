@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace PlanetbaseMultiplayer.Patcher.Patches.Environment
+namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
 {
     [HarmonyPatch(typeof(Planetbase.Sandstorm), "onEnd")]
     public class EndSandstorm
