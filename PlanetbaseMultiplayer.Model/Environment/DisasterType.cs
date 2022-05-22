@@ -5,6 +5,7 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Model.Environment
 {
+    [Serializable]
     public enum DisasterType
     {
         Sandstorm = 0,
