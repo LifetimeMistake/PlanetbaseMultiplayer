@@ -11,7 +11,7 @@ using System.Text;
 namespace PlanetbaseMultiplayer.Patcher.Patches.Time
 {
     [HarmonyPatch(typeof(GameStateGame), "increaseSpeed")]
-    class IncreaseSpeed
+    class OnIncreaseSpeedUI
     {
         static bool Prefix()
         {
@@ -19,8 +19,27 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
                 return true; // Not in multiplayer mode
 
             Player? simulationOwner = Multiplayer.Client.SimulationManager.GetSimulationOwner();
-            if (simulationOwner == null || simulationOwner.Value != Multiplayer.Client.LocalPlayer)
-                return true; // Player isn't the simulation owner
+            if (simulationOwner == null || simulationOwner.Value != Multiplayer.Client.LocalPlayer) // Player isn't the simulation owner
+            {
+                MessageToast.Show($"Only the simulation owner can control time!", 3f);
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(TimeManager), "increaseSpeed")]
+    class OnIncreaseSpeed
+    {
+        static bool Prefix()
+        {
+            if (Multiplayer.Client == null)
+                return true; // Not in multiplayer mode
+
+            Player? simulationOwner = Multiplayer.Client.SimulationManager.GetSimulationOwner();
+            if (simulationOwner == null || simulationOwner.Value != Multiplayer.Client.LocalPlayer) 
+                return false; // Player isn't the simulation owner
 
             PlanetbaseMultiplayer.Client.Time.TimeManager timeManager = Multiplayer.Client.TimeManager;
 
@@ -31,7 +50,6 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
                 timeScale = 8f;
 
             timeManager.SetSpeed(timeScale);
-            MessageToast.Show($"Set game speed to x{timeScale}", 3f);
             return false;
         }
     }

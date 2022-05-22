@@ -4,6 +4,7 @@ using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.World;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -13,6 +14,7 @@ namespace PlanetbaseMultiplayer.Server.World
     {
         private WorldStateData worldStateData;
         private Server server;
+        private string savePath;
         private bool dataRequestInProgress;
         public bool IsInitialized { get; private set; }
 
@@ -20,9 +22,10 @@ namespace PlanetbaseMultiplayer.Server.World
         public event EventHandler WorldDataUpdated;
         public event EventHandler WorldDataRequestFailed;
 
-        public WorldStateManager(Server server, WorldStateData worldStateData)
+        public WorldStateManager(Server server, string savePath, WorldStateData worldStateData)
         {
             this.server = server ?? throw new ArgumentNullException(nameof(server));
+            this.savePath = savePath ?? throw new ArgumentNullException(nameof(savePath));
             this.worldStateData = worldStateData ?? throw new ArgumentNullException(nameof(worldStateData));
         }
 
@@ -53,6 +56,15 @@ namespace PlanetbaseMultiplayer.Server.World
         public void UpdateWorldData(WorldStateData worldStateData)
         {
             this.worldStateData = worldStateData;
+            try
+            {
+                File.WriteAllText(savePath, worldStateData.XmlData);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to write the world data to disk: {ex}");
+            }
+
             WorldDataUpdated?.Invoke(this, new System.EventArgs());
         }
 
