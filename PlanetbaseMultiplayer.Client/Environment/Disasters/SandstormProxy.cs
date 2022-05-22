@@ -50,7 +50,7 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
         {
 			mTimeInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mTime", true);
 			mSandstormTimeInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mSandstormTime", true);
-			mSandstormInProgressInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mSandstormInProgressInfo", true);
+			mSandstormInProgressInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mSandstormInProgress", true);
 			mIntensityInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mIntensity", true);
 			mParticleSystemInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mParticleSystem", true);
 			mOriginalEmissionRateInfo = Reflection.GetPrivateFieldOrThrow(sandstorm.GetType(), "mOriginalEmissionRate", true);
