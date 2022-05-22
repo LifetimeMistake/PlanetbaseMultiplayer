@@ -30,7 +30,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
             if(sandstormInProgress)
             {
                 FieldInfo mTimeInfo = Reflection.GetPrivateFieldOrThrow(sandstormType, "mTime", true);
-                FieldInfo mSandstormTimeInfo = Reflection.GetPrivateFieldOrThrow(sandstormType, "mStandstormTime", true);
+                FieldInfo mSandstormTimeInfo = Reflection.GetPrivateFieldOrThrow(sandstormType, "mSandstormTime", true);
                 MethodInfo onEndInfo = Reflection.GetPrivateMethodOrThrow(sandstormType, "onEnd", true);
 
                 float mTime = (float)Reflection.GetInstanceFieldValue(__instance, mTimeInfo);
