@@ -25,7 +25,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
                 return false;
             }
 
-            return false;
+            return true;
         }
     }
 
