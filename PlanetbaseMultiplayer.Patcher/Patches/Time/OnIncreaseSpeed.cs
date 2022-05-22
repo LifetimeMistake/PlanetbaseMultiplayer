@@ -13,7 +13,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
     [HarmonyPatch(typeof(GameStateGame), "increaseSpeed")]
     class OnIncreaseSpeedUI
     {
-        static bool Prefix()
+        static bool Prefix(GameStateGame __instance)
         {
             if (Multiplayer.Client == null)
                 return true; // Not in multiplayer mode
@@ -25,7 +25,16 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
                 return false;
             }
 
-            return true;
+            PlanetbaseMultiplayer.Client.Time.TimeManager timeManager = Multiplayer.Client.TimeManager;
+            float timeScale = timeManager.GetCurrentSpeed();
+            timeScale *= 2f;
+
+            if (timeScale > 8f)
+                timeScale = 8f;
+
+            MessageToast.Show(StringList.get("speed_set") + " x" + timeScale, 3f);
+            TimeManager.getInstance().increaseSpeed();
+            return false;
         }
     }
 
@@ -45,7 +54,6 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
 
             float timeScale = timeManager.GetCurrentSpeed();
             timeScale *= 2f;
-
             if (timeScale > 8f)
                 timeScale = 8f;
 

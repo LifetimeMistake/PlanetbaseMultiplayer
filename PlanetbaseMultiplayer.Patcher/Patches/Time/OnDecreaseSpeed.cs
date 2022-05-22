@@ -25,7 +25,16 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
                 return false;
             }
 
-            return true;
+            PlanetbaseMultiplayer.Client.Time.TimeManager timeManager = Multiplayer.Client.TimeManager;
+            float timeScale = timeManager.GetCurrentSpeed();
+            timeScale /= 2f;
+
+            if (timeScale < 1f)
+                timeScale = 1f;
+
+            MessageToast.Show(StringList.get("speed_set") + " x" + timeScale, 3f);
+            TimeManager.getInstance().decreaseSpeed();
+            return false;
         }
     }
 
@@ -42,7 +51,6 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
                 return false; // Player isn't the simulation owner
 
             PlanetbaseMultiplayer.Client.Time.TimeManager timeManager = Multiplayer.Client.TimeManager;
-
             float timeScale = timeManager.GetCurrentSpeed();
             timeScale /= 2f;
 
