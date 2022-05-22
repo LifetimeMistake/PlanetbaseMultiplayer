@@ -61,7 +61,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
                 }
             }
 
-            return true;
+            return false;
         }
     }
 }
