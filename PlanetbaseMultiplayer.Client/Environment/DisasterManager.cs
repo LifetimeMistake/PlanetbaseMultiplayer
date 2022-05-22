@@ -64,10 +64,10 @@ namespace PlanetbaseMultiplayer.Client.Environment
                     disasterProxy = new SandstormProxy(disaster.CurrentTime, disaster.DisasterLength, disasterManager.getSandstorm());
                     break;
                 case DisasterType.Blizzard:
-                    //do cool sandstorm stuff
+                    disasterProxy = new BlizzardProxy(disaster.CurrentTime, disaster.DisasterLength, disasterManager.getBlizzard());
                     break;
                 case DisasterType.SolarFlare:
-                    //do cool sandstorm stuff
+                    disasterProxy = new SolarFlareProxy(disaster.CurrentTime, disaster.DisasterLength, disasterManager.getSolarFlare());
                     break;
                 default:
                     throw new ArgumentException("Unknown disaster type");
@@ -99,10 +99,6 @@ namespace PlanetbaseMultiplayer.Client.Environment
             if (this.disaster == null || this.disasterProxy == null)
                 return;
 
-            Debug.Log("////////////////////////////////");
-            Debug.Log($"Time (Server): {currentTime}");
-            Debug.Log($"Time (Local): {disasterProxy.Time}");
-            Debug.Log($"Time (Manager): {this.disaster.Value.CurrentTime}");
             Disaster disaster = this.disaster.Value;
             disaster.CurrentTime = currentTime;
             this.disaster = disaster; // Nullable structs are a pain

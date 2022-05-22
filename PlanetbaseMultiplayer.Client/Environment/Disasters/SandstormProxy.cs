@@ -73,10 +73,10 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
         public void EndDisaster()
         {
             MethodInfo destroyParticlesInfo = Reflection.GetPrivateMethodOrThrow(sandstorm.GetType(), "destroyParticles", true);
-            Singleton<Planetbase.EnvironmentManager>.getInstance().refreshAmbientSound();
             Reflection.InvokeInstanceMethod(sandstorm, destroyParticlesInfo, new object[] { });
 			SandstormInProgress = false;
-        }
+			Singleton<Planetbase.EnvironmentManager>.getInstance().refreshAmbientSound();
+		}
 
         public void UpdateDisaster(float currentTime)
         {
@@ -102,9 +102,6 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
 				{
 					Intensity = 1f;
 				}
-
-				Debug.Log($"New time: {Time}");
-				Debug.Log($"New computed disaster intensity: {Intensity}");
 				mParticleSystem.emissionRate = mOriginalEmissionRate * Intensity;
 			}
 		}

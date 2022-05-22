@@ -55,8 +55,10 @@
     <Compile Include="ConnectionOptions.cs" />
     <Compile Include="Debugging\DebugManager.cs" />
     <Compile Include="Environment\DisasterManager.cs" />
+    <Compile Include="Environment\Disasters\BlizzardProxy.cs" />
     <Compile Include="Environment\Disasters\IDisasterProxy.cs" />
     <Compile Include="Environment\Disasters\SandstormProxy.cs" />
+    <Compile Include="Environment\Disasters\SolarFlareProxy.cs" />
     <Compile Include="GameStates\GameStateMultiplayer.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Multiplayer.cs" />

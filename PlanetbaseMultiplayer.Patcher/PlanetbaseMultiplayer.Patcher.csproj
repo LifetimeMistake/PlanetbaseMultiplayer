@@ -52,10 +52,17 @@
     <Compile Include="Patches\Core\DebugLog.cs" />
     <Compile Include="Patches\Core\GameFixedUpdate.cs" />
     <Compile Include="Patches\Core\OnExitMultiplayerGame.cs" />
+    <Compile Include="Patches\Environment\Blizzard\EndBlizzard.cs" />
+    <Compile Include="Patches\Environment\Blizzard\TriggerBlizzard.cs" />
+    <Compile Include="Patches\Environment\Blizzard\UpdateBlizzard.cs" />
     <Compile Include="Patches\Environment\DisableWindUpdate.cs" />
     <Compile Include="Patches\Environment\Sandstorm\EndSandstorm.cs" />
     <Compile Include="Patches\Environment\Sandstorm\TriggerSandstorm.cs" />
     <Compile Include="Patches\Environment\Sandstorm\UpdateSandstorm.cs" />
+    <Compile Include="Patches\Environment\SolarFlare\EndSolarFlare.cs" />
+    <Compile Include="Patches\Environment\SolarFlare\TriggerSolarFlare.cs" />
+    <Compile Include="Patches\Environment\SolarFlare\UpdateSolarFlare.cs" />
+    <Compile Include="Patches\Temp\PlanetAvailable.cs" />
     <Compile Include="Patches\Time\OnDecreaseSpeed.cs" />
     <Compile Include="Patches\Time\OnIncreaseSpeed.cs" />
     <Compile Include="Patches\Time\OnSetNormalSpeed.cs" />
