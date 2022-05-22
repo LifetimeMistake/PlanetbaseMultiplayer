@@ -53,17 +53,23 @@
   <ItemGroup>
     <Compile Include="ClientProcessorContext.cs" />
     <Compile Include="ConnectionOptions.cs" />
+    <Compile Include="Environment\DisasterManager.cs" />
+    <Compile Include="Environment\Disasters\IDisasterProxy.cs" />
+    <Compile Include="Environment\Disasters\SandstormProxy.cs" />
     <Compile Include="GameStates\GameStateMultiplayer.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Multiplayer.cs" />
     <Compile Include="Packets\Processors\AuthenticateProcessor.cs" />
+    <Compile Include="Packets\Processors\CreateDisasterProcessor.cs" />
     <Compile Include="Packets\Processors\DisconnectRequestProcessor.cs" />
+    <Compile Include="Packets\Processors\EndDisasterProcessor.cs" />
     <Compile Include="Packets\Processors\PlayerDataUpdatedProcessor.cs" />
     <Compile Include="Packets\Processors\PlayerDisconnectedProcessor.cs" />
     <Compile Include="Packets\Processors\PlayerJoinedProcessor.cs" />
     <Compile Include="Packets\Processors\SessionDataProcessor.cs" />
     <Compile Include="Packets\Processors\SimulationOwnerChangedProcessor.cs" />
     <Compile Include="Packets\Processors\TimeScaleUpdateProcessor.cs" />
+    <Compile Include="Packets\Processors\UpdateDisasterProcessor.cs" />
     <Compile Include="Packets\Processors\UpdateEnvironmentDataProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataRequestProcessor.cs" />
@@ -72,6 +78,7 @@
     <Compile Include="Simulation\SimulationManager.cs" />
     <Compile Include="Timers\Actions\Abstract\TimerAction.cs" />
     <Compile Include="Timers\Actions\ProcessPacketsAction.cs" />
+    <Compile Include="Timers\Actions\UpdateDisasterAction.cs" />
     <Compile Include="Timers\Actions\SyncEnvironmentDataAction.cs" />
     <Compile Include="Timers\TimerActionManager.cs" />
     <Compile Include="Time\TimeManager.cs" />

@@ -11,19 +11,18 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Server.Packets.Processors
 {
-    public class UpdateEnvironmentDataProcessor : PacketProcessor
+    public class EndDisasterProcessor : PacketProcessor
     {
         public override Type GetProcessedPacketType()
         {
-            return typeof(UpdateEnvironmentDataPacket);
+            return typeof(EndDisasterPacket);
         }
 
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
         {
-            UpdateEnvironmentDataPacket updateEnvironmentDataPacket = (UpdateEnvironmentDataPacket)packet;
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
             SimulationManager simulationManager = processorContext.Server.SimulationManager;
-            EnvironmentManager environmentManager = processorContext.Server.EnvironmentManager;
+            DisasterManager disasterManager = processorContext.Server.DisasterManager;
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || sourcePlayerId != simulationOwner.Value.Id)
@@ -32,7 +31,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
                 return;
             }
 
-            environmentManager.UpdateEnvironmentData(updateEnvironmentDataPacket.Time, updateEnvironmentDataPacket.WindLevel, updateEnvironmentDataPacket.WindDirection);
+            disasterManager.EndDisaster();
         }
     }
 }
