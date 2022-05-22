@@ -8,15 +8,19 @@ namespace PlanetbaseMultiplayer.Model.Environment
     [Serializable]
     public struct Disaster
     {
-        public float CurrentTime;
-        public float DisasterLength;
-        public DisasterType Type;
+        private float currentTime;
+        private float disasterLength;
+        private DisasterType type;
+
+        public float CurrentTime { get => currentTime; set => currentTime = value; }
+        public float DisasterLength { get => disasterLength; set => disasterLength = value; }
+        public DisasterType Type { get => type; set => type = value; }
 
         public Disaster(DisasterType type, float disasterLength, float currentTime)
         {
-            DisasterLength = disasterLength;
-            Type = type;
-            CurrentTime = currentTime;
+            this.disasterLength = disasterLength;
+            this.type = type;
+            this.currentTime = currentTime;
         }
     }
 }

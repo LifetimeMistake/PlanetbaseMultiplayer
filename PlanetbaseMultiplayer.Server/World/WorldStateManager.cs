@@ -26,7 +26,7 @@ namespace PlanetbaseMultiplayer.Server.World
         {
             this.server = server ?? throw new ArgumentNullException(nameof(server));
             this.savePath = savePath ?? throw new ArgumentNullException(nameof(savePath));
-            this.worldStateData = worldStateData ?? throw new ArgumentNullException(nameof(worldStateData));
+            this.worldStateData = worldStateData;
         }
 
         public bool Initialize()

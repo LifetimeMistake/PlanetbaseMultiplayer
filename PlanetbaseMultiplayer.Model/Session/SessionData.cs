@@ -9,15 +9,19 @@ namespace PlanetbaseMultiplayer.Model.Session
     [Serializable]
     public struct SessionData
     {
-        public string ServerName;
-        public bool PasswordProtected;
-        public int PlayerCount;
+        private string serverName;
+        private bool passwordProtected;
+        private int playerCount;
+
+        public string ServerName { get => serverName; set => serverName = value; }
+        public bool PasswordProtected { get => passwordProtected; set => passwordProtected = value; }
+        public int PlayerCount { get => playerCount; set => playerCount = value; }
 
         public SessionData(string serverName, bool passwordProtected, int playerCount)
         {
-            ServerName = serverName ?? throw new ArgumentNullException(nameof(serverName));
-            PasswordProtected = passwordProtected;
-            PlayerCount = playerCount;
+            this.serverName = serverName ?? throw new ArgumentNullException(nameof(serverName));
+            this.passwordProtected = passwordProtected;
+            this.playerCount = playerCount;
         }
     }
 }

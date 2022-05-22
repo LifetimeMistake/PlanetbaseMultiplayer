@@ -12,6 +12,6 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
         float Intensity { get; set; }
         void StartDisaster();
         void EndDisaster();
-        void UpdateDisaster(float timeStep);
+        void UpdateDisaster(float currentTime);
     }
 }

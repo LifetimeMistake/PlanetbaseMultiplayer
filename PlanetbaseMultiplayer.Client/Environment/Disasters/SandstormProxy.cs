@@ -78,16 +78,15 @@ namespace PlanetbaseMultiplayer.Client.Environment.Disasters
 			SandstormInProgress = false;
         }
 
-        public void UpdateDisaster(float timeStep)
+        public void UpdateDisaster(float currentTime)
         {
-			Debug.Log($"TimeStep: {timeStep}");
 			Planet currentPlanet = PlanetManager.getCurrentPlanet();
 			if (currentPlanet.getSandstormRisk() != Planet.Quantity.None)
 			{
 				Singleton<MusicManager>.getInstance().onTension();
 				Reflection.InvokeInstanceMethod(sandstorm, updatePositionInfo, new object[] { });
 
-				Time += timeStep;
+				Time = currentTime;
 				Reflection.SetInstanceFieldValue(sandstorm, mTimeInfo, Time);
 
 				float num = Time / DisasterLength;

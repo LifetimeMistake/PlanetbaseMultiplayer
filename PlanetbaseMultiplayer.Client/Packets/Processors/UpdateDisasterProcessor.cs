@@ -1,4 +1,5 @@
-﻿using PlanetbaseMultiplayer.Model.Packets;
+﻿using PlanetbaseMultiplayer.Client.Environment;
+using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Players;

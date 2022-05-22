@@ -23,8 +23,16 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Core
         static void ShowDebugLog()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            foreach(string line in Multiplayer.Client.DebugManager.GetLog())
-                stringBuilder.AppendLine(line);
+            try
+            {
+                foreach (string line in Multiplayer.Client.DebugManager.GetLog())
+                    stringBuilder.AppendLine(line);
+            }
+            catch(Exception)
+            {
+                Debug.Log("WARN: Debug list access collision");
+                return;
+            }
 
             GUIStyle style = new GUIStyle();
             style.normal.textColor = Color.white;

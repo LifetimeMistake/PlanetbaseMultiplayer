@@ -20,11 +20,6 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             UpdateEnvironmentDataPacket updateEnvironmentDataPacket = (UpdateEnvironmentDataPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
-
-            Player? simulationOwner = processorContext.Client.SimulationManager.GetSimulationOwner();
-            if (simulationOwner != null && sourcePlayerId == simulationOwner.Value.Id)
-                return;
-
             processorContext.Client.EnvironmentManager.OnUpdateEnvironmentData(updateEnvironmentDataPacket.Time, updateEnvironmentDataPacket.WindLevel, updateEnvironmentDataPacket.WindDirection);
         }
     }

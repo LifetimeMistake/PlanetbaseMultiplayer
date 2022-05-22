@@ -13,7 +13,7 @@ namespace PlanetbaseMultiplayer.Model.Packets.World
 
         public WorldDataPacket(WorldStateData world)
         {
-            World = world ?? throw new ArgumentNullException(nameof(world));
+            World = world;
         }
     }
 }

@@ -99,12 +99,15 @@ namespace PlanetbaseMultiplayer.Client.Environment
             if (this.disaster == null || this.disasterProxy == null)
                 return;
 
+            Debug.Log("////////////////////////////////");
+            Debug.Log($"Time (Server): {currentTime}");
+            Debug.Log($"Time (Local): {disasterProxy.Time}");
+            Debug.Log($"Time (Manager): {this.disaster.Value.CurrentTime}");
             Disaster disaster = this.disaster.Value;
-
-            float timeStep = currentTime - disaster.CurrentTime;
             disaster.CurrentTime = currentTime;
+            this.disaster = disaster; // Nullable structs are a pain
 
-            disasterProxy.UpdateDisaster(timeStep);
+            disasterProxy.UpdateDisaster(currentTime);
         }
 
         public void UpdateDisaster(float currentTime)
