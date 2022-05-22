@@ -33,13 +33,13 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
                 switch (authenticatePacket.ErrorReason.Value)
                 {
                     case AuthenticationErrorReason.UsernameTaken:
-                        processorContext.Client.ShowMessageBox(null, "Failed to join game", "Failed to connect to the server: Username is already taken");
+                        MessageBoxOk.Show(null, "Failed to join game", "Failed to connect to the server: Username is already taken");
                         break;
                     case AuthenticationErrorReason.IncorrectPassword:
-                        processorContext.Client.ShowMessageBox(null, "Failed to join game", "Failed to connect to the server: Incorrect password");
+                        MessageBoxOk.Show(null, "Failed to join game", "Failed to connect to the server: Incorrect password");
                         break;
                     case AuthenticationErrorReason.IllegalUsername:
-                        processorContext.Client.ShowMessageBox(null, "Failed to join game",  "Failed to connect to the server: Username contains disallowed characters");
+                        MessageBoxOk.Show(null, "Failed to join game",  "Failed to connect to the server: Username contains disallowed characters");
                         break;
                 }
 

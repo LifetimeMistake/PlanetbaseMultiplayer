@@ -85,6 +85,7 @@
     <Compile Include="Timers\Actions\SyncEnvironmentDataAction.cs" />
     <Compile Include="Timers\TimerActionManager.cs" />
     <Compile Include="Time\TimeManager.cs" />
+    <Compile Include="UI\MessageBoxOk.cs" />
     <Compile Include="UI\MessageLog.cs" />
     <Compile Include="UI\MessageLogFlags.cs" />
     <Compile Include="UI\MessageToast.cs" />
