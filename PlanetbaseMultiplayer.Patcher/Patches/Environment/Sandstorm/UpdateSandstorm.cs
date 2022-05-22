@@ -50,7 +50,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
                 FieldInfo mTimeToNextSandstorminfo = Reflection.GetPrivateFieldOrThrow(sandstormType, "mTimeToNextSandstorm", true);
                 float mTimeToNextSandstorm = (float)Reflection.GetInstanceFieldValue(__instance, mTimeToNextSandstorminfo);
 
-                Reflection.InvokeInstanceMethod(sandstormType, updateDetectionInfo, new[] { mTimeToNextSandstorm, timeStep });
+                Reflection.InvokeInstanceMethod(__instance, updateDetectionInfo, new object[] { mTimeToNextSandstorm, timeStep });
                 mTimeToNextSandstorm -= timeStep;
                 Reflection.SetInstanceFieldValue(__instance, mTimeToNextSandstorminfo, mTimeToNextSandstorm);
                 if (mTimeToNextSandstorm < 0f)
