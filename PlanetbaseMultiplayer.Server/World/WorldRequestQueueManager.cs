@@ -62,7 +62,7 @@ namespace PlanetbaseMultiplayer.Server.World
         private void DeliverWorldData()
         {
             Console.WriteLine("Delivering world data...");
-            WorldStateData worldStateData = server.WorldStateManager.GetWorldData();
+            WorldData worldStateData = server.WorldStateManager.GetWorldData();
             WorldDataPacket worldDataPacket = new WorldDataPacket(worldStateData);
             foreach (KeyValuePair<Guid, Player> kvp in playerQueue)
             {

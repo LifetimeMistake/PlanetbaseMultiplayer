@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Model.Environment
 {
-    public interface IEnvironmentManager : IManager
+    public interface IEnvironmentManager : IManager, IPersistent
     {
         float GetTimeOfDay();
         void SetTimeOfDay(float time);

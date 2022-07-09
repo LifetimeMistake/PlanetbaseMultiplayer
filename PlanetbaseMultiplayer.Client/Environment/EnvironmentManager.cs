@@ -4,6 +4,8 @@ using PlanetbaseMultiplayer.Model.Environment;
 using PlanetbaseMultiplayer.Model.Math;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
 using PlanetbaseMultiplayer.Model.Players;
+using PlanetbaseMultiplayer.Model.World;
+using PlanetbaseMultiplayer.Model.World.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,6 +96,20 @@ namespace PlanetbaseMultiplayer.Client.Environment
         public void SetWindDirection(Vector3D windDirection)
         {
             UpdateEnvironmentData(time, windLevel, windDirection);
+        }
+
+        public bool Save(WorldData world)
+        {
+            EnvironmentData environmentData = new EnvironmentData(time, windLevel, windDirection);
+            world.Environment = environmentData;
+            return true;
+        }
+
+        public bool Load(WorldData world)
+        {
+            EnvironmentData environmentData = world.Environment;
+            OnUpdateEnvironmentData(environmentData.DayTime, environmentData.WindLevel, environmentData.WindDirection);
+            return true;
         }
     }
 }

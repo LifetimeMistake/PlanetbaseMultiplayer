@@ -8,7 +8,7 @@ namespace PlanetbaseMultiplayer.Model.World
     public interface IWorldStateManager : IManager
     {
         bool RequestWorldData();
-        void UpdateWorldData(WorldStateData worldStateData);
-        WorldStateData GetWorldData();
+        void UpdateWorldData(WorldData worldStateData);
+        WorldData GetWorldData();
     }
 }

@@ -9,9 +9,9 @@ namespace PlanetbaseMultiplayer.Model.Packets.World
     [Serializable]
     public class WorldDataPacket : Packet
     {
-        public WorldStateData World;
+        public WorldData World;
 
-        public WorldDataPacket(WorldStateData world)
+        public WorldDataPacket(WorldData world)
         {
             World = world;
         }

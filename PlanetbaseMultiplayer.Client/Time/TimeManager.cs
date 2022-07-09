@@ -91,6 +91,5 @@ namespace PlanetbaseMultiplayer.Client.Time
         {
             return (float)Math.Sqrt(timeScale);
         }
-
     }
 }

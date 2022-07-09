@@ -1,5 +1,6 @@
 ﻿using Planetbase;
 using PlanetbaseMultiplayer.Client.Simulation;
+using PlanetbaseMultiplayer.Client.World;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.World;
@@ -28,13 +29,14 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             if (player.HasValue && clientProcessor.Client.LocalPlayer.HasValue && clientProcessor.Client.LocalPlayer.Value != player.Value)
                 return; // Not the simulation owner
 
-            GameStateGame gameStateGame = GameManager.getInstance().getGameState() as GameStateGame;
+            // TODO
+            //GameStateGame gameStateGame = GameManager.getInstance().getGameState() as GameStateGame;
 
-            string xmlData = WorldSerializer.Serialize(gameStateGame);
-            WorldStateData worldStateData = new WorldStateData(xmlData);
+            //string xmlData = WorldSerializer.Serialize(gameStateGame);
+            //WorldData worldStateData = new WorldData(xmlData);
 
-            WorldDataPacket worldDataPacket = new WorldDataPacket(worldStateData);
-            clientProcessor.Client.SendPacket(worldDataPacket);
+            //WorldDataPacket worldDataPacket = new WorldDataPacket(worldStateData);
+            //clientProcessor.Client.SendPacket(worldDataPacket);
         }
     }
 }

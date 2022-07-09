@@ -1,9 +1,12 @@
 ﻿using PlanetbaseMultiplayer.Model.Environment;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
+using PlanetbaseMultiplayer.Model.World;
+using PlanetbaseMultiplayer.Model.World.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace PlanetbaseMultiplayer.Server.Environment
 {
@@ -77,6 +80,19 @@ namespace PlanetbaseMultiplayer.Server.Environment
             disaster = null;
             EndDisasterPacket endDisasterPacket = new EndDisasterPacket();
             server.SendPacketToAll(endDisasterPacket);
+        }
+
+        public bool Save(WorldData world)
+        {
+            DisasterData disasterData = new DisasterData(disaster);
+            world.Disasters = disasterData;
+            return true;
+        }
+
+        public bool Load(WorldData world)
+        {
+            disaster = world.Disasters.CurrentDisaster;
+            return true;
         }
     }
 }

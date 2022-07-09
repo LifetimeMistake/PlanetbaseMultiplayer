@@ -53,8 +53,11 @@ namespace PlanetbaseMultiplayer.Server
             if (!File.Exists(settings.SavePath))
                 throw new FileNotFoundException("Save file not found.");
 
-            string worldData = File.ReadAllText(settings.SavePath);
-            WorldStateData worldStateData = new WorldStateData(worldData);
+            WorldData worldStateData;
+            using (FileStream stream = File.OpenRead(settings.SavePath))
+            {
+                worldStateData = WorldData.Deserialize(stream);
+            }
 
             this.settings = settings;
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());

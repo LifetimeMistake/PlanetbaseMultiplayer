@@ -3,11 +3,14 @@ using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Environment;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
 using PlanetbaseMultiplayer.Model.Players;
+using PlanetbaseMultiplayer.Model.World;
+using PlanetbaseMultiplayer.Model.World.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client.Environment
@@ -137,6 +140,37 @@ namespace PlanetbaseMultiplayer.Client.Environment
 
             EndDisasterPacket endDisasterPacket = new EndDisasterPacket();
             client.SendPacket(endDisasterPacket);
+        }
+
+        public bool Serialize(XmlDocument document)
+        {
+            return true;
+        }
+
+        public bool Deserialize(XmlDocument document)
+        {
+            return true;
+        }
+
+        public bool Save(WorldData world)
+        {
+            DisasterData disasterData = new DisasterData(disaster);
+            world.Disasters = disasterData;
+            return true;
+        }
+
+        public bool Load(WorldData world)
+        {
+            if (world.Disasters.CurrentDisaster.HasValue)
+            {
+                OnCreateDisaster(world.Disasters.CurrentDisaster.Value);
+            }
+            else
+            {
+                disaster = world.Disasters.CurrentDisaster;
+            }
+
+            return true;
         }
     }
 }

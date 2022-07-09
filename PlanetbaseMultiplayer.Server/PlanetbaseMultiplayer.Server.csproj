@@ -42,10 +42,9 @@
     <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Environment\DisasterManager.cs" />
@@ -79,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlanetbaseMultiplayer.Model\PlanetbaseMultiplayer.Model.csproj">
-      <Project>{C993E29D-57F9-40C2-AEE1-F9623F46076A}</Project>
+      <Project>{c993e29d-57f9-40c2-aee1-f9623f46076a}</Project>
       <Name>PlanetbaseMultiplayer.Model</Name>
     </ProjectReference>
   </ItemGroup>

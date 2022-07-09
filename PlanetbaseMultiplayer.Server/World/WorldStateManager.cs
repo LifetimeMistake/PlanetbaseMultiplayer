@@ -12,7 +12,7 @@ namespace PlanetbaseMultiplayer.Server.World
 {
     public class WorldStateManager : IManager
     {
-        private WorldStateData worldStateData;
+        private WorldData worldStateData;
         private Server server;
         private string savePath;
         private bool dataRequestInProgress;
@@ -22,7 +22,7 @@ namespace PlanetbaseMultiplayer.Server.World
         public event EventHandler WorldDataUpdated;
         public event EventHandler WorldDataRequestFailed;
 
-        public WorldStateManager(Server server, string savePath, WorldStateData worldStateData)
+        public WorldStateManager(Server server, string savePath, WorldData worldStateData)
         {
             this.server = server ?? throw new ArgumentNullException(nameof(server));
             this.savePath = savePath ?? throw new ArgumentNullException(nameof(savePath));
@@ -53,7 +53,7 @@ namespace PlanetbaseMultiplayer.Server.World
             return true;
         }
 
-        public void UpdateWorldData(WorldStateData worldStateData)
+        public void UpdateWorldData(WorldData worldStateData)
         {
             this.worldStateData = worldStateData;
             try
@@ -68,12 +68,12 @@ namespace PlanetbaseMultiplayer.Server.World
             WorldDataUpdated?.Invoke(this, new System.EventArgs());
         }
 
-        public WorldStateData GetWorldData()
+        public WorldData GetWorldData()
         {
             return worldStateData;
         }
         
-        public void OnWorldDataReceived(WorldStateData worldStateData)
+        public void OnWorldDataReceived(WorldData worldStateData)
         {
             Console.WriteLine("Received world data, updating...");
             dataRequestInProgress = false;

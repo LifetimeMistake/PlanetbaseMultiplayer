@@ -1,4 +1,5 @@
 ﻿using Planetbase;
+using PlanetbaseMultiplayer.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,9 +7,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
-using UnityEngine;
 
-namespace PlanetbaseMultiplayer.Model.World
+namespace PlanetbaseMultiplayer.Client.World
 {
 	public static class WorldSerializer
 	{

@@ -42,10 +42,11 @@
     <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml">
+      <HintPath>..\References\System.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\References\UnityEngine.dll</HintPath>
     </Reference>
@@ -90,7 +91,9 @@
     <Compile Include="UI\MessageLogFlags.cs" />
     <Compile Include="UI\MessageToast.cs" />
     <Compile Include="Environment\EnvironmentManager.cs" />
+    <Compile Include="World\WorldSerializer.cs" />
     <Compile Include="World\WorldStateManager.cs" />
+    <Compile Include="Utils\XmlSerializerUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlanetbaseMultiplayer.Model\PlanetbaseMultiplayer.Model.csproj">

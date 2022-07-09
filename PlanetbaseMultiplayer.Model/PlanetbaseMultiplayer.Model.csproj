@@ -41,9 +41,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml">
-      <HintPath>..\References\System.Xml.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\References\UnityEngine.dll</HintPath>
     </Reference>
@@ -51,6 +48,7 @@
   <ItemGroup>
     <Compile Include="EventArgs\PlayerEventArgs.cs" />
     <Compile Include="EventArgs\SimulationOwnerUpdatedEventArgs.cs" />
+    <Compile Include="IPersistent.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Packets\Environment\CreateDisasterPacket.cs" />
     <Compile Include="Packets\Environment\EndDisasterPacket.cs" />
@@ -100,9 +98,9 @@
     <Compile Include="Environment\IDisasterManager.cs" />
     <Compile Include="Environment\IEnvironmentManager.cs" />
     <Compile Include="World\IWorldStateManager.cs" />
-    <Compile Include="World\WorldSerializer.cs" />
-    <Compile Include="World\WorldStateData.cs" />
-    <Compile Include="Utils\XmlSerializerUtils.cs" />
+    <Compile Include="World\Persistence\DisasterData.cs" />
+    <Compile Include="World\Persistence\EnvironmentData.cs" />
+    <Compile Include="World\WorldData.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

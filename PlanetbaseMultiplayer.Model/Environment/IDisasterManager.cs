@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Model.Environment
 {
-    public interface IDisasterManager : IManager
+    public interface IDisasterManager : IManager, IPersistent
     {
         bool AnyDisasterInProgress();
         Disaster? GetDisasterInProgress();

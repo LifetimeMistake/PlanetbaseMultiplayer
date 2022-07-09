@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml;
 using UnityEngine;
 
-namespace PlanetbaseMultiplayer.Model.Utils
+namespace PlanetbaseMultiplayer.Client.Utils
 {
 	public static class XmlSerializerUtils
 	{
