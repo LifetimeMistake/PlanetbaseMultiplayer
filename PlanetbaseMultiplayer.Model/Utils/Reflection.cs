@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace PlanetbaseMultiplayer.Model
+namespace PlanetbaseMultiplayer.Model.Utils
 {
     public static class Reflection
     {
