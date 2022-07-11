@@ -25,11 +25,11 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         {
             WorldDataRequestPacket worldDataRequestPacket = (WorldDataRequestPacket)packet;
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            PlayerManager playerManager = processorContext.Server.PlayerManager;
-            SimulationManager simulationManager = processorContext.Server.SimulationManager;
-            TimeManager timeManager = processorContext.Server.TimeManager;
-            WorldRequestQueueManager worldRequestQueueManager = processorContext.Server.WorldRequestQueueManager;
-            WorldStateManager worldStateManager = processorContext.Server.WorldStateManager;
+            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
+            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
+            TimeManager timeManager = processorContext.ServiceLocator.LocateService<TimeManager>();
+            WorldRequestQueueManager worldRequestQueueManager = processorContext.ServiceLocator.LocateService<WorldRequestQueueManager>();
+            WorldStateManager worldStateManager = processorContext.ServiceLocator.LocateService<WorldStateManager>();
 
             if (!playerManager.PlayerExists(sourcePlayerId))
             {

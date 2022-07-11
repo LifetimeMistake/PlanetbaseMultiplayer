@@ -21,8 +21,8 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
         {
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            SimulationManager simulationManager = processorContext.Server.SimulationManager;
-            DisasterManager disasterManager = processorContext.Server.DisasterManager;
+            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
+            DisasterManager disasterManager = processorContext.ServiceLocator.LocateService<DisasterManager>();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || sourcePlayerId != simulationOwner.Value.Id)

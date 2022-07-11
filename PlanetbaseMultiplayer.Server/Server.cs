@@ -18,6 +18,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using PlanetbaseMultiplayer.Server.Environment;
+using PlanetbaseMultiplayer.Model.Autofac;
+using PlanetbaseMultiplayer.Server.Autofac;
+using PlanetbaseMultiplayer.Model;
 
 namespace PlanetbaseMultiplayer.Server
 {
@@ -27,25 +30,13 @@ namespace PlanetbaseMultiplayer.Server
         private ServerSettings settings;
         private ServerProcessorContext processorContext;
         private PacketRouter router;
+        private ServiceLocator serviceLocator;
+
         public Dictionary<Guid, long> playerConnections;
 
-        private PlayerManager playerManager;
-        private SimulationManager simulationManager;
-        private WorldStateManager worldStateManager;
-        private WorldRequestQueueManager worldRequestQueueManager;
-        private TimeManager timeManager;
-        private EnvironmentManager environmentManager;
-        private DisasterManager disasterManager;
-
         public ServerSettings Settings { get { return settings; } }
+        public ServiceLocator ServiceLocator { get { return serviceLocator; } }
         //public Dictionary<Guid, long> PlayerConnections { get { return playerConnections; } }
-        public PlayerManager PlayerManager { get { return playerManager; } }
-        public SimulationManager SimulationManager { get { return simulationManager; } }
-        public WorldStateManager WorldStateManager { get { return worldStateManager; } }
-        public WorldRequestQueueManager WorldRequestQueueManager { get { return worldRequestQueueManager; } }
-        public TimeManager TimeManager { get { return timeManager; } }
-        public EnvironmentManager EnvironmentManager { get { return environmentManager; } }
-        public DisasterManager DisasterManager { get { return disasterManager; } }
 
         public Server(ServerSettings settings)
         {
@@ -58,32 +49,27 @@ namespace PlanetbaseMultiplayer.Server
 
             this.settings = settings;
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-            processorContext = new ServerProcessorContext(this);
+            playerConnections = new Dictionary<Guid, long>();
+
+            ServerAutoFacRegistrar serverAutoFacRegistrar = new ServerAutoFacRegistrar(this);
+            serviceLocator = new ServiceLocator(serverAutoFacRegistrar);
+            processorContext = new ServerProcessorContext(this, serviceLocator);
 
             router = new PacketRouter(processorContext);
             foreach (PacketProcessor packetProcessor in PacketProcessor.GetProcessors())
                 router.RegisterPacketProcessor(packetProcessor);
 
-            playerConnections = new Dictionary<Guid, long>();
-            playerManager = new PlayerManager(this);
-            simulationManager = new SimulationManager(this);
-            worldStateManager = new WorldStateManager(this, settings.SavePath, worldStateData);
-            worldRequestQueueManager = new WorldRequestQueueManager(this);
-            timeManager = new TimeManager(this);
-            environmentManager = new EnvironmentManager(this);
-            disasterManager = new DisasterManager(this);
+            serviceLocator.BeginLifetimeScope();
             Initialize();
         }
 
         private void Initialize()
         {
-            playerManager.Initialize();
-            simulationManager.Initialize();
-            worldStateManager.Initialize();
-            worldRequestQueueManager.Initialize();
-            timeManager.Initialize();
-            environmentManager.Initialize();
-            disasterManager.Initialize();
+            foreach (IManager manager in serviceLocator.LocateServicesOfType<IManager>())
+            {
+                if (!manager.Initialize())
+                    throw new Exception($"Could not initialize manager \"{manager.GetType().Name}\"");
+            }
         }
 
         public void Start()
@@ -101,6 +87,9 @@ namespace PlanetbaseMultiplayer.Server
 
         public void Shutdown(bool gracefulShutdown = true)
         {
+            WorldStateManager worldStateManager = serviceLocator.LocateService<WorldStateManager>();
+            PlayerManager playerManager = serviceLocator.LocateService<PlayerManager>();
+
             if (gracefulShutdown)
             {
                 // Add graceful shutdown logic
@@ -148,6 +137,9 @@ namespace PlanetbaseMultiplayer.Server
 
         public void OnIncomingStatusChange(NetPeer peer, NetIncomingMessage msg)
         {
+            TimeManager timeManager = serviceLocator.LocateService<TimeManager>();
+
+            PlayerManager playerManager = serviceLocator.LocateService<PlayerManager>();
             if (msg.SenderConnection.Status == NetConnectionStatus.Disconnecting || msg.SenderConnection.Status == NetConnectionStatus.Disconnected)
             {
                 long id = msg.SenderConnection.RemoteUniqueIdentifier;
@@ -224,6 +216,8 @@ namespace PlanetbaseMultiplayer.Server
 
         public void KickPlayer(Guid playerId)
         {
+            PlayerManager playerManager = serviceLocator.LocateService<PlayerManager>();
+
             playerManager.DestroyPlayer(playerId, DisconnectReason.KickedOut);
             DisconnectRequestPacket disconnectRequest = new DisconnectRequestPacket(DisconnectReason.KickedOut);
             SendPacketToPlayer(disconnectRequest, playerId);

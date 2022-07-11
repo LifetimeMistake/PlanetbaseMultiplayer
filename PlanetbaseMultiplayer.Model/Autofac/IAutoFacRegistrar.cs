@@ -8,6 +8,6 @@ namespace PlanetbaseMultiplayer.Model.Autofac
 {
     public interface IAutoFacRegistrar
     {
-        bool RegisterComponents(ContainerBuilder builder);
+        void RegisterComponents(ContainerBuilder builder);
     }
 }

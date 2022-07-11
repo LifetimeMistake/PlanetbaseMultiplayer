@@ -22,8 +22,8 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         {
             CreateDisasterPacket createDisasterPacket = (CreateDisasterPacket)packet;
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            SimulationManager simulationManager = processorContext.Server.SimulationManager;
-            DisasterManager disasterManager = processorContext.Server.DisasterManager;
+            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
+            DisasterManager disasterManager = processorContext.ServiceLocator.LocateService<DisasterManager>();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || sourcePlayerId != simulationOwner.Value.Id)

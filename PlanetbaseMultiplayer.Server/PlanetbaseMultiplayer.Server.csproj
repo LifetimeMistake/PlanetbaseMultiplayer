@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Autofac\ServerAutoFacRegistrar.cs" />
     <Compile Include="Environment\DisasterManager.cs" />
     <Compile Include="Environment\EnvironmentManager.cs" />
     <Compile Include="Exceptions\UsernameTakenException.cs" />

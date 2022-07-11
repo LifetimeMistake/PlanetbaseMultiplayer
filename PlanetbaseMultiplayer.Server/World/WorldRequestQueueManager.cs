@@ -2,6 +2,7 @@
 using PlanetbaseMultiplayer.Model.Packets.World;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.World;
+using PlanetbaseMultiplayer.Server.Players;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -24,9 +25,11 @@ namespace PlanetbaseMultiplayer.Server.World
 
         public bool Initialize()
         {
-            server.WorldStateManager.WorldDataUpdated += OnWorldDataUpdated;
-            server.WorldStateManager.WorldDataRequestFailed += OnWorldDataRequestFailed;
-            server.PlayerManager.PlayerRemoved += OnPlayerRemoved;
+            PlayerManager playerManager = server.ServiceLocator.LocateService<PlayerManager>();
+            WorldStateManager worldStateManager = server.ServiceLocator.LocateService<WorldStateManager>();
+            worldStateManager.WorldDataUpdated += OnWorldDataUpdated;
+            worldStateManager.WorldDataRequestFailed += OnWorldDataRequestFailed;
+            playerManager.PlayerRemoved += OnPlayerRemoved;
             IsInitialized = true;
             return true;
         }
@@ -61,8 +64,10 @@ namespace PlanetbaseMultiplayer.Server.World
 
         private void DeliverWorldData()
         {
+            WorldStateManager worldStateManager = server.ServiceLocator.LocateService<WorldStateManager>();
+
             Console.WriteLine("Delivering world data...");
-            WorldStateData worldStateData = server.WorldStateManager.GetWorldData();
+            WorldStateData worldStateData = worldStateManager.GetWorldData();
             WorldDataPacket worldDataPacket = new WorldDataPacket(worldStateData);
             foreach (KeyValuePair<Guid, Player> kvp in playerQueue)
             {

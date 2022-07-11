@@ -2,6 +2,7 @@
 using PlanetbaseMultiplayer.Model.Packets.World;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.World;
+using PlanetbaseMultiplayer.Server.Simulation;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +13,7 @@ namespace PlanetbaseMultiplayer.Server.World
 {
     public class WorldStateManager : IManager
     {
+        private SimulationManager simulationManager;
         private WorldStateData worldStateData;
         private Server server;
         private string savePath;
@@ -22,23 +24,24 @@ namespace PlanetbaseMultiplayer.Server.World
         public event EventHandler WorldDataUpdated;
         public event EventHandler WorldDataRequestFailed;
 
-        public WorldStateManager(Server server, string savePath, WorldStateData worldStateData)
+        public WorldStateManager(Server server, string savePath, WorldStateData worldStateData, SimulationManager simulationManager)
         {
             this.server = server ?? throw new ArgumentNullException(nameof(server));
             this.savePath = savePath ?? throw new ArgumentNullException(nameof(savePath));
             this.worldStateData = worldStateData;
+            this.simulationManager = simulationManager;
         }
 
         public bool Initialize()
         {
-            server.SimulationManager.SimulationOwnerUpdated += OnSimulationOwnerUpdated;
+            simulationManager.SimulationOwnerUpdated += OnSimulationOwnerUpdated;
             IsInitialized = true;
             return true;
         }
 
         public bool RequestWorldData()
         {
-            Player? player = server.SimulationManager.GetSimulationOwner();
+            Player? player = simulationManager.GetSimulationOwner();
             if (player == null)
                 return false; // Can't request world data, there are no simulation owners
 

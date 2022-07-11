@@ -54,5 +54,12 @@ namespace PlanetbaseMultiplayer.Model.Autofac
             AssertLifetimeScopeExists();
             return container.Resolve(serviceType);
         }
+
+        public List<T> LocateServicesOfType<T>() where T : class
+        {
+            AssertLifetimeScopeExists();
+            object obj = container.Resolve<T>();
+            return null;
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
         {
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            PlayerManager playerManager = processorContext.Server.PlayerManager;
+            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
             ServerSettings serverSettings = processorContext.Server.Settings;
 
             SessionData sessionData = new SessionData(serverSettings.Name, serverSettings.PasswordProtected, playerManager.GetPlayerCount());

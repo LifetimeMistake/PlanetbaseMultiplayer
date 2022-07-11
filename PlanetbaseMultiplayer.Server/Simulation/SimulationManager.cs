@@ -3,6 +3,7 @@ using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Simulation;
 using PlanetbaseMultiplayer.Server.EventArgs;
+using PlanetbaseMultiplayer.Server.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace PlanetbaseMultiplayer.Server.Simulation
 {
     public class SimulationManager : ISimulationManager
     {
+        private PlayerManager playerManager;
         private Server server;
         private Player? simulationOwner;
 
@@ -19,16 +21,17 @@ namespace PlanetbaseMultiplayer.Server.Simulation
 
         public event EventHandler<SimulationOwnerUpdatedEventArgs> SimulationOwnerUpdated;
 
-        public SimulationManager(Server server)
+        public SimulationManager(Server server, PlayerManager playerManager)
         {
             this.server = server ?? throw new ArgumentNullException(nameof(server));
+            this.playerManager = playerManager ?? throw new ArgumentNullException(nameof(playerManager));
         }
 
         public bool Initialize()
         {
-            server.PlayerManager.PlayerCreated += OnPlayerUpdated;
-            server.PlayerManager.PlayerUpdated += OnPlayerUpdated;
-            server.PlayerManager.PlayerRemoved += OnPlayerDestroyed;
+            playerManager.PlayerCreated += OnPlayerUpdated;
+            playerManager.PlayerUpdated += OnPlayerUpdated;
+            playerManager.PlayerRemoved += OnPlayerDestroyed;
             IsInitialized = true;
             return true;
         }
@@ -40,7 +43,7 @@ namespace PlanetbaseMultiplayer.Server.Simulation
 
         public bool SetSimulationOwner(Guid playerId)
         {
-            Player player = server.PlayerManager.GetPlayer(playerId);
+            Player player = playerManager.GetPlayer(playerId);
             return SetSimulationOwner(player);
         }
 
@@ -97,7 +100,7 @@ namespace PlanetbaseMultiplayer.Server.Simulation
 
         private bool FindNextSimulationOwner()
         {
-            foreach(Player player in server.PlayerManager.GetPlayers().Where(player => player.State == PlayerState.ConnectedReady))
+            foreach(Player player in playerManager.GetPlayers().Where(player => player.State == PlayerState.ConnectedReady))
             {
                 SetSimulationOwner(player);
                 return true;

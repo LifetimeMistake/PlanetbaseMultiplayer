@@ -22,8 +22,8 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         {
             TimeScaleUpdatePacket timeScaleUpdatePacket = (TimeScaleUpdatePacket)packet;
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            SimulationManager simulationManager = processorContext.Server.SimulationManager;
-            TimeManager timeManager = processorContext.Server.TimeManager;
+            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
+            TimeManager timeManager = processorContext.ServiceLocator.LocateService<TimeManager>();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || sourcePlayerId != simulationOwner.Value.Id) 
