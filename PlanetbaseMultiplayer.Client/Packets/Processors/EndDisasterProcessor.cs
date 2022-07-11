@@ -1,4 +1,5 @@
-﻿using PlanetbaseMultiplayer.Model.Packets;
+﻿using PlanetbaseMultiplayer.Client.Environment;
+using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Players;
@@ -19,7 +20,8 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
         {
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            processorContext.Client.DisasterManager.OnEndDisaster();
+            DisasterManager disasterManager = processorContext.ServiceLocator.LocateService<DisasterManager>();
+            disasterManager.OnEndDisaster();
         }
     }
 }

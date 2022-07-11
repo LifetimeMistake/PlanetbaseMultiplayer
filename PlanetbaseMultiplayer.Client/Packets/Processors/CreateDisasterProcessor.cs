@@ -1,4 +1,5 @@
-﻿using PlanetbaseMultiplayer.Model.Packets;
+﻿using PlanetbaseMultiplayer.Client.Environment;
+using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Players;
@@ -20,7 +21,8 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             CreateDisasterPacket createDisasterPacket = (CreateDisasterPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            processorContext.Client.DisasterManager.OnCreateDisaster(createDisasterPacket.Disaster);
+            DisasterManager disasterManager = processorContext.ServiceLocator.LocateService<DisasterManager>();
+            disasterManager.OnCreateDisaster(createDisasterPacket.Disaster);
         }
     }
 }

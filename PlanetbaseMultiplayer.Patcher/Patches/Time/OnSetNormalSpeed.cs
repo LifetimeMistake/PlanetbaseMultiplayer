@@ -17,11 +17,14 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
             if (Multiplayer.Client == null)
                 return true; // Not in multiplayer mode
 
-            Player? simulationOwner = Multiplayer.Client.SimulationManager.GetSimulationOwner();
+            Client.Simulation.SimulationManager simulationManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Simulation.SimulationManager>();
+
+            Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != Multiplayer.Client.LocalPlayer)
                 return false; // Player isn't the simulation owner
 
-            PlanetbaseMultiplayer.Client.Time.TimeManager timeManager = Multiplayer.Client.TimeManager;
+            Client.Time.TimeManager timeManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Time.TimeManager>();
+
             timeManager.SetNormalSpeed();
             return false;
         }

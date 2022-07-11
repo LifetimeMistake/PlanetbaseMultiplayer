@@ -18,7 +18,10 @@ namespace PlanetbaseMultiplayer.Client.Timers.Actions
     {
         public override void ProcessAction(ulong currentTick, ClientProcessorContext context)
         {
-            Player? simulationOwner = context.Client.SimulationManager.GetSimulationOwner();
+            SimulationManager clientSimulationManager = context.ServiceLocator.LocateService<SimulationManager>();
+            Environment.EnvironmentManager clientEnvironmentManager = context.ServiceLocator.LocateService<Environment.EnvironmentManager>();
+
+            Player? simulationOwner = clientSimulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != context.Client.LocalPlayer)
                 return;
 
@@ -36,7 +39,7 @@ namespace PlanetbaseMultiplayer.Client.Timers.Actions
             float windLevel = windIndicator.getValue();
             Vector3 windDirection = (Vector3)Reflection.GetInstanceFieldValue(environmentManager, mWindDirection);
 
-            context.Client.EnvironmentManager.UpdateEnvironmentData(time, windLevel, windDirection);
+            clientEnvironmentManager.UpdateEnvironmentData(time, windLevel, windDirection);
         }
     }
 }

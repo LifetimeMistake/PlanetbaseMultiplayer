@@ -1,4 +1,5 @@
 ﻿using Planetbase;
+using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Environment;
 using PlanetbaseMultiplayer.Model.Math;
@@ -68,7 +69,8 @@ namespace PlanetbaseMultiplayer.Client.Environment
 
         public void UpdateEnvironmentData(float time, float windLevel, Vector3D windDirection)
         {
-            Player? simulationOwner = client.SimulationManager.GetSimulationOwner();
+            SimulationManager simulationManager = client.ServiceLocator.LocateService<SimulationManager>();
+            Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return; // Don't send the packet if we aren't the simulation owner
 

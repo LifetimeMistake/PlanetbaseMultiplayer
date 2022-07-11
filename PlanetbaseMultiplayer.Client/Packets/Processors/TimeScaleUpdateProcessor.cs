@@ -21,7 +21,8 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             TimeScaleUpdatePacket timeScaleUpdatedPacket = (TimeScaleUpdatePacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            processorContext.Client.TimeManager.OnTimeScaleUpdated(timeScaleUpdatedPacket.TimeScale, timeScaleUpdatedPacket.IsPaused);
+            TimeManager timeManager = processorContext.ServiceLocator.LocateService<TimeManager>();
+            timeManager.OnTimeScaleUpdated(timeScaleUpdatedPacket.TimeScale, timeScaleUpdatedPacket.IsPaused);
         }
     }
 }

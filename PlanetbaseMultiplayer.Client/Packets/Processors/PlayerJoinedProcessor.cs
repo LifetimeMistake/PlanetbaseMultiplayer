@@ -1,4 +1,5 @@
-﻿using PlanetbaseMultiplayer.Client.UI;
+﻿using PlanetbaseMultiplayer.Client.Players;
+using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
@@ -20,8 +21,9 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             PlayerJoinedPacket playerJoinedPacket = (PlayerJoinedPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
+            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
 
-            processorContext.Client.PlayerManager.OnPlayerAdded(playerJoinedPacket.Player);
+            playerManager.OnPlayerAdded(playerJoinedPacket.Player);
 
             MessageLogFlags flags;
             if (playerJoinedPacket.Player.Name.ToLower() == "freddy")
