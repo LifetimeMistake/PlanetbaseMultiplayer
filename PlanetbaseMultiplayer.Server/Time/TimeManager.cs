@@ -25,10 +25,9 @@ namespace PlanetbaseMultiplayer.Server.Time
             isPaused = false;
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
 
         public void SetNormalSpeed()

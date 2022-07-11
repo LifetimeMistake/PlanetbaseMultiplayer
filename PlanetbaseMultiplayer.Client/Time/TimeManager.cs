@@ -23,10 +23,9 @@ namespace PlanetbaseMultiplayer.Client.Time
         {
             this.client = client;
         }
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
 
         public void OnTimeScaleUpdated(float timeScale, bool paused)

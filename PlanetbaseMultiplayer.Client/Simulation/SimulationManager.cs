@@ -19,10 +19,9 @@ namespace PlanetbaseMultiplayer.Client.Simulation
             this.client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
 
         public Player? GetSimulationOwner()

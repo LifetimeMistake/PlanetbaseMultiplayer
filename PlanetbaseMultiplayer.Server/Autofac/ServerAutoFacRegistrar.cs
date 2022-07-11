@@ -18,23 +18,27 @@ namespace PlanetbaseMultiplayer.Server.Autofac
 {
     public class ServerAutoFacRegistrar : IAutoFacRegistrar
     {
-        private Server ownerInstance;
+        private Server serverInstance;
+        private ServerSettings serverSettings;
 
-        public ServerAutoFacRegistrar(Server ownerInstance)
+        public ServerAutoFacRegistrar(Server serverInstance, ServerSettings serverSettings)
         {
-            this.ownerInstance = ownerInstance ?? throw new ArgumentNullException(nameof(ownerInstance));
+            this.serverInstance = serverInstance ?? throw new ArgumentNullException(nameof(serverInstance));
+            this.serverSettings = serverSettings ?? throw new ArgumentNullException(nameof(serverSettings));
         }
 
         public void RegisterComponents(ContainerBuilder builder)
         {
-            builder.RegisterType<PlayerManager>();
-            builder.RegisterType<SimulationManager>().As<ISimulationManager>();
-            builder.RegisterType<WorldStateManager>().As<IWorldStateManager>();
-            builder.RegisterType<WorldRequestQueueManager>();
-            builder.RegisterType<TimeManager>().As<ITimeManager>();
-            builder.RegisterType<EnvironmentManager>().As<IEnvironmentManager>();
-            builder.RegisterType<DisasterManager>().As<IDisasterManager>();
-            builder.RegisterInstance(ownerInstance).As<Server>().ExternallyOwned();
+            builder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
+            builder.RegisterType<SimulationManager>().InstancePerLifetimeScope();
+            builder.RegisterType<WorldStateManager>().InstancePerLifetimeScope();
+            builder.RegisterType<WorldRequestQueueManager>().InstancePerLifetimeScope();
+            builder.RegisterType<TimeManager>().InstancePerLifetimeScope();
+            builder.RegisterType<EnvironmentManager>().InstancePerLifetimeScope();
+            builder.RegisterType<DisasterManager>().InstancePerLifetimeScope();
+
+            builder.RegisterInstance(serverSettings).As<ServerSettings>().ExternallyOwned();
+            builder.RegisterInstance(serverInstance).As<Server>().ExternallyOwned();
         }
     }
 }

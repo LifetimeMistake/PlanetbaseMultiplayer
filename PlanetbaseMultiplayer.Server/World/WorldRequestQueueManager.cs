@@ -23,7 +23,7 @@ namespace PlanetbaseMultiplayer.Server.World
             playerQueue = new ConcurrentDictionary<Guid, Player>();
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             PlayerManager playerManager = server.ServiceLocator.LocateService<PlayerManager>();
             WorldStateManager worldStateManager = server.ServiceLocator.LocateService<WorldStateManager>();
@@ -31,7 +31,6 @@ namespace PlanetbaseMultiplayer.Server.World
             worldStateManager.WorldDataRequestFailed += OnWorldDataRequestFailed;
             playerManager.PlayerRemoved += OnPlayerRemoved;
             IsInitialized = true;
-            return true;
         }
 
         public bool EnqueuePlayer(Player player)

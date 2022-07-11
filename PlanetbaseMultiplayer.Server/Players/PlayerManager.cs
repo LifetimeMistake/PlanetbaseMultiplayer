@@ -27,10 +27,9 @@ namespace PlanetbaseMultiplayer.Server.Players
             connectedPlayers = new Dictionary<Guid, Player>();
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
 
         public Player CreatePlayer(string username, PlayerPermissions permissions = PlayerPermissions.Standard, PlayerState state = PlayerState.ConnectedUnauthenticated)

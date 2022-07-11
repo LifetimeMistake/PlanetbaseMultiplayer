@@ -40,18 +40,11 @@ namespace PlanetbaseMultiplayer.Server
 
         public Server(ServerSettings settings)
         {
-            // Attempt to load world
-            if (!File.Exists(settings.SavePath))
-                throw new FileNotFoundException("Save file not found.");
-
-            string worldData = File.ReadAllText(settings.SavePath);
-            WorldStateData worldStateData = new WorldStateData(worldData);
-
             this.settings = settings;
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
             playerConnections = new Dictionary<Guid, long>();
 
-            ServerAutoFacRegistrar serverAutoFacRegistrar = new ServerAutoFacRegistrar(this);
+            ServerAutoFacRegistrar serverAutoFacRegistrar = new ServerAutoFacRegistrar(this, settings);
             serviceLocator = new ServiceLocator(serverAutoFacRegistrar);
             processorContext = new ServerProcessorContext(this, serviceLocator);
 
@@ -67,8 +60,14 @@ namespace PlanetbaseMultiplayer.Server
         {
             foreach (IManager manager in serviceLocator.LocateServicesOfType<IManager>())
             {
-                if (!manager.Initialize())
-                    throw new Exception($"Could not initialize manager \"{manager.GetType().Name}\"");
+                try
+                {
+                    manager.Initialize();
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception($"Could not initialize manager \"{manager.GetType().Name}\": {ex}");
+                }
             }
         }
 

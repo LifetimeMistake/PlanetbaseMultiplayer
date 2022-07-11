@@ -11,32 +11,38 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Server.World
 {
-    public class WorldStateManager : IManager
+    public class WorldStateManager : IWorldStateManager
     {
+        private ServerSettings serverSettings;
         private SimulationManager simulationManager;
         private WorldStateData worldStateData;
         private Server server;
-        private string savePath;
         private bool dataRequestInProgress;
+
+        public WorldStateManager(ServerSettings serverSettings, SimulationManager simulationManager, Server server)
+        {
+            this.serverSettings = serverSettings ?? throw new ArgumentNullException(nameof(serverSettings));
+            this.simulationManager = simulationManager ?? throw new ArgumentNullException(nameof(simulationManager));
+            this.server = server ?? throw new ArgumentNullException(nameof(server));
+        }
+
         public bool IsInitialized { get; private set; }
 
         public event EventHandler WorldDataRequestSent;
         public event EventHandler WorldDataUpdated;
         public event EventHandler WorldDataRequestFailed;
 
-        public WorldStateManager(Server server, string savePath, WorldStateData worldStateData, SimulationManager simulationManager)
+        public void Initialize()
         {
-            this.server = server ?? throw new ArgumentNullException(nameof(server));
-            this.savePath = savePath ?? throw new ArgumentNullException(nameof(savePath));
-            this.worldStateData = worldStateData;
-            this.simulationManager = simulationManager;
-        }
+            if (!File.Exists(serverSettings.SavePath))
+                throw new FileNotFoundException($"Save file \"{Path.GetFullPath(serverSettings.SavePath)}\" does not exist.");
 
-        public bool Initialize()
-        {
+            string xmlData = File.ReadAllText(serverSettings.SavePath);
+            WorldStateData worldStateData = new WorldStateData(xmlData);
+            this.worldStateData = worldStateData;
+
             simulationManager.SimulationOwnerUpdated += OnSimulationOwnerUpdated;
             IsInitialized = true;
-            return true;
         }
 
         public bool RequestWorldData()
@@ -61,7 +67,7 @@ namespace PlanetbaseMultiplayer.Server.World
             this.worldStateData = worldStateData;
             try
             {
-                File.WriteAllText(savePath, worldStateData.XmlData);
+                File.WriteAllText(serverSettings.SavePath, worldStateData.XmlData);
             }
             catch (Exception ex)
             {

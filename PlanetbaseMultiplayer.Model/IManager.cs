@@ -8,6 +8,6 @@ namespace PlanetbaseMultiplayer.Model
     public interface IManager
     {
         bool IsInitialized { get; }
-        bool Initialize();
+        void Initialize();
     }
 }

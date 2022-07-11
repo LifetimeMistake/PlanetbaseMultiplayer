@@ -30,10 +30,9 @@ namespace PlanetbaseMultiplayer.Client.Environment
             windDirection = new Vector3D(1, 0, 0);
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
         public float GetTimeOfDay()
         {
