@@ -38,42 +38,33 @@ namespace PlanetbaseMultiplayer.Client
         private Player? localPlayer;
         private PacketRouter router;
         private TimerActionManager timer;
-        private ClientProcessorContext processorContext;
         private ServiceLocator serviceLocator;
 
-
-        public ServiceLocator ServiceLocator { get { return serviceLocator; } }
-        public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
-
-        public Client(GameStateMultiplayer gameStateMultiplayer)
+        public Client(GameStateMultiplayer gameStateMultiplayer, PacketRouter router, TimerActionManager timer, ClientProcessorContext processorContext, ServiceLocator serviceLocator, SynchronizationContext synchronizationContext)
         {
-            this.gameStateMultiplayer = gameStateMultiplayer;
+            this.gameStateMultiplayer = gameStateMultiplayer ?? throw new ArgumentNullException(nameof(gameStateMultiplayer));
+            this.router = router ?? throw new ArgumentNullException(nameof(router));
+            this.timer = timer ?? throw new ArgumentNullException(nameof(timer));
+            this.serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
+
             packetQueue = new ConcurrentQueue<Packet>();
+            SynchronizationContext.SetSynchronizationContext(synchronizationContext);
 
-            ClientAutoFacRegistrar clientAutoFacRegistrar = new ClientAutoFacRegistrar(this, gameStateMultiplayer);
-            serviceLocator = new ServiceLocator(clientAutoFacRegistrar);
-            processorContext = new ClientProcessorContext(this, serviceLocator);
-
-            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
             NetPeerConfiguration config = new NetPeerConfiguration("PlanetbaseMultiplayer");
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             client = new NetClient(config);
             client.RegisterReceivedCallback(new SendOrPostCallback(MessageReceived));
 
-            router = new PacketRouter(processorContext);
-            foreach (PacketProcessor packetProcessor in PacketProcessor.GetProcessors())
-                router.RegisterPacketProcessor(packetProcessor);
-
-
-            serviceLocator.BeginLifetimeScope();
-            InitializeActions();
+            RegisterActions();
             InitializeManagers();
         }
 
-        private void InitializeActions()
+        public ServiceLocator ServiceLocator { get { return serviceLocator; } }
+        public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
+
+        private void RegisterActions()
         {
-            timer = new TimerActionManager(processorContext);
             timer.RegisterAction(new ProcessPacketsAction(), 1);
             timer.RegisterAction(new SyncEnvironmentDataAction(), 30);
             timer.RegisterAction(new UpdateDisasterAction(), 10);

@@ -12,10 +12,13 @@ namespace PlanetbaseMultiplayer.Model.Packets
         private IProcessorContext processorContext;
         private Dictionary<Type, PacketProcessor> registeredProcessors;
 
-        public PacketRouter(IProcessorContext processorContext)
+        public PacketRouter(IProcessorContext processorContext, PacketProcessor[] packetProcessors)
         {
             this.processorContext = processorContext;
             registeredProcessors = new Dictionary<Type, PacketProcessor>();
+
+            foreach(PacketProcessor processor in packetProcessors)
+                RegisterPacketProcessor(processor);
         }
 
         public bool ProcessPacket(Guid sourcePlayerId, Packet packet)

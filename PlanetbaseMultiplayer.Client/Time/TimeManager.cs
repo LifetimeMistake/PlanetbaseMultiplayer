@@ -16,14 +16,18 @@ namespace PlanetbaseMultiplayer.Client.Time
     public class TimeManager : ITimeManager
     {
         private Client client;
+        private SimulationManager simulationManager;
+
         public bool IsInitialized { get; private set; }
         private float timeScale;
         private bool isPaused;
-        
-        public TimeManager(Client client)
+
+        public TimeManager(Client client, SimulationManager simulationManager)
         {
             this.client = client;
+            this.simulationManager = simulationManager;
         }
+
         public void Initialize()
         {
             IsInitialized = true;
@@ -60,7 +64,6 @@ namespace PlanetbaseMultiplayer.Client.Time
 
         public void SetTimescale(float speed, bool paused)
         {
-            SimulationManager simulationManager = client.ServiceLocator.LocateService<SimulationManager>();
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return; // Don't send the packet if we aren't the simulation owner

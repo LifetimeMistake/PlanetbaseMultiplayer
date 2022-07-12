@@ -13,9 +13,20 @@ namespace PlanetbaseMultiplayer.Model.Autofac
 
         public ServiceLocator(params IAutoFacRegistrar[] registrars)
         {
+            Initialize(registrars);
+        }
+
+        public ServiceLocator()
+        { }
+
+        public void Initialize(params IAutoFacRegistrar[] registrars)
+        {
+            if (container != null)
+                throw new InvalidOperationException("Service locator is already initialized.");
+            
             ContainerBuilder containerBuilder = new ContainerBuilder();
 
-            foreach(var registrar in registrars)
+            foreach (var registrar in registrars)
                 registrar.RegisterComponents(containerBuilder);
 
             container = containerBuilder.Build();
@@ -23,6 +34,9 @@ namespace PlanetbaseMultiplayer.Model.Autofac
 
         public void BeginLifetimeScope()
         {
+            if (container == null)
+                throw new InvalidOperationException("You must initialize the service locator before starting a new lifetime scope.");
+
             EndLifetimeScope();
             lifetimeScope = container.BeginLifetimeScope();
         }

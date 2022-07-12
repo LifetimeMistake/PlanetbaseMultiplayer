@@ -16,6 +16,7 @@ namespace PlanetbaseMultiplayer.Client.Environment
     public class DisasterManager : IDisasterManager
     {
         private Client client;
+        private SimulationManager simulationManager;
         private IDisasterProxy disasterProxy;
         private Disaster? disaster;
 
@@ -23,9 +24,10 @@ namespace PlanetbaseMultiplayer.Client.Environment
         public bool IsInitialized { get; private set; }
 
 
-        public DisasterManager(Client client)
+        public DisasterManager(Client client, SimulationManager simulationManager)
         {
             this.client = client;
+            this.simulationManager = simulationManager;
         }
 
         public void Initialize()
@@ -79,7 +81,6 @@ namespace PlanetbaseMultiplayer.Client.Environment
 
         public void CreateDisaster(Disaster disaster)
         {
-            SimulationManager simulationManager = client.ServiceLocator.LocateService<SimulationManager>();
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return; // Don't send the packet if we aren't the simulation owner
@@ -114,7 +115,6 @@ namespace PlanetbaseMultiplayer.Client.Environment
             if (!AnyDisasterInProgress())
                 return;
 
-            SimulationManager simulationManager = client.ServiceLocator.LocateService<SimulationManager>();
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return; // Don't send the packet if we aren't the simulation owner
@@ -135,7 +135,6 @@ namespace PlanetbaseMultiplayer.Client.Environment
             if (!AnyDisasterInProgress())
                 return;
 
-            SimulationManager simulationManager = client.ServiceLocator.LocateService<SimulationManager>();
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return; // Don't send the packet if we aren't the simulation owner

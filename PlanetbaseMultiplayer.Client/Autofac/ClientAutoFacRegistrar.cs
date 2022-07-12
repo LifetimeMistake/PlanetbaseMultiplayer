@@ -16,18 +16,23 @@ using System.Text;
 using PlanetbaseMultiplayer.Client.Timers;
 using PlanetbaseMultiplayer.Client.Debugging;
 using PlanetbaseMultiplayer.Client.GameStates;
+using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
+using System.Reflection;
+using System.Threading;
+using PlanetbaseMultiplayer.Model.Packets;
 
 namespace PlanetbaseMultiplayer.Client.Autofac
 {
     public class ClientAutoFacRegistrar : IAutoFacRegistrar
     {
-        private Client clientInstance;
-        private GameStateMultiplayer gameStateMultiplayer;
+        // this is stupid and will have to be changed somehow
+        private ServiceLocator serviceLocator;
+        private GameStateMultiplayer multiplayerScene;
 
-        public ClientAutoFacRegistrar(Client clientInstance, GameStateMultiplayer gameStateMultiplayer)
+        public ClientAutoFacRegistrar(ServiceLocator serviceLocator, GameStateMultiplayer multiplayerScene)
         {
-            this.clientInstance = clientInstance ?? throw new ArgumentNullException(nameof(clientInstance));
-            this.gameStateMultiplayer = gameStateMultiplayer ?? throw new ArgumentNullException(nameof(gameStateMultiplayer));
+            this.serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
+            this.multiplayerScene = multiplayerScene ?? throw new ArgumentNullException(nameof(multiplayerScene));
         }
 
         public void RegisterComponents(ContainerBuilder builder)
@@ -38,12 +43,31 @@ namespace PlanetbaseMultiplayer.Client.Autofac
             builder.RegisterType<TimeManager>().InstancePerLifetimeScope();
             builder.RegisterType<EnvironmentManager>().InstancePerLifetimeScope();
             builder.RegisterType<DisasterManager>().InstancePerLifetimeScope();
+
 #if DEBUG
             builder.RegisterType<DebugManager>().InstancePerLifetimeScope();
 #endif
 
-            builder.RegisterInstance(clientInstance).As<Client>().ExternallyOwned();
-            builder.RegisterInstance(gameStateMultiplayer).As<GameStateMultiplayer>().ExternallyOwned();
+            builder.RegisterType<ClientProcessorContext>().InstancePerLifetimeScope();
+            builder.RegisterType<PacketRouter>().InstancePerLifetimeScope();
+            builder.RegisterType<SynchronizationContext>().InstancePerLifetimeScope();
+            builder.RegisterType<TimerActionManager>().InstancePerLifetimeScope();
+            builder.RegisterType<GameStateMultiplayer>().InstancePerLifetimeScope();
+            builder.RegisterType<Client>().InstancePerLifetimeScope();
+
+            RegisterProcessors(builder, Assembly.GetCallingAssembly());
+
+            // this is moderately stupid
+            builder.RegisterInstance(multiplayerScene).ExternallyOwned();
+            // this is extremely stupid and will have to be changed
+            builder.RegisterInstance(serviceLocator).ExternallyOwned();
+        }
+
+        private void RegisterProcessors(ContainerBuilder builder, Assembly assembly)
+        {
+            builder.RegisterAssemblyTypes(assembly)
+                .AsClosedTypesOf(typeof(PacketProcessor))
+                .InstancePerLifetimeScope();
         }
     }
 }

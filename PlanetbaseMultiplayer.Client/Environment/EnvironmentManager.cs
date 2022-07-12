@@ -18,14 +18,16 @@ namespace PlanetbaseMultiplayer.Client.Environment
     public class EnvironmentManager : IEnvironmentManager
     {
         private Client client;
+        private SimulationManager simulationManager;
         public bool IsInitialized { get; private set; }
         private float time;
         private float windLevel;
         private Vector3D windDirection;
 
-        public EnvironmentManager(Client client)
+        public EnvironmentManager(Client client, SimulationManager simulationManager)
         {
             this.client = client;
+            this.simulationManager = simulationManager;
             time = 0;
             windLevel = 0;
             windDirection = new Vector3D(1, 0, 0);
@@ -69,7 +71,6 @@ namespace PlanetbaseMultiplayer.Client.Environment
 
         public void UpdateEnvironmentData(float time, float windLevel, Vector3D windDirection)
         {
-            SimulationManager simulationManager = client.ServiceLocator.LocateService<SimulationManager>();
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return; // Don't send the packet if we aren't the simulation owner
