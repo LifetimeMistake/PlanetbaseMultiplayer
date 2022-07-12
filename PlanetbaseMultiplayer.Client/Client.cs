@@ -37,8 +37,10 @@ namespace PlanetbaseMultiplayer.Client
         private ConcurrentQueue<Packet> packetQueue;
         private Player? localPlayer;
         private PacketRouter router;
+        private TimerActionManager timer;
         private ClientProcessorContext processorContext;
         private ServiceLocator serviceLocator;
+
 
         public ServiceLocator ServiceLocator { get { return serviceLocator; } }
         public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
@@ -71,7 +73,7 @@ namespace PlanetbaseMultiplayer.Client
 
         private void InitializeActions()
         {
-            TimerActionManager timer = serviceLocator.LocateService<TimerActionManager>();
+            timer = new TimerActionManager(processorContext);
             timer.RegisterAction(new ProcessPacketsAction(), 1);
             timer.RegisterAction(new SyncEnvironmentDataAction(), 30);
             timer.RegisterAction(new UpdateDisasterAction(), 10);

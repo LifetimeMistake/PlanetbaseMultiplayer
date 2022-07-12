@@ -38,7 +38,6 @@ namespace PlanetbaseMultiplayer.Client.Autofac
             builder.RegisterType<TimeManager>().InstancePerLifetimeScope();
             builder.RegisterType<EnvironmentManager>().InstancePerLifetimeScope();
             builder.RegisterType<DisasterManager>().InstancePerLifetimeScope();
-            builder.RegisterType<TimerActionManager>().InstancePerLifetimeScope();
 #if DEBUG
             builder.RegisterType<DebugManager>().InstancePerLifetimeScope();
 #endif
