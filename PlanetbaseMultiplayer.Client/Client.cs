@@ -222,7 +222,6 @@ namespace PlanetbaseMultiplayer.Client
 
         public void OnFixedUpdate()
         {
-            TimerActionManager timer = serviceLocator.LocateService<TimerActionManager>();
             // Update timers
             timer.OnTick();
         }
