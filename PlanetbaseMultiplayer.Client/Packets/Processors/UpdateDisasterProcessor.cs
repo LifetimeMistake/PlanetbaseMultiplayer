@@ -21,7 +21,8 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             UpdateDisasterPacket updateDisasterPacket = (UpdateDisasterPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            processorContext.Client.DisasterManager.OnUpdateDisaster(updateDisasterPacket.CurrentTime);
+            DisasterManager disasterManager = processorContext.ServiceLocator.LocateService<DisasterManager>();
+            disasterManager.OnUpdateDisaster(updateDisasterPacket.CurrentTime);
         }
     }
 }

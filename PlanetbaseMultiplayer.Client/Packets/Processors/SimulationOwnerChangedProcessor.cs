@@ -24,8 +24,8 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             SimulationOwnerChangedPacket simulationOwnerChangedPacket = (SimulationOwnerChangedPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            PlayerManager playerManager = processorContext.Client.PlayerManager;
-            SimulationManager simulationManager = processorContext.Client.SimulationManager;
+            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
+            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
 
             if(simulationOwnerChangedPacket.PlayerId != null)
             {

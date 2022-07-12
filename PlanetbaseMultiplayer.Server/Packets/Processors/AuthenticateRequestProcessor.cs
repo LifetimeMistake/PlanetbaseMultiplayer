@@ -24,8 +24,8 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
             AuthenticateRequestPacket authenticateRequestPacket = (AuthenticateRequestPacket)packet;
             ServerSettings serverSettings = processorContext.Server.Settings;
-            PlayerManager playerManager = processorContext.Server.PlayerManager;
-            SimulationManager simulationManager = processorContext.Server.SimulationManager;
+            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
+            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
 
             AuthenticatePacket authenticateResponsePacket;
             if (playerManager.PlayerExists(sourcePlayerId))

@@ -17,8 +17,10 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment
             if (Multiplayer.Client == null)
                 return true; // Not in multiplayer
 
+            Client.Simulation.SimulationManager simulationManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Simulation.SimulationManager>();
+
             Player? localPlayer = Multiplayer.Client.LocalPlayer;
-            Player? simulationOwner = Multiplayer.Client.SimulationManager.GetSimulationOwner();
+            Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || localPlayer == null || localPlayer.Value != simulationOwner.Value)
                 return false; // Only the simulation owner should run the update method
 

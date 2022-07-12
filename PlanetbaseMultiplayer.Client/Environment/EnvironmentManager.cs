@@ -1,9 +1,11 @@
 ﻿using Planetbase;
+using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Environment;
 using PlanetbaseMultiplayer.Model.Math;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
 using PlanetbaseMultiplayer.Model.Players;
+using PlanetbaseMultiplayer.Model.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +31,9 @@ namespace PlanetbaseMultiplayer.Client.Environment
             windDirection = new Vector3D(1, 0, 0);
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
         public float GetTimeOfDay()
         {
@@ -68,7 +69,8 @@ namespace PlanetbaseMultiplayer.Client.Environment
 
         public void UpdateEnvironmentData(float time, float windLevel, Vector3D windDirection)
         {
-            Player? simulationOwner = client.SimulationManager.GetSimulationOwner();
+            SimulationManager simulationManager = client.ServiceLocator.LocateService<SimulationManager>();
+            Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return; // Don't send the packet if we aren't the simulation owner
 

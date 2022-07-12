@@ -20,7 +20,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
         {
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            PlayerManager playerManager = processorContext.Server.PlayerManager;
+            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
 
             if (!playerManager.PlayerExists(sourcePlayerId))
                 return; // what

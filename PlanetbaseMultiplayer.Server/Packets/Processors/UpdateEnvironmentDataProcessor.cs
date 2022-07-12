@@ -22,8 +22,8 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         {
             UpdateEnvironmentDataPacket updateEnvironmentDataPacket = (UpdateEnvironmentDataPacket)packet;
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            SimulationManager simulationManager = processorContext.Server.SimulationManager;
-            EnvironmentManager environmentManager = processorContext.Server.EnvironmentManager;
+            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
+            EnvironmentManager environmentManager = processorContext.ServiceLocator.LocateService<EnvironmentManager>();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || sourcePlayerId != simulationOwner.Value.Id)

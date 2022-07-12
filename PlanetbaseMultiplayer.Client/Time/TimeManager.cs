@@ -1,7 +1,9 @@
-﻿using PlanetbaseMultiplayer.Model;
+﻿using PlanetbaseMultiplayer.Client.Simulation;
+using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Packets.Time;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Time;
+using PlanetbaseMultiplayer.Model.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +24,9 @@ namespace PlanetbaseMultiplayer.Client.Time
         {
             this.client = client;
         }
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
 
         public void OnTimeScaleUpdated(float timeScale, bool paused)
@@ -59,7 +60,8 @@ namespace PlanetbaseMultiplayer.Client.Time
 
         public void SetTimescale(float speed, bool paused)
         {
-            Player? simulationOwner = client.SimulationManager.GetSimulationOwner();
+            SimulationManager simulationManager = client.ServiceLocator.LocateService<SimulationManager>();
+            Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return; // Don't send the packet if we aren't the simulation owner
 

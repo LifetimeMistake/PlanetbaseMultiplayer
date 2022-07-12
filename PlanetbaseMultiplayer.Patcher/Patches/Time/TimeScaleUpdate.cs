@@ -18,7 +18,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Time
             if (Multiplayer.Client == null)
                 return true;
 
-            PlanetbaseMultiplayer.Client.Time.TimeManager timeManager = Multiplayer.Client.TimeManager;
+            Client.Time.TimeManager timeManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Time.TimeManager>();
 
             if (timeManager.IsPaused())
             {

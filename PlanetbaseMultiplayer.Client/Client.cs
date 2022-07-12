@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using Planetbase;
+using PlanetbaseMultiplayer.Client.Autofac;
 using PlanetbaseMultiplayer.Client.GameStates;
 using PlanetbaseMultiplayer.Client.Players;
 using PlanetbaseMultiplayer.Client.Simulation;
@@ -8,6 +9,7 @@ using PlanetbaseMultiplayer.Client.Timers.Actions;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Client.World;
 using PlanetbaseMultiplayer.Model;
+using PlanetbaseMultiplayer.Model.Autofac;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
@@ -37,33 +39,20 @@ namespace PlanetbaseMultiplayer.Client
         private PacketRouter router;
         private TimerActionManager timer;
         private ClientProcessorContext processorContext;
+        private ServiceLocator serviceLocator;
 
-        private PlayerManager playerManager;
-        private SimulationManager simulationManager;
-        private Time.TimeManager timeManager;
-        private WorldStateManager worldStateManager;
-        private Environment.EnvironmentManager environmentManager;
-        private Environment.DisasterManager disasterManager;
-#if DEBUG
-        private Debugging.DebugManager debugManager;
-#endif
 
+        public ServiceLocator ServiceLocator { get { return serviceLocator; } }
         public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
-        public PlayerManager PlayerManager { get { return playerManager; } }
-        public SimulationManager SimulationManager { get { return simulationManager; } }
-        public Time.TimeManager TimeManager { get { return timeManager; } }
-        public WorldStateManager WorldStateManager { get { return worldStateManager; } }
-        public Environment.EnvironmentManager EnvironmentManager { get { return environmentManager; } }
-        public Environment.DisasterManager DisasterManager { get { return disasterManager; } }
-#if DEBUG
-        public Debugging.DebugManager DebugManager { get { return debugManager; } }
-#endif
 
         public Client(GameStateMultiplayer gameStateMultiplayer)
         {
             this.gameStateMultiplayer = gameStateMultiplayer;
             packetQueue = new ConcurrentQueue<Packet>();
-            processorContext = new ClientProcessorContext(this);
+
+            ClientAutoFacRegistrar clientAutoFacRegistrar = new ClientAutoFacRegistrar(this, gameStateMultiplayer);
+            serviceLocator = new ServiceLocator(clientAutoFacRegistrar);
+            processorContext = new ClientProcessorContext(this, serviceLocator);
 
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
             NetPeerConfiguration config = new NetPeerConfiguration("PlanetbaseMultiplayer");
@@ -72,16 +61,14 @@ namespace PlanetbaseMultiplayer.Client
             client = new NetClient(config);
             client.RegisterReceivedCallback(new SendOrPostCallback(MessageReceived));
 
-            InitializeProcessors();
-            InitializeActions();
-            InitializeManagers();
-        }
-
-        private void InitializeProcessors()
-        {
             router = new PacketRouter(processorContext);
             foreach (PacketProcessor packetProcessor in PacketProcessor.GetProcessors())
                 router.RegisterPacketProcessor(packetProcessor);
+
+
+            serviceLocator.BeginLifetimeScope();
+            InitializeActions();
+            InitializeManagers();
         }
 
         private void InitializeActions()
@@ -94,25 +81,17 @@ namespace PlanetbaseMultiplayer.Client
 
         private void InitializeManagers()
         {
-            playerManager = new PlayerManager(this);
-            simulationManager = new SimulationManager(this);
-            timeManager = new Time.TimeManager(this);
-            worldStateManager = new WorldStateManager(this);
-            environmentManager = new Environment.EnvironmentManager(this);
-            disasterManager = new Environment.DisasterManager(this);
-#if DEBUG
-            debugManager = new Debugging.DebugManager(this);
-#endif
-
-            playerManager.Initialize();
-            simulationManager.Initialize();
-            timeManager.Initialize();
-            worldStateManager.Initialize();
-            environmentManager.Initialize();
-            disasterManager.Initialize();
-#if DEBUG
-            debugManager.Initialize();
-#endif
+            foreach (IManager manager in serviceLocator.LocateServicesOfType<IManager>())
+            {
+                try
+                {
+                    manager.Initialize();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Could not initialize manager \"{manager.GetType().Name}\": {ex}");
+                }
+            }
         }
 
         public bool Connect(ConnectionOptions connectionOptions)

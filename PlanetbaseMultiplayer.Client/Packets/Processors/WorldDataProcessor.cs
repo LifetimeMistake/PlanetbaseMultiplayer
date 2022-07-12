@@ -1,4 +1,5 @@
-﻿using PlanetbaseMultiplayer.Model.Packets;
+﻿using PlanetbaseMultiplayer.Client.World;
+using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Packets.World;
@@ -21,7 +22,8 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             WorldDataPacket worldDataPacket = (WorldDataPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            processorContext.Client.WorldStateManager.UpdateWorldData(worldDataPacket.World);
+            WorldStateManager worldStateManager = processorContext.ServiceLocator.LocateService<WorldStateManager>();
+            worldStateManager.UpdateWorldData(worldDataPacket.World);
 
             Debug.Log("Informing the server that we've started loading the world data");
             ClientLoadingStartedPacket clientLoadingStartedPacket = new ClientLoadingStartedPacket();

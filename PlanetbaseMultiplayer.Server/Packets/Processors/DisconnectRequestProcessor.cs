@@ -22,8 +22,8 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
         {
             ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            PlayerManager playerManager = processorContext.Server.PlayerManager;
-            TimeManager timeManager = processorContext.Server.TimeManager;
+            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
+            TimeManager timeManager = processorContext.ServiceLocator.LocateService<TimeManager>();
 
             Console.WriteLine($"Player {sourcePlayerId} requested a graceful disconnect");
             playerManager.DestroyPlayer(sourcePlayerId, DisconnectReason.DisconnectRequest);

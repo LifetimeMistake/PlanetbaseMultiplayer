@@ -4,6 +4,7 @@ using PlanetbaseMultiplayer.Client;
 using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Environment;
 using PlanetbaseMultiplayer.Model.Players;
+using PlanetbaseMultiplayer.Model.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,9 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
             if (Multiplayer.Client == null)
                 return true;
 
-            Player? simulationOwner = Multiplayer.Client.SimulationManager.GetSimulationOwner();
+            Client.Simulation.SimulationManager simulationManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Simulation.SimulationManager>();
+
+            Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != Multiplayer.Client.LocalPlayer)
                 return false; // Player isn't the simulation owner
 

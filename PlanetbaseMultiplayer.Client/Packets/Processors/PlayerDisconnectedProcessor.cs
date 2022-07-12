@@ -1,4 +1,5 @@
-﻿using PlanetbaseMultiplayer.Client.UI;
+﻿using PlanetbaseMultiplayer.Client.Players;
+using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
@@ -22,12 +23,13 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             PlayerDisconnectedPacket playerDisconnectedPacket = (PlayerDisconnectedPacket)packet;
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
+            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
 
             if (processorContext.Client.LocalPlayer.HasValue)
             {
                 if (processorContext.Client.LocalPlayer.Value.Id != playerDisconnectedPacket.PlayerId)
                 {
-                    Player player = processorContext.Client.PlayerManager.GetPlayer(playerDisconnectedPacket.PlayerId);
+                    Player player = playerManager.GetPlayer(playerDisconnectedPacket.PlayerId);
                     string reason = DisconnectReasonUtils.ReasonToString(playerDisconnectedPacket.Reason);
                     MessageLog.Show($"Player {player.Name} left the game: {reason}", null, MessageLogFlags.MessageSoundNormal);
                 }
@@ -41,7 +43,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
                 }
             }
 
-            processorContext.Client.PlayerManager.OnPlayerRemoved(playerDisconnectedPacket.PlayerId);
+            playerManager.OnPlayerRemoved(playerDisconnectedPacket.PlayerId);
         }
     }
 }

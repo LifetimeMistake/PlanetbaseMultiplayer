@@ -1,5 +1,6 @@
 ﻿using Planetbase;
 using PlanetbaseMultiplayer.Client.Players;
+using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
@@ -26,7 +27,8 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             ClientProcessorContext processorContext = (ClientProcessorContext)context;
             AuthenticatePacket authenticatePacket = (AuthenticatePacket)packet;
-            PlayerManager playerManager = processorContext.Client.PlayerManager;
+            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
+            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
 
             if(!authenticatePacket.AuthenticationSuccessful)
             {
@@ -48,7 +50,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             }
 
             processorContext.Client.LocalPlayer = authenticatePacket.LocalPlayer.Value;
-            processorContext.Client.SimulationManager.OnSimulationOwnerUpdated(authenticatePacket.SimulationOwner);
+            simulationManager.OnSimulationOwnerUpdated(authenticatePacket.SimulationOwner);
             foreach (Player player in authenticatePacket.Players)
                 playerManager.OnPlayerAdded(player); // Sync players
 

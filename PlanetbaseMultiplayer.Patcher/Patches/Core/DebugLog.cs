@@ -13,6 +13,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Core
     [HarmonyPatch(typeof(GameManager), "onGui")]
     public class DebugLogger
     {
+
         static void Postfix()
         {
             if (Multiplayer.Client == null) return;
@@ -23,9 +24,11 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Core
         static void ShowDebugLog()
         {
             StringBuilder stringBuilder = new StringBuilder();
+            Client.Debugging.DebugManager debugManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Debugging.DebugManager>();
+
             try
             {
-                foreach (string line in Multiplayer.Client.DebugManager.GetLog())
+                foreach (string line in debugManager.GetLog())
                     stringBuilder.AppendLine(line);
             }
             catch(Exception)
@@ -48,7 +51,8 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Core
         static void Postfix(object message)
         {
             if (Multiplayer.Client == null) return;
-            Multiplayer.Client.DebugManager.AddMessage((message == null) ? "Null" : message.ToString());
+            Client.Debugging.DebugManager debugManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Debugging.DebugManager>();
+            debugManager.AddMessage((message == null) ? "Null" : message.ToString());
         }
     }
 
@@ -58,7 +62,8 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Core
         static void Postfix(string value)
         {
             if (Multiplayer.Client == null) return;
-            Multiplayer.Client.DebugManager.AddMessage(value);
+            Client.Debugging.DebugManager debugManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Debugging.DebugManager>();
+            debugManager.AddMessage(value);
         }
     }
 #endif

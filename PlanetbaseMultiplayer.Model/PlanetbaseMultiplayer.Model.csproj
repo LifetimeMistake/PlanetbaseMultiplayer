@@ -34,6 +34,12 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\References\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="Lidgren.Network">
       <HintPath>..\References\Lidgren.Network.dll</HintPath>
     </Reference>
@@ -49,6 +55,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Autofac\IAutoFacRegistrar.cs" />
+    <Compile Include="Autofac\ServiceLocator.cs" />
     <Compile Include="EventArgs\PlayerEventArgs.cs" />
     <Compile Include="EventArgs\SimulationOwnerUpdatedEventArgs.cs" />
     <Compile Include="Location.cs" />
@@ -87,7 +95,7 @@
     <Compile Include="Players\PlayerState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Math\QuaternionD.cs" />
-    <Compile Include="Reflection.cs" />
+    <Compile Include="Utils\Reflection.cs" />
     <Compile Include="Session\SessionData.cs" />
     <Compile Include="Session\AuthenticationErrorReason.cs" />
     <Compile Include="Simulation\ISimulationManager.cs" />
@@ -104,6 +112,8 @@
     <Compile Include="World\WorldStateData.cs" />
     <Compile Include="Utils\XmlSerializerUtils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
