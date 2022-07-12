@@ -1,6 +1,7 @@
 ﻿using PlanetbaseMultiplayer.Client.Environment;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Players;
 using System;
@@ -17,10 +18,9 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(EndDisasterPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
-            ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            DisasterManager disasterManager = processorContext.ServiceLocator.LocateService<DisasterManager>();
+            DisasterManager disasterManager = context.ServiceLocator.LocateService<DisasterManager>();
             disasterManager.OnEndDisaster();
         }
     }

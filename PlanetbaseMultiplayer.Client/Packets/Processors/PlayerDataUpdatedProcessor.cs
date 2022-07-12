@@ -1,5 +1,6 @@
 ﻿using PlanetbaseMultiplayer.Client.Players;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using System;
@@ -16,17 +17,17 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(PlayerDataUpdatedPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
+            Client client = context.ServiceLocator.LocateService<Client>();
             PlayerDataUpdatedPacket playerDataUpdatedPacket = (PlayerDataUpdatedPacket)packet;
-            ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
+            PlayerManager playerManager = context.ServiceLocator.LocateService<PlayerManager>();
 
             playerManager.OnPlayerUpdated(playerDataUpdatedPacket.PlayerId, playerDataUpdatedPacket.Player);
-            if (playerDataUpdatedPacket.Player == processorContext.Client.LocalPlayer)
+            if (playerDataUpdatedPacket.Player == client.LocalPlayer)
             {
                 // Update the local client data
-                processorContext.Client.LocalPlayer = playerDataUpdatedPacket.Player;
+                client.LocalPlayer = playerDataUpdatedPacket.Player;
             }
         }
     }

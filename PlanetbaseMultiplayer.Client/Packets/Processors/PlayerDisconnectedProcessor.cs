@@ -1,6 +1,7 @@
 ﻿using PlanetbaseMultiplayer.Client.Players;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Players;
@@ -19,27 +20,27 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(PlayerDisconnectedPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
+            Client client = context.ServiceLocator.LocateService<Client>();
             PlayerDisconnectedPacket playerDisconnectedPacket = (PlayerDisconnectedPacket)packet;
-            ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
+            PlayerManager playerManager = context.ServiceLocator.LocateService<PlayerManager>();
 
-            if (processorContext.Client.LocalPlayer.HasValue)
+            if (client.LocalPlayer.HasValue)
             {
-                if (processorContext.Client.LocalPlayer.Value.Id != playerDisconnectedPacket.PlayerId)
+                if (client.LocalPlayer.Value.Id != playerDisconnectedPacket.PlayerId)
                 {
                     Player player = playerManager.GetPlayer(playerDisconnectedPacket.PlayerId);
                     string reason = DisconnectReasonUtils.ReasonToString(playerDisconnectedPacket.Reason);
                     MessageLog.Show($"Player {player.Name} left the game: {reason}", null, MessageLogFlags.MessageSoundNormal);
                 }
 
-                if (processorContext.Client.LocalPlayer.Value.Id == playerDisconnectedPacket.PlayerId)
+                if (client.LocalPlayer.Value.Id == playerDisconnectedPacket.PlayerId)
                 {
                     // The server has freed up resources associated with our player
                     // This may mean that we requested a disconnect
                     // or we're in for a big surprise
-                    processorContext.Client.LocalPlayer = null;
+                    client.LocalPlayer = null;
                 }
             }
 

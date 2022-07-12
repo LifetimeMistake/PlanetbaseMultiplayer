@@ -31,6 +31,7 @@ namespace PlanetbaseMultiplayer.Client
 {
     public class Client
     {
+        private bool isInitialized;
         private GameStateMultiplayer gameStateMultiplayer;
         private ConnectionOptions connectionOptions;
         private NetClient client;
@@ -40,7 +41,7 @@ namespace PlanetbaseMultiplayer.Client
         private TimerActionManager timer;
         private ServiceLocator serviceLocator;
 
-        public Client(GameStateMultiplayer gameStateMultiplayer, PacketRouter router, TimerActionManager timer, ClientProcessorContext processorContext, ServiceLocator serviceLocator, SynchronizationContext synchronizationContext)
+        public Client(GameStateMultiplayer gameStateMultiplayer, PacketRouter router, TimerActionManager timer, ServiceLocator serviceLocator, SynchronizationContext synchronizationContext)
         {
             this.gameStateMultiplayer = gameStateMultiplayer ?? throw new ArgumentNullException(nameof(gameStateMultiplayer));
             this.router = router ?? throw new ArgumentNullException(nameof(router));
@@ -55,13 +56,21 @@ namespace PlanetbaseMultiplayer.Client
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             client = new NetClient(config);
             client.RegisterReceivedCallback(new SendOrPostCallback(MessageReceived));
-
-            RegisterActions();
-            InitializeManagers();
         }
 
         public ServiceLocator ServiceLocator { get { return serviceLocator; } }
         public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
+        public bool IsInitialized { get { return isInitialized; } }
+
+        public void Initialize()
+        {
+            if (isInitialized)
+                throw new InvalidOperationException("The client had already been initialized.");
+
+            RegisterActions();
+            InitializeManagers();
+            isInitialized = true;
+        }
 
         private void RegisterActions()
         {
@@ -109,7 +118,7 @@ namespace PlanetbaseMultiplayer.Client
             if (client.Status == NetPeerStatus.Running)
                 client.Shutdown("Disconnected");
 
-            gameStateMultiplayer.OnClientDisconnected();
+            gameStateMultiplayer.OnPlayerDisconnected();
         }
 
         // Handle incoming messages

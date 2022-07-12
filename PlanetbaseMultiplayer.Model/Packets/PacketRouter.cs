@@ -1,4 +1,5 @@
-﻿using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
+﻿using PlanetbaseMultiplayer.Model.Packets.Processors;
+using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Players;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,10 @@ namespace PlanetbaseMultiplayer.Model.Packets
 {
     public class PacketRouter
     {
-        private IProcessorContext processorContext;
+        private ProcessorContext processorContext;
         private Dictionary<Type, PacketProcessor> registeredProcessors;
 
-        public PacketRouter(IProcessorContext processorContext, PacketProcessor[] packetProcessors)
+        public PacketRouter(ProcessorContext processorContext, IEnumerable<PacketProcessor> packetProcessors)
         {
             this.processorContext = processorContext;
             registeredProcessors = new Dictionary<Type, PacketProcessor>();

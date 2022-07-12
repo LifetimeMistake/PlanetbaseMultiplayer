@@ -3,6 +3,7 @@ using PlanetbaseMultiplayer.Client.Environment;
 using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.Timers.Actions.Abstract;
 using PlanetbaseMultiplayer.Model;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Model.Utils;
 using System;
@@ -16,13 +17,14 @@ namespace PlanetbaseMultiplayer.Client.Timers.Actions
 {
     public class SyncEnvironmentDataAction : TimerAction
     {
-        public override void ProcessAction(ulong currentTick, ClientProcessorContext context)
+        public override void ProcessAction(ulong currentTick, ProcessorContext context)
         {
+            Client client = context.ServiceLocator.LocateService<Client>();
             SimulationManager clientSimulationManager = context.ServiceLocator.LocateService<SimulationManager>();
             Environment.EnvironmentManager clientEnvironmentManager = context.ServiceLocator.LocateService<Environment.EnvironmentManager>();
 
             Player? simulationOwner = clientSimulationManager.GetSimulationOwner();
-            if (simulationOwner == null || simulationOwner.Value != context.Client.LocalPlayer)
+            if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return;
 
             Planetbase.EnvironmentManager environmentManager = Planetbase.EnvironmentManager.getInstance();

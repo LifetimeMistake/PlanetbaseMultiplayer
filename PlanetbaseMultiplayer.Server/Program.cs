@@ -1,4 +1,6 @@
-﻿using PlanetbaseMultiplayer.Model.Packets;
+﻿using PlanetbaseMultiplayer.Model.Autofac;
+using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Server.Autofac;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +10,17 @@ namespace PlanetbaseMultiplayer.Server
 {
     public static class Program
     {
-        private static Server server;
         public static void Main()
         {
             ServerSettings serverSettings = new ServerSettings("gaming", "aaa", 8081, "save.sav");
-            server = new Server(serverSettings);
+            ServiceLocator serviceLocator = new ServiceLocator();
+            ServerAutoFacRegistrar serverAutoFacRegistrar = new ServerAutoFacRegistrar(serviceLocator, serverSettings);
+            serviceLocator.Initialize(serverAutoFacRegistrar);
+            serviceLocator.BeginLifetimeScope();
+
+            Server server = serviceLocator.LocateService<Server>();
             server.Start();
+            server.Initialize();
             Console.ReadLine();
         }
     }

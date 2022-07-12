@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Autofac\ClientAutoFacRegistrar.cs" />
-    <Compile Include="ClientProcessorContext.cs" />
     <Compile Include="ConnectionOptions.cs" />
     <Compile Include="Debugging\DebugManager.cs" />
     <Compile Include="Environment\DisasterManager.cs" />

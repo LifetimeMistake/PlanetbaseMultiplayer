@@ -20,6 +20,7 @@ using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using System.Reflection;
 using System.Threading;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 
 namespace PlanetbaseMultiplayer.Client.Autofac
 {
@@ -48,14 +49,14 @@ namespace PlanetbaseMultiplayer.Client.Autofac
             builder.RegisterType<DebugManager>().InstancePerLifetimeScope();
 #endif
 
-            builder.RegisterType<ClientProcessorContext>().InstancePerLifetimeScope();
+            builder.RegisterType<ProcessorContext>().InstancePerLifetimeScope();
             builder.RegisterType<PacketRouter>().InstancePerLifetimeScope();
             builder.RegisterType<SynchronizationContext>().InstancePerLifetimeScope();
             builder.RegisterType<TimerActionManager>().InstancePerLifetimeScope();
             builder.RegisterType<GameStateMultiplayer>().InstancePerLifetimeScope();
             builder.RegisterType<Client>().InstancePerLifetimeScope();
 
-            RegisterProcessors(builder, Assembly.GetCallingAssembly());
+            RegisterProcessors(builder);
 
             // this is moderately stupid
             builder.RegisterInstance(multiplayerScene).ExternallyOwned();
@@ -63,11 +64,10 @@ namespace PlanetbaseMultiplayer.Client.Autofac
             builder.RegisterInstance(serviceLocator).ExternallyOwned();
         }
 
-        private void RegisterProcessors(ContainerBuilder builder, Assembly assembly)
+        private void RegisterProcessors(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(assembly)
-                .AsClosedTypesOf(typeof(PacketProcessor))
-                .InstancePerLifetimeScope();
+            foreach (PacketProcessor processor in PacketProcessor.GetProcessors())
+                builder.RegisterType(processor.GetType()).As(typeof(PacketProcessor), processor.GetType()).InstancePerLifetimeScope();
         }
     }
 }

@@ -196,6 +196,7 @@ namespace PlanetbaseMultiplayer.Client.GameStates
 			serviceLocator.BeginLifetimeScope();
 
 			Client client = serviceLocator.LocateService<Client>();
+			client.Initialize();
 
 			Multiplayer.Client = client;
 			Multiplayer.ServiceLocator = serviceLocator;
@@ -205,16 +206,14 @@ namespace PlanetbaseMultiplayer.Client.GameStates
 
 		public void DisableMultiplayer()
 		{
-			if (Multiplayer.Client != null)
-			{
-				Multiplayer.Client.Disconnect();
-				Multiplayer.Client = null;
-			}
+			Multiplayer.Client?.Disconnect();
+			Multiplayer.ServiceLocator?.EndLifetimeScope();
 		}
 
-		public void OnClientDisconnected()
+		public void OnPlayerDisconnected()
         {
 			Multiplayer.Client = null;
-        }
+			Multiplayer.ServiceLocator = null;
+		}
 	}
 }

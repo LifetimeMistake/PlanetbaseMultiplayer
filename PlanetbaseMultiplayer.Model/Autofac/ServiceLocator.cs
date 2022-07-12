@@ -60,22 +60,22 @@ namespace PlanetbaseMultiplayer.Model.Autofac
         public T LocateService<T>() where T : class
         {
             AssertLifetimeScopeExists();
-            return container.Resolve<T>();
+            return lifetimeScope.Resolve<T>();
         }
 
         public object LocateService(Type serviceType)
         {
             AssertLifetimeScopeExists();
-            return container.Resolve(serviceType);
+            return lifetimeScope.Resolve(serviceType);
         }
 
         public List<T> LocateServicesOfType<T>() where T : class
         {
             AssertLifetimeScopeExists();
-            return container.ComponentRegistry.Registrations
+            return lifetimeScope.ComponentRegistry.Registrations
                 .Where(r => typeof(T).IsAssignableFrom(r.Activator.LimitType))
                 .Select(r => r.Activator.LimitType)
-                .Select(t => container.Resolve(t) as T).ToList();
+                .Select(t => lifetimeScope.Resolve(t) as T).ToList();
         }
     }
 }
