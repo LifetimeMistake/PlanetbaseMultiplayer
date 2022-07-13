@@ -1,10 +1,11 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Planetbase;
 using PlanetbaseMultiplayer.Client.Autofac;
 using PlanetbaseMultiplayer.Client.GameStates;
 using PlanetbaseMultiplayer.Model.Autofac;
 using System.Runtime.Serialization;
 using System.Linq;
+using System;
 
 namespace PlanetbaseMultiplayer.Client.Tests
 {
@@ -25,7 +26,7 @@ namespace PlanetbaseMultiplayer.Client.Tests
             {
                 Client client = serviceLocator.LocateService<Client>();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Assert.Fail($"Caught an exception while resolving Client service: {ex}");
             }
