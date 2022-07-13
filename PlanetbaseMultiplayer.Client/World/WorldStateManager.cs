@@ -21,10 +21,9 @@ namespace PlanetbaseMultiplayer.Client.World
             this.client = client;
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
 
         public bool RequestWorldData()

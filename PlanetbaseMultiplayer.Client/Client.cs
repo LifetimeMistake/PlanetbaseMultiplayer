@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using Planetbase;
+using PlanetbaseMultiplayer.Client.Autofac;
 using PlanetbaseMultiplayer.Client.GameStates;
 using PlanetbaseMultiplayer.Client.Players;
 using PlanetbaseMultiplayer.Client.Simulation;
@@ -8,6 +9,7 @@ using PlanetbaseMultiplayer.Client.Timers.Actions;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Client.World;
 using PlanetbaseMultiplayer.Model;
+using PlanetbaseMultiplayer.Model.Autofac;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
@@ -29,6 +31,7 @@ namespace PlanetbaseMultiplayer.Client
 {
     public class Client
     {
+        private bool isInitialized;
         private GameStateMultiplayer gameStateMultiplayer;
         private ConnectionOptions connectionOptions;
         private NetClient client;
@@ -36,57 +39,41 @@ namespace PlanetbaseMultiplayer.Client
         private Player? localPlayer;
         private PacketRouter router;
         private TimerActionManager timer;
-        private ClientProcessorContext processorContext;
+        private ServiceLocator serviceLocator;
 
-        private PlayerManager playerManager;
-        private SimulationManager simulationManager;
-        private Time.TimeManager timeManager;
-        private WorldStateManager worldStateManager;
-        private Environment.EnvironmentManager environmentManager;
-        private Environment.DisasterManager disasterManager;
-#if DEBUG
-        private Debugging.DebugManager debugManager;
-#endif
-
-        public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
-        public PlayerManager PlayerManager { get { return playerManager; } }
-        public SimulationManager SimulationManager { get { return simulationManager; } }
-        public Time.TimeManager TimeManager { get { return timeManager; } }
-        public WorldStateManager WorldStateManager { get { return worldStateManager; } }
-        public Environment.EnvironmentManager EnvironmentManager { get { return environmentManager; } }
-        public Environment.DisasterManager DisasterManager { get { return disasterManager; } }
-#if DEBUG
-        public Debugging.DebugManager DebugManager { get { return debugManager; } }
-#endif
-
-        public Client(GameStateMultiplayer gameStateMultiplayer)
+        public Client(GameStateMultiplayer gameStateMultiplayer, PacketRouter router, TimerActionManager timer, ServiceLocator serviceLocator, SynchronizationContext synchronizationContext)
         {
-            this.gameStateMultiplayer = gameStateMultiplayer;
-            packetQueue = new ConcurrentQueue<Packet>();
-            processorContext = new ClientProcessorContext(this);
+            this.gameStateMultiplayer = gameStateMultiplayer ?? throw new ArgumentNullException(nameof(gameStateMultiplayer));
+            this.router = router ?? throw new ArgumentNullException(nameof(router));
+            this.timer = timer ?? throw new ArgumentNullException(nameof(timer));
+            this.serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
 
-            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+            packetQueue = new ConcurrentQueue<Packet>();
+            SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+
             NetPeerConfiguration config = new NetPeerConfiguration("PlanetbaseMultiplayer");
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             client = new NetClient(config);
             client.RegisterReceivedCallback(new SendOrPostCallback(MessageReceived));
+        }
 
-            InitializeProcessors();
-            InitializeActions();
+        public ServiceLocator ServiceLocator { get { return serviceLocator; } }
+        public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
+        public bool IsInitialized { get { return isInitialized; } }
+
+        public void Initialize()
+        {
+            if (isInitialized)
+                throw new InvalidOperationException("The client had already been initialized.");
+
+            RegisterActions();
             InitializeManagers();
+            isInitialized = true;
         }
 
-        private void InitializeProcessors()
+        private void RegisterActions()
         {
-            router = new PacketRouter(processorContext);
-            foreach (PacketProcessor packetProcessor in PacketProcessor.GetProcessors())
-                router.RegisterPacketProcessor(packetProcessor);
-        }
-
-        private void InitializeActions()
-        {
-            timer = new TimerActionManager(processorContext);
             timer.RegisterAction(new ProcessPacketsAction(), 1);
             timer.RegisterAction(new SyncEnvironmentDataAction(), 30);
             timer.RegisterAction(new UpdateDisasterAction(), 10);
@@ -94,25 +81,17 @@ namespace PlanetbaseMultiplayer.Client
 
         private void InitializeManagers()
         {
-            playerManager = new PlayerManager(this);
-            simulationManager = new SimulationManager(this);
-            timeManager = new Time.TimeManager(this);
-            worldStateManager = new WorldStateManager(this);
-            environmentManager = new Environment.EnvironmentManager(this);
-            disasterManager = new Environment.DisasterManager(this);
-#if DEBUG
-            debugManager = new Debugging.DebugManager(this);
-#endif
-
-            playerManager.Initialize();
-            simulationManager.Initialize();
-            timeManager.Initialize();
-            worldStateManager.Initialize();
-            environmentManager.Initialize();
-            disasterManager.Initialize();
-#if DEBUG
-            debugManager.Initialize();
-#endif
+            foreach (IManager manager in serviceLocator.LocateServicesOfType<IManager>())
+            {
+                try
+                {
+                    manager.Initialize();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Could not initialize manager \"{manager.GetType().Name}\": {ex}");
+                }
+            }
         }
 
         public bool Connect(ConnectionOptions connectionOptions)
@@ -139,7 +118,7 @@ namespace PlanetbaseMultiplayer.Client
             if (client.Status == NetPeerStatus.Running)
                 client.Shutdown("Disconnected");
 
-            gameStateMultiplayer.OnClientDisconnected();
+            gameStateMultiplayer.OnPlayerDisconnected();
         }
 
         // Handle incoming messages

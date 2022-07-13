@@ -24,10 +24,9 @@ namespace PlanetbaseMultiplayer.Client.Players
             connectedPlayers = new Dictionary<Guid, Player>();
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
 
         public void OnPlayerAdded(Player player)

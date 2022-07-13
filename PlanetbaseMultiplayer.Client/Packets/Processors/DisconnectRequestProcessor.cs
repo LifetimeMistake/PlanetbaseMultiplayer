@@ -1,6 +1,7 @@
 ﻿using Planetbase;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Session;
@@ -19,15 +20,15 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(DisconnectRequestPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
-            ClientProcessorContext processorContext = (ClientProcessorContext)context;
+            Client client = context.ServiceLocator.LocateService<Client>();
             DisconnectRequestPacket disconnectRequestPacket = (DisconnectRequestPacket)packet;
 
             void OnExitConfirm(object parameter)
             {
                 GameManager.getInstance().setGameStateTitle();
-                processorContext.Client.Disconnect();
+                client.Disconnect();
             }
 
             GuiDefinitions.Callback callback = new GuiDefinitions.Callback(OnExitConfirm);

@@ -1,5 +1,6 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Environment;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Players;
 using PlanetbaseMultiplayer.Server.Environment;
@@ -18,12 +19,11 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             return typeof(UpdateEnvironmentDataPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
             UpdateEnvironmentDataPacket updateEnvironmentDataPacket = (UpdateEnvironmentDataPacket)packet;
-            ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            SimulationManager simulationManager = processorContext.Server.SimulationManager;
-            EnvironmentManager environmentManager = processorContext.Server.EnvironmentManager;
+            SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
+            EnvironmentManager environmentManager = context.ServiceLocator.LocateService<EnvironmentManager>();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || sourcePlayerId != simulationOwner.Value.Id)

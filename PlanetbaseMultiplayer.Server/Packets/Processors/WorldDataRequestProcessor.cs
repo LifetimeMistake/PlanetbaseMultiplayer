@@ -1,4 +1,5 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.World;
 using PlanetbaseMultiplayer.Model.Players;
@@ -21,15 +22,15 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             return typeof(WorldDataRequestPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
+            Server server = context.ServiceLocator.LocateService<Server>();
             WorldDataRequestPacket worldDataRequestPacket = (WorldDataRequestPacket)packet;
-            ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            PlayerManager playerManager = processorContext.Server.PlayerManager;
-            SimulationManager simulationManager = processorContext.Server.SimulationManager;
-            TimeManager timeManager = processorContext.Server.TimeManager;
-            WorldRequestQueueManager worldRequestQueueManager = processorContext.Server.WorldRequestQueueManager;
-            WorldStateManager worldStateManager = processorContext.Server.WorldStateManager;
+            PlayerManager playerManager = context.ServiceLocator.LocateService<PlayerManager>();
+            SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
+            TimeManager timeManager = context.ServiceLocator.LocateService<TimeManager>();
+            WorldRequestQueueManager worldRequestQueueManager = context.ServiceLocator.LocateService<WorldRequestQueueManager>();
+            WorldStateManager worldStateManager = context.ServiceLocator.LocateService<WorldStateManager>();
 
             if (!playerManager.PlayerExists(sourcePlayerId))
             {
@@ -59,7 +60,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
                 // The state we have is already the newest
                 WorldData worldStateData = worldStateManager.GetWorldData();
                 WorldDataPacket worldDataPacket = new WorldDataPacket(worldStateData);
-                processorContext.Server.SendPacketToPlayer(worldDataPacket, sourcePlayerId);
+                server.SendPacketToPlayer(worldDataPacket, sourcePlayerId);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace PlanetbaseMultiplayer.Model.Packets.Processors.Abstract
     public abstract class PacketProcessor
     {
         public abstract Type GetProcessedPacketType();
-        public abstract void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context);
+        public abstract void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context);
         public static List<PacketProcessor> GetProcessors(Dictionary<Type, object> processorArguments = null)
         {
             if (processorArguments == null)

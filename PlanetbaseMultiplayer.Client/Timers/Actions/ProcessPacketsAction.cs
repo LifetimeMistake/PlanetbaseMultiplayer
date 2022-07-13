@@ -1,4 +1,5 @@
 ﻿using PlanetbaseMultiplayer.Client.Timers.Actions.Abstract;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,10 @@ namespace PlanetbaseMultiplayer.Client.Timers.Actions
 {
     public class ProcessPacketsAction : TimerAction
     {
-        public override void ProcessAction(ulong currentTick, ClientProcessorContext context)
+        public override void ProcessAction(ulong currentTick, ProcessorContext context)
         {
-            context.Client.ProcessPackets();
+            Client client = context.ServiceLocator.LocateService<Client>();
+            client.ProcessPackets();
         }
     }
 }

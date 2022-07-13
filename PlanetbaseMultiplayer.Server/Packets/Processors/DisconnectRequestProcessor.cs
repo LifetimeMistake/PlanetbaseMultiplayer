@@ -1,4 +1,5 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Players;
@@ -19,20 +20,20 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             return typeof(DisconnectRequestPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
-            ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            PlayerManager playerManager = processorContext.Server.PlayerManager;
-            TimeManager timeManager = processorContext.Server.TimeManager;
+            Server server = context.ServiceLocator.LocateService<Server>();
+            PlayerManager playerManager = context.ServiceLocator.LocateService<PlayerManager>();
+            TimeManager timeManager = context.ServiceLocator.LocateService<TimeManager>();
 
             Console.WriteLine($"Player {sourcePlayerId} requested a graceful disconnect");
             playerManager.DestroyPlayer(sourcePlayerId, DisconnectReason.DisconnectRequest);
 
             // We reply with another disconnect request to let the client know that we're ready for a graceful disconnect
             DisconnectRequestPacket disconnectReply = new DisconnectRequestPacket(DisconnectReason.DisconnectRequestResponse);
-            processorContext.Server.SendPacketToPlayer(disconnectReply, sourcePlayerId);
+            server.SendPacketToPlayer(disconnectReply, sourcePlayerId);
 
-            processorContext.Server.playerConnections.Remove(sourcePlayerId);
+            server.playerConnections.Remove(sourcePlayerId);
             if (playerManager.GetPlayers().Count(p => p.State == PlayerState.ConnectedLoadingData) == 0)
                 timeManager.UnfreezeTime();
         }

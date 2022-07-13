@@ -21,10 +21,9 @@ namespace PlanetbaseMultiplayer.Server.Environment
             this.server = server;
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
 
         public bool AnyDisasterInProgress()

@@ -1,7 +1,9 @@
 ﻿using PlanetbaseMultiplayer.Client.Environment;
 using PlanetbaseMultiplayer.Client.Environment.Disasters;
+using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.Timers.Actions.Abstract;
 using PlanetbaseMultiplayer.Model;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Players;
 using System;
 using System.Collections.Generic;
@@ -13,13 +15,15 @@ namespace PlanetbaseMultiplayer.Client.Timers.Actions
 {
     public class UpdateDisasterAction : TimerAction
     {
-        public override void ProcessAction(ulong currentTick, ClientProcessorContext context)
+        public override void ProcessAction(ulong currentTick, ProcessorContext context)
         {
-            Player? simulationOwner = context.Client.SimulationManager.GetSimulationOwner();
-            if (simulationOwner == null || simulationOwner.Value != context.Client.LocalPlayer)
+            Client client = context.ServiceLocator.LocateService<Client>();
+            SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
+            Player? simulationOwner = simulationManager.GetSimulationOwner();
+            if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return;
 
-            DisasterManager disasterManager = context.Client.DisasterManager;
+            DisasterManager disasterManager = context.ServiceLocator.LocateService<DisasterManager>();
             if (!disasterManager.AnyDisasterInProgress())
                 return;
 

@@ -20,10 +20,9 @@ namespace PlanetbaseMultiplayer.Client.Debugging
             this.logCapacity = 50;
         }
 
-        public bool Initialize()
+        public void Initialize()
         {
             IsInitialized = true;
-            return true;
         }
 
         public int GetLogCapacity()

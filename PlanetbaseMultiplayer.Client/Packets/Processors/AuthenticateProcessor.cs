@@ -1,7 +1,9 @@
 ﻿using Planetbase;
 using PlanetbaseMultiplayer.Client.Players;
+using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Packets.World;
@@ -22,11 +24,12 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(AuthenticatePacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
-            ClientProcessorContext processorContext = (ClientProcessorContext)context;
+            Client client = context.ServiceLocator.LocateService<Client>();
             AuthenticatePacket authenticatePacket = (AuthenticatePacket)packet;
-            PlayerManager playerManager = processorContext.Client.PlayerManager;
+            PlayerManager playerManager = context.ServiceLocator.LocateService<PlayerManager>();
+            SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
 
             if(!authenticatePacket.AuthenticationSuccessful)
             {
@@ -43,18 +46,18 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
                         break;
                 }
 
-                processorContext.Client.RequestDisconnect();
+                client.RequestDisconnect();
                 return;
             }
 
-            processorContext.Client.LocalPlayer = authenticatePacket.LocalPlayer.Value;
-            processorContext.Client.SimulationManager.OnSimulationOwnerUpdated(authenticatePacket.SimulationOwner);
+            client.LocalPlayer = authenticatePacket.LocalPlayer.Value;
+            simulationManager.OnSimulationOwnerUpdated(authenticatePacket.SimulationOwner);
             foreach (Player player in authenticatePacket.Players)
                 playerManager.OnPlayerAdded(player); // Sync players
 
             Debug.Log("Sending world data request");
             WorldDataRequestPacket worldDataRequestPacket = new WorldDataRequestPacket();
-            processorContext.Client.SendPacket(worldDataRequestPacket);
+            client.SendPacket(worldDataRequestPacket);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using PlanetbaseMultiplayer.Client.UI;
+﻿using PlanetbaseMultiplayer.Client.Players;
+using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using System;
@@ -16,12 +18,12 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(PlayerJoinedPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
             PlayerJoinedPacket playerJoinedPacket = (PlayerJoinedPacket)packet;
-            ClientProcessorContext processorContext = (ClientProcessorContext)context;
+            PlayerManager playerManager = context.ServiceLocator.LocateService<PlayerManager>();
 
-            processorContext.Client.PlayerManager.OnPlayerAdded(playerJoinedPacket.Player);
+            playerManager.OnPlayerAdded(playerJoinedPacket.Player);
 
             MessageLogFlags flags;
             if (playerJoinedPacket.Player.Name.ToLower() == "freddy")

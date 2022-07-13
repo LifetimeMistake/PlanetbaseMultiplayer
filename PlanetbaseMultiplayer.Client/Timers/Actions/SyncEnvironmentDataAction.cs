@@ -3,7 +3,9 @@ using PlanetbaseMultiplayer.Client.Environment;
 using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.Timers.Actions.Abstract;
 using PlanetbaseMultiplayer.Model;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Players;
+using PlanetbaseMultiplayer.Model.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +17,14 @@ namespace PlanetbaseMultiplayer.Client.Timers.Actions
 {
     public class SyncEnvironmentDataAction : TimerAction
     {
-        public override void ProcessAction(ulong currentTick, ClientProcessorContext context)
+        public override void ProcessAction(ulong currentTick, ProcessorContext context)
         {
-            Player? simulationOwner = context.Client.SimulationManager.GetSimulationOwner();
-            if (simulationOwner == null || simulationOwner.Value != context.Client.LocalPlayer)
+            Client client = context.ServiceLocator.LocateService<Client>();
+            SimulationManager clientSimulationManager = context.ServiceLocator.LocateService<SimulationManager>();
+            Environment.EnvironmentManager clientEnvironmentManager = context.ServiceLocator.LocateService<Environment.EnvironmentManager>();
+
+            Player? simulationOwner = clientSimulationManager.GetSimulationOwner();
+            if (simulationOwner == null || simulationOwner.Value != client.LocalPlayer)
                 return;
 
             Planetbase.EnvironmentManager environmentManager = Planetbase.EnvironmentManager.getInstance();
@@ -35,7 +41,7 @@ namespace PlanetbaseMultiplayer.Client.Timers.Actions
             float windLevel = windIndicator.getValue();
             Vector3 windDirection = (Vector3)Reflection.GetInstanceFieldValue(environmentManager, mWindDirection);
 
-            context.Client.EnvironmentManager.UpdateEnvironmentData(time, windLevel, windDirection);
+            clientEnvironmentManager.UpdateEnvironmentData(time, windLevel, windDirection);
         }
     }
 }
