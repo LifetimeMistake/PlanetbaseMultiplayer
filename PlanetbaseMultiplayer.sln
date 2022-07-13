@@ -11,7 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetbaseMultiplayer.Clien
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetbaseMultiplayer.Server", "PlanetbaseMultiplayer.Server\PlanetbaseMultiplayer.Server.csproj", "{9A55B89A-B77F-4A5F-A30A-F8E1710CBC9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetbaseMultiplayer.Model.Tests", "PlanetbaseMultiplayer.Model.Tests\PlanetbaseMultiplayer.Model.Tests.csproj", "{D05508CD-B9DC-4CD9-8917-30C35B7A3B7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanetbaseMultiplayer.Client.Tests", "PlanetbaseMultiplayer.Client.Tests\PlanetbaseMultiplayer.Client.Tests.csproj", "{8AD46C3D-ADD1-42DA-A24F-AE491D7267C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanetbaseMultiplayer.Server.Tests", "PlanetbaseMultiplayer.Server.Tests\PlanetbaseMultiplayer.Server.Tests.csproj", "{D611E780-5C0A-4DC4-92DC-ED692F62D757}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanetbaseMultiplayer.Model.Tests", "PlanetbaseMultiplayer.Model.Tests\PlanetbaseMultiplayer.Model.Tests.csproj", "{23CB77CC-EAA6-4423-A545-C36FE6DCF0E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +39,18 @@ Global
 		{9A55B89A-B77F-4A5F-A30A-F8E1710CBC9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A55B89A-B77F-4A5F-A30A-F8E1710CBC9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A55B89A-B77F-4A5F-A30A-F8E1710CBC9A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D05508CD-B9DC-4CD9-8917-30C35B7A3B7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D05508CD-B9DC-4CD9-8917-30C35B7A3B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D05508CD-B9DC-4CD9-8917-30C35B7A3B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D05508CD-B9DC-4CD9-8917-30C35B7A3B7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AD46C3D-ADD1-42DA-A24F-AE491D7267C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AD46C3D-ADD1-42DA-A24F-AE491D7267C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AD46C3D-ADD1-42DA-A24F-AE491D7267C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AD46C3D-ADD1-42DA-A24F-AE491D7267C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D611E780-5C0A-4DC4-92DC-ED692F62D757}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D611E780-5C0A-4DC4-92DC-ED692F62D757}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D611E780-5C0A-4DC4-92DC-ED692F62D757}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D611E780-5C0A-4DC4-92DC-ED692F62D757}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23CB77CC-EAA6-4423-A545-C36FE6DCF0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23CB77CC-EAA6-4423-A545-C36FE6DCF0E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23CB77CC-EAA6-4423-A545-C36FE6DCF0E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23CB77CC-EAA6-4423-A545-C36FE6DCF0E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

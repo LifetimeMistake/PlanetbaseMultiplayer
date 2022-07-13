@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace PlanetbaseMultiplayer.Model.Tests
 {
-    public class Tests
+    public class PacketTests
     {
         [Test]
         public void PacketSerializableTest()
