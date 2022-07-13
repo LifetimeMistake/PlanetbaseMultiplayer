@@ -1,10 +1,9 @@
 ﻿using NUnit.Framework;
-using Planetbase;
 using PlanetbaseMultiplayer.Client.Autofac;
 using PlanetbaseMultiplayer.Client.GameStates;
+using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Autofac;
 using System.Runtime.Serialization;
-using System.Linq;
 using System;
 
 namespace PlanetbaseMultiplayer.Client.Tests
@@ -28,15 +27,50 @@ namespace PlanetbaseMultiplayer.Client.Tests
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Caught an exception while resolving Client service: {ex}");
+                Assert.Fail($"Failed to resolve Client service: {ex}");
             }
-
-            Assert.Pass();
         }
 
-        public class DummyGameState : GameState
+        [Test]
+        public void ResolveManagersTest()
         {
-            public DummyGameState() { }
+            GameStateMultiplayer gameStateMultiplayer = FormatterServices.GetUninitializedObject(typeof(GameStateMultiplayer)) as GameStateMultiplayer;
+            ServiceLocator serviceLocator = new ServiceLocator();
+
+            ClientAutoFacRegistrar clientAutoFacRegistrar = new ClientAutoFacRegistrar(serviceLocator, gameStateMultiplayer);
+
+            serviceLocator.Initialize(clientAutoFacRegistrar);
+            serviceLocator.BeginLifetimeScope();
+
+            Type currentType = null;
+
+            try
+            {
+                foreach (Type managerType in serviceLocator.GetDerivedServiceTypes<IManager>())
+                {
+                    currentType = managerType;
+                    object service = serviceLocator.LocateService(managerType);
+                }
+            }
+            catch(Exception ex)
+            {
+                Assert.Fail($"Failed to resolve {currentType.FullName}: {ex}");
+            }
+        }
+
+        [Test]
+        public void ManagersCountNotEmpty()
+        {
+            GameStateMultiplayer gameStateMultiplayer = FormatterServices.GetUninitializedObject(typeof(GameStateMultiplayer)) as GameStateMultiplayer;
+            ServiceLocator serviceLocator = new ServiceLocator();
+
+            ClientAutoFacRegistrar clientAutoFacRegistrar = new ClientAutoFacRegistrar(serviceLocator, gameStateMultiplayer);
+
+            serviceLocator.Initialize(clientAutoFacRegistrar);
+            serviceLocator.BeginLifetimeScope();
+
+            if (serviceLocator.GetDerivedServiceTypes<IManager>().Count == 0)
+                Assert.Fail("Current ServiceLocator does not contain any registered managers");
         }
     }
 }

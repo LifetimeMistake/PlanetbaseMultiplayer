@@ -4,12 +4,13 @@ using PlanetbaseMultiplayer.Model.Packets;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace PlanetbaseMultiplayer.Model.Tests
 {
     public class PacketTests
     {
-        [NUnit.Framework.Test]
+        [Test]
         public void PacketSerializableTest()
         {
             Assembly ass = Assembly.GetAssembly(typeof(Packet));
@@ -29,7 +30,7 @@ namespace PlanetbaseMultiplayer.Model.Tests
                 }
             }
 
-            NUnit.Framework.Assert.That(invalidTypes.Count, NUnit.Framework.Is.EqualTo(0));
+            Assert.That(invalidTypes.Count, Is.EqualTo(0));
         }
     }
 }
