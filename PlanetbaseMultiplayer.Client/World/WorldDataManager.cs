@@ -10,13 +10,13 @@ using System.Xml;
 
 namespace PlanetbaseMultiplayer.Client.World
 {
-    public class WorldStateManager : IWorldStateManager
+    public class WorldDataManager : IWorldDataManager
     {
         private Client client;
-        private WorldData worldStateData;
+        private WorldData worldData;
         public bool IsInitialized { get; private set; }
 
-        public WorldStateManager(Client client)
+        public WorldDataManager(Client client)
         {
             this.client = client;
         }
@@ -33,23 +33,21 @@ namespace PlanetbaseMultiplayer.Client.World
             return true;
         }
 
-        public void UpdateWorldData(WorldData worldStateData)
+        public void UpdateWorldData(WorldData worldData)
         {
-            this.worldStateData = worldStateData;
-            XmlDocument document = new XmlDocument();
-            document.LoadXml(worldStateData.XmlData);
-            client.DisasterManager.Deserialize(document);
+            this.worldData = worldData;
+            
             // Planetbase only supports loading save data from a file
             // instead of rewriting a lot of game logic, we compromise
             string tmpPath = Path.GetTempFileName();
-            File.WriteAllText(tmpPath, worldStateData.XmlData);
+            File.WriteAllText(tmpPath, worldData.XmlData);
             SaveData save = new SaveData(tmpPath, DateTime.Now);
             GameManager.getInstance().setNewState(new GameStateGame(save.getPath(), save.getPlanetIndex(), null));
         }
 
         public WorldData GetWorldData()
         {
-            return worldStateData;
+            return worldData;
         }
     }
 }

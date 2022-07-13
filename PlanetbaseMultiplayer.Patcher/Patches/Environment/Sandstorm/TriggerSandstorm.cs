@@ -20,13 +20,13 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment.Sandstorm
             if (Multiplayer.Client == null)
                 return true;
 
-            Client.Simulation.SimulationManager simulationManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Simulation.SimulationManager>();
+            Client.Simulation.SimulationManager simulationManager = Multiplayer.ServiceLocator.LocateService<Client.Simulation.SimulationManager>();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || simulationOwner.Value != Multiplayer.Client.LocalPlayer)
                 return false; // Player isn't the simulation owner
 
-            Client.Environment.DisasterManager disasterManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Environment.DisasterManager>();
+            Client.Environment.DisasterManager disasterManager = Multiplayer.ServiceLocator.LocateService<Client.Environment.DisasterManager>();
 
             float disasterLength = UnityEngine.Random.Range(90f, 180f);
             float currentTime = 0f;

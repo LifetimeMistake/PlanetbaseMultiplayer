@@ -23,8 +23,8 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             Client client = context.ServiceLocator.LocateService<Client>();
             WorldDataPacket worldDataPacket = (WorldDataPacket)packet;
-            WorldStateManager worldStateManager = context.ServiceLocator.LocateService<WorldStateManager>();
-            worldStateManager.UpdateWorldData(worldDataPacket.World);
+            WorldDataManager worldDataManager = context.ServiceLocator.LocateService<WorldDataManager>();
+            worldDataManager.UpdateWorldData(worldDataPacket.World);
 
             Debug.Log("Informing the server that we've started loading the world data");
             ClientLoadingStartedPacket clientLoadingStartedPacket = new ClientLoadingStartedPacket();

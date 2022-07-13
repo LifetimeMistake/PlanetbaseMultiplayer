@@ -11,21 +11,13 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Server.World
 {
-    public class WorldStateManager : IWorldStateManager
+    public class WorldDataManager : IWorldDataManager
     {
-        private WorldData worldStateData;
         private ServerSettings serverSettings;
         private SimulationManager simulationManager;
-        private WorldStateData worldStateData;
+        private WorldData worldData;
         private Server server;
         private bool dataRequestInProgress;
-
-        public WorldStateManager(ServerSettings serverSettings, SimulationManager simulationManager, Server server)
-        {
-            this.serverSettings = serverSettings ?? throw new ArgumentNullException(nameof(serverSettings));
-            this.simulationManager = simulationManager ?? throw new ArgumentNullException(nameof(simulationManager));
-            this.server = server ?? throw new ArgumentNullException(nameof(server));
-        }
 
         public bool IsInitialized { get; private set; }
 
@@ -33,12 +25,15 @@ namespace PlanetbaseMultiplayer.Server.World
         public event EventHandler WorldDataUpdated;
         public event EventHandler WorldDataRequestFailed;
 
-        public WorldStateManager(Server server, string savePath, WorldStateData worldStateData)
+        public WorldDataManager(ServerSettings serverSettings, SimulationManager simulationManager, Server server)
         {
+            this.serverSettings = serverSettings ?? throw new ArgumentNullException(nameof(serverSettings));
+            this.simulationManager = simulationManager ?? throw new ArgumentNullException(nameof(simulationManager));
             this.server = server ?? throw new ArgumentNullException(nameof(server));
-            this.savePath = savePath ?? throw new ArgumentNullException(nameof(savePath));
-            this.worldStateData = worldStateData;
+        }
 
+        public void Initialize()
+        {
             simulationManager.SimulationOwnerUpdated += OnSimulationOwnerUpdated;
             IsInitialized = true;
         }
@@ -60,12 +55,12 @@ namespace PlanetbaseMultiplayer.Server.World
             return true;
         }
 
-        public void UpdateWorldData(WorldData worldStateData)
+        public void UpdateWorldData(WorldData worldData)
         {
-            this.worldStateData = worldStateData;
+            this.worldData = worldData;
             try
             {
-                File.WriteAllText(serverSettings.SavePath, worldStateData.XmlData);
+                
             }
             catch (Exception ex)
             {
@@ -77,14 +72,14 @@ namespace PlanetbaseMultiplayer.Server.World
 
         public WorldData GetWorldData()
         {
-            return worldStateData;
+            return worldData;
         }
         
-        public void OnWorldDataReceived(WorldData worldStateData)
+        public void OnWorldDataReceived(WorldData worldData)
         {
             Console.WriteLine("Received world data, updating...");
             dataRequestInProgress = false;
-            UpdateWorldData(worldStateData);
+            UpdateWorldData(worldData);
         }
 
         private void OnSimulationOwnerUpdated(object sender, EventArgs.SimulationOwnerUpdatedEventArgs e)

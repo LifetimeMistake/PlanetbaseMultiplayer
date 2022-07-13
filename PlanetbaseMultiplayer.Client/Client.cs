@@ -41,6 +41,10 @@ namespace PlanetbaseMultiplayer.Client
         private TimerActionManager timer;
         private ServiceLocator serviceLocator;
 
+        public ServiceLocator ServiceLocator { get { return serviceLocator; } }
+        public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
+        public bool IsInitialized { get { return isInitialized; } }
+
         public Client(GameStateMultiplayer gameStateMultiplayer, PacketRouter router, TimerActionManager timer, ServiceLocator serviceLocator, SynchronizationContext synchronizationContext)
         {
             this.gameStateMultiplayer = gameStateMultiplayer ?? throw new ArgumentNullException(nameof(gameStateMultiplayer));
@@ -57,10 +61,6 @@ namespace PlanetbaseMultiplayer.Client
             client = new NetClient(config);
             client.RegisterReceivedCallback(new SendOrPostCallback(MessageReceived));
         }
-
-        public ServiceLocator ServiceLocator { get { return serviceLocator; } }
-        public Player? LocalPlayer { get { return localPlayer; } set { localPlayer = value; } }
-        public bool IsInitialized { get { return isInitialized; } }
 
         public void Initialize()
         {

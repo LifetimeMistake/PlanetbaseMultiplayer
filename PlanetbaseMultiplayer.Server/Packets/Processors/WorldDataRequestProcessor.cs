@@ -30,7 +30,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
             TimeManager timeManager = context.ServiceLocator.LocateService<TimeManager>();
             WorldRequestQueueManager worldRequestQueueManager = context.ServiceLocator.LocateService<WorldRequestQueueManager>();
-            WorldStateManager worldStateManager = context.ServiceLocator.LocateService<WorldStateManager>();
+            WorldDataManager worldDataManager = context.ServiceLocator.LocateService<WorldDataManager>();
 
             if (!playerManager.PlayerExists(sourcePlayerId))
             {
@@ -49,7 +49,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             timeManager.FreezeTime();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
-            if (simulationOwner != null && simulationOwner.Value != sourcePlayer && worldStateManager.RequestWorldData())
+            if (simulationOwner != null && simulationOwner.Value != sourcePlayer && worldDataManager.RequestWorldData())
             {
                 // The server can get a newer world state
                 // add the client to the queue and wait
@@ -58,8 +58,8 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             else
             {
                 // The state we have is already the newest
-                WorldData worldStateData = worldStateManager.GetWorldData();
-                WorldDataPacket worldDataPacket = new WorldDataPacket(worldStateData);
+                WorldData worldData = worldDataManager.GetWorldData();
+                WorldDataPacket worldDataPacket = new WorldDataPacket(worldData);
                 server.SendPacketToPlayer(worldDataPacket, sourcePlayerId);
             }
         }

@@ -17,7 +17,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Environment
             if (Multiplayer.Client == null)
                 return true; // Not in multiplayer
 
-            Client.Simulation.SimulationManager simulationManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Simulation.SimulationManager>();
+            Client.Simulation.SimulationManager simulationManager = Multiplayer.ServiceLocator.LocateService<Client.Simulation.SimulationManager>();
 
             Player? localPlayer = Multiplayer.Client.LocalPlayer;
             Player? simulationOwner = simulationManager.GetSimulationOwner();

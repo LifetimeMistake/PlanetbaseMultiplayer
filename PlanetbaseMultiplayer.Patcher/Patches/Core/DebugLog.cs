@@ -24,7 +24,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Core
         static void ShowDebugLog()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            Client.Debugging.DebugManager debugManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Debugging.DebugManager>();
+            Client.Debugging.DebugManager debugManager = Multiplayer.ServiceLocator.LocateService<Client.Debugging.DebugManager>();
 
             try
             {
@@ -51,7 +51,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Core
         static void Postfix(object message)
         {
             if (Multiplayer.Client == null) return;
-            Client.Debugging.DebugManager debugManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Debugging.DebugManager>();
+            Client.Debugging.DebugManager debugManager = Multiplayer.ServiceLocator.LocateService<Client.Debugging.DebugManager>();
             debugManager.AddMessage((message == null) ? "Null" : message.ToString());
         }
     }
@@ -62,7 +62,7 @@ namespace PlanetbaseMultiplayer.Patcher.Patches.Core
         static void Postfix(string value)
         {
             if (Multiplayer.Client == null) return;
-            Client.Debugging.DebugManager debugManager = Multiplayer.Client.ServiceLocator.LocateService<Client.Debugging.DebugManager>();
+            Client.Debugging.DebugManager debugManager = Multiplayer.ServiceLocator.LocateService<Client.Debugging.DebugManager>();
             debugManager.AddMessage(value);
         }
     }

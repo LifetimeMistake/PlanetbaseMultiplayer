@@ -36,7 +36,7 @@ namespace PlanetbaseMultiplayer.Server.Autofac
         {
             builder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             builder.RegisterType<SimulationManager>().InstancePerLifetimeScope();
-            builder.RegisterType<WorldStateManager>().InstancePerLifetimeScope();
+            builder.RegisterType<WorldDataManager>().InstancePerLifetimeScope();
             builder.RegisterType<WorldRequestQueueManager>().InstancePerLifetimeScope();
             builder.RegisterType<TimeManager>().InstancePerLifetimeScope();
             builder.RegisterType<EnvironmentManager>().InstancePerLifetimeScope();

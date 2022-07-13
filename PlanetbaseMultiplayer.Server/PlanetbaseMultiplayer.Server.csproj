@@ -68,6 +68,7 @@
     <Compile Include="Packets\Processors\UpdateDisasterProcessor.cs" />
     <Compile Include="Packets\Processors\UpdateEnvironmentDataProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataProcessor.cs" />
+    <Compile Include="Packets\Processors\WorldDataRequestFailProcessor.cs" />
     <Compile Include="Packets\Processors\WorldDataRequestProcessor.cs" />
     <Compile Include="Players\PlayerManager.cs" />
     <Compile Include="Program.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="ServerSettings.cs" />
     <Compile Include="Simulation\SimulationManager.cs" />
     <Compile Include="World\WorldRequestQueueManager.cs" />
-    <Compile Include="World\WorldStateManager.cs" />
+    <Compile Include="World\WorldDataManager.cs" />
     <Compile Include="Time\TimeManager.cs" />
   </ItemGroup>
   <ItemGroup>

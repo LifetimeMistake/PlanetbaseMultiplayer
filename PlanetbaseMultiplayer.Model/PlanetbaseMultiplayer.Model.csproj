@@ -65,6 +65,7 @@
     <Compile Include="Packets\Session\ClientLoadingStartedPacket.cs" />
     <Compile Include="Packets\Session\ClientReadyPacket.cs" />
     <Compile Include="Packets\Time\TimeScaleUpdatePacket.cs" />
+    <Compile Include="Packets\World\WorldDataRequestFailPacket.cs" />
     <Compile Include="Resources\IResourceManager.cs" />
     <Compile Include="Resources\Resource.cs" />
     <Compile Include="Resources\ResourceDurability.cs" />
@@ -105,7 +106,7 @@
     <Compile Include="Environment\DisasterType.cs" />
     <Compile Include="Environment\IDisasterManager.cs" />
     <Compile Include="Environment\IEnvironmentManager.cs" />
-    <Compile Include="World\IWorldStateManager.cs" />
+    <Compile Include="World\IWorldDataManager.cs" />
     <Compile Include="World\Persistence\DisasterData.cs" />
     <Compile Include="World\Persistence\EnvironmentData.cs" />
     <Compile Include="World\WorldData.cs" />

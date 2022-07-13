@@ -1,6 +1,7 @@
 ﻿using Planetbase;
 using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.World;
+using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Packets;
 using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
@@ -31,14 +32,26 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             if (player.HasValue && client.LocalPlayer.HasValue && client.LocalPlayer.Value != player.Value)
                 return; // Not the simulation owner
 
-            // TODO
-            //GameStateGame gameStateGame = GameManager.getInstance().getGameState() as GameStateGame;
+            GameStateGame gameStateGame = GameManager.getInstance().getGameState() as GameStateGame;
+            string xmlData = WorldSerializer.Serialize(gameStateGame);
+            WorldData worldData = new WorldData();
+            worldData.XmlData = xmlData;
 
-            //string xmlData = WorldSerializer.Serialize(gameStateGame);
-            //WorldData worldStateData = new WorldData(xmlData);
+            foreach (IPersistent persistent in context.ServiceLocator.LocateServicesOfType<IPersistent>())
+            {
+                if (!persistent.Save(worldData))
+                {
+                    // Inform the server that something went terribly wrong.
+                    WorldDataRequestFailPacket worldDataRequestFailPacket = new WorldDataRequestFailPacket();
+                    client.SendPacket(worldDataRequestFailPacket);
 
-            //WorldDataPacket worldDataPacket = new WorldDataPacket(worldStateData);
-            //client.SendPacket(worldDataPacket);
+                    // TODO: Handle this by informing the user about it and not interrupting the game
+                    throw new Exception($"Failed to serialize persistent manager: {persistent.GetType().Name}");
+                }
+            }
+
+            WorldDataPacket worldDataPacket = new WorldDataPacket(worldData);
+            client.SendPacket(worldDataPacket);
         }
     }
 }

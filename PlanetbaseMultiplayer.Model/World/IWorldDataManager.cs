@@ -5,10 +5,10 @@ using System.Text;
 
 namespace PlanetbaseMultiplayer.Model.World
 {
-    public interface IWorldStateManager : IManager
+    public interface IWorldDataManager : IManager
     {
         bool RequestWorldData();
-        void UpdateWorldData(WorldData worldStateData);
+        void UpdateWorldData(WorldData worldData);
         WorldData GetWorldData();
     }
 }

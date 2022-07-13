@@ -43,10 +43,10 @@ namespace PlanetbaseMultiplayer.Server
             this.router = router ?? throw new ArgumentNullException(nameof(router));
             this.serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
 
-            WorldData worldStateData;
+            WorldData worldData;
             using (FileStream stream = File.OpenRead(settings.SavePath))
             {
-                worldStateData = WorldData.Deserialize(stream);
+                worldData = WorldData.Deserialize(stream);
             }
             SynchronizationContext.SetSynchronizationContext(synchronizationContext);
             playerConnections = new Dictionary<Guid, long>();
@@ -87,13 +87,13 @@ namespace PlanetbaseMultiplayer.Server
 
         public void Shutdown(bool gracefulShutdown = true)
         {
-            WorldStateManager worldStateManager = serviceLocator.LocateService<WorldStateManager>();
+            WorldDataManager worldDataManager = serviceLocator.LocateService<WorldDataManager>();
             PlayerManager playerManager = serviceLocator.LocateService<PlayerManager>();
 
             if (gracefulShutdown)
             {
                 // Add graceful shutdown logic
-                if (worldStateManager.RequestWorldData())
+                if (worldDataManager.RequestWorldData())
                 {
                     // Add logic
                 }

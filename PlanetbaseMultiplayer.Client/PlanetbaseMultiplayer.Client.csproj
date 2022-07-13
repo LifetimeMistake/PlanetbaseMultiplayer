@@ -98,7 +98,7 @@
     <Compile Include="UI\MessageToast.cs" />
     <Compile Include="Environment\EnvironmentManager.cs" />
     <Compile Include="World\WorldSerializer.cs" />
-    <Compile Include="World\WorldStateManager.cs" />
+    <Compile Include="World\WorldDataManager.cs" />
     <Compile Include="Utils\XmlSerializerUtils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +110,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

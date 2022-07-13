@@ -23,7 +23,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
         {
             WorldDataPacket worldDataPacket = (WorldDataPacket)packet;
             SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
-            WorldStateManager worldStateManager = context.ServiceLocator.LocateService<WorldStateManager>();
+            WorldDataManager worldDataManager = context.ServiceLocator.LocateService<WorldDataManager>();
 
             Player? simulationOwner = simulationManager.GetSimulationOwner();
             if (simulationOwner == null || sourcePlayerId != simulationOwner.Value.Id)
@@ -32,7 +32,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
                 return;
             }
 
-            worldStateManager.OnWorldDataReceived(worldDataPacket.World);
+            worldDataManager.OnWorldDataReceived(worldDataPacket.World);
         }
     }
 }
