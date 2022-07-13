@@ -1,4 +1,5 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Players;
@@ -18,11 +19,10 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             return typeof(ClientReadyPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
-            ServerProcessorContext processorContext = (ServerProcessorContext)context;
-            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
-            TimeManager timeManager = processorContext.ServiceLocator.LocateService<TimeManager>();
+            PlayerManager playerManager = context.ServiceLocator.LocateService<PlayerManager>();
+            TimeManager timeManager = context.ServiceLocator.LocateService<TimeManager>();
 
             if (!playerManager.PlayerExists(sourcePlayerId))
                 return; // what

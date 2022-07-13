@@ -13,7 +13,9 @@ namespace PlanetbaseMultiplayer.Patcher
         public static void Execute()
         {
             Debug.Log("Creating harmony instance");
+#if DEBUG
             Harmony.DEBUG = true;
+#endif
             HarmonyInstance = new Harmony("com.planetbase.multiplayermod.harmony");
             Debug.Log("Patching game!");
             HarmonyInstance.PatchAll();

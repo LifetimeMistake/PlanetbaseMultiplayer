@@ -2,6 +2,7 @@
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using System;
@@ -18,11 +19,11 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(SessionDataPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
+            Client client = context.ServiceLocator.LocateService<Client>();
             SessionDataPacket sessionDataPacket = (SessionDataPacket)packet;
-            ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            processorContext.Client.OnSessionDataReceived(sessionDataPacket.SessionData);
+            client.OnSessionDataReceived(sessionDataPacket.SessionData);
         }
     }
 }

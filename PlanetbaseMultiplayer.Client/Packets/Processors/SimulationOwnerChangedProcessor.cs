@@ -2,6 +2,7 @@
 using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Client.UI;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Players;
@@ -20,12 +21,11 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(SimulationOwnerChangedPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
             SimulationOwnerChangedPacket simulationOwnerChangedPacket = (SimulationOwnerChangedPacket)packet;
-            ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
-            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
+            PlayerManager playerManager = context.ServiceLocator.LocateService<PlayerManager>();
+            SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
 
             if(simulationOwnerChangedPacket.PlayerId != null)
             {

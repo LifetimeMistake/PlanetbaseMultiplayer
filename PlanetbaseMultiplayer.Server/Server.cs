@@ -26,38 +26,32 @@ namespace PlanetbaseMultiplayer.Server
 {
     public class Server
     {
+        private bool isInitialized;
         private NetServer server;
         private ServerSettings settings;
-        private ServerProcessorContext processorContext;
         private PacketRouter router;
         private ServiceLocator serviceLocator;
-
         public Dictionary<Guid, long> playerConnections;
 
         public ServerSettings Settings { get { return settings; } }
         public ServiceLocator ServiceLocator { get { return serviceLocator; } }
         //public Dictionary<Guid, long> PlayerConnections { get { return playerConnections; } }
 
-        public Server(ServerSettings settings)
+        public Server(ServerSettings settings, PacketRouter router, ServiceLocator serviceLocator, SynchronizationContext synchronizationContext)
         {
-            this.settings = settings;
-            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+            this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            this.router = router ?? throw new ArgumentNullException(nameof(router));
+            this.serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
+
+            SynchronizationContext.SetSynchronizationContext(synchronizationContext);
             playerConnections = new Dictionary<Guid, long>();
-
-            ServerAutoFacRegistrar serverAutoFacRegistrar = new ServerAutoFacRegistrar(this, settings);
-            serviceLocator = new ServiceLocator(serverAutoFacRegistrar);
-            processorContext = new ServerProcessorContext(this, serviceLocator);
-
-            router = new PacketRouter(processorContext);
-            foreach (PacketProcessor packetProcessor in PacketProcessor.GetProcessors())
-                router.RegisterPacketProcessor(packetProcessor);
-
-            serviceLocator.BeginLifetimeScope();
-            Initialize();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
+            if (isInitialized)
+                throw new InvalidOperationException("The server had already been initialized.");
+
             foreach (IManager manager in serviceLocator.LocateServicesOfType<IManager>())
             {
                 try
@@ -69,6 +63,8 @@ namespace PlanetbaseMultiplayer.Server
                     throw new Exception($"Could not initialize manager \"{manager.GetType().Name}\": {ex}");
                 }
             }
+
+            isInitialized = true;
         }
 
         public void Start()

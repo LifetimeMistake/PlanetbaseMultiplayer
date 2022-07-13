@@ -1,5 +1,6 @@
 ﻿using PlanetbaseMultiplayer.Client.Time;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Time;
 using System;
@@ -17,11 +18,10 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(TimeScaleUpdatePacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
             TimeScaleUpdatePacket timeScaleUpdatedPacket = (TimeScaleUpdatePacket)packet;
-            ClientProcessorContext processorContext = (ClientProcessorContext)context;
-            TimeManager timeManager = processorContext.ServiceLocator.LocateService<TimeManager>();
+            TimeManager timeManager = context.ServiceLocator.LocateService<TimeManager>();
             timeManager.OnTimeScaleUpdated(timeScaleUpdatedPacket.TimeScale, timeScaleUpdatedPacket.IsPaused);
         }
     }

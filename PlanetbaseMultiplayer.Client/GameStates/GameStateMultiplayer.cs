@@ -1,5 +1,7 @@
 ﻿using Planetbase;
+using PlanetbaseMultiplayer.Client.Autofac;
 using PlanetbaseMultiplayer.Model;
+using PlanetbaseMultiplayer.Model.Autofac;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -187,23 +189,31 @@ namespace PlanetbaseMultiplayer.Client.GameStates
             }
 
 			ConnectionOptions connectionOptions = new ConnectionOptions(host, port, username, password);
-			Client client = new Client(this);
+			// this is hilariously stupid
+			ServiceLocator serviceLocator = new ServiceLocator();
+			ClientAutoFacRegistrar clientAutoFacRegistrar = new ClientAutoFacRegistrar(serviceLocator, this);
+			serviceLocator.Initialize(clientAutoFacRegistrar);
+			serviceLocator.BeginLifetimeScope();
+
+			Client client = serviceLocator.LocateService<Client>();
+			client.Initialize();
+
 			Multiplayer.Client = client;
+			Multiplayer.ServiceLocator = serviceLocator;
+			
 			client.Connect(connectionOptions);
 		}
 
 		public void DisableMultiplayer()
 		{
-			if (Multiplayer.Client != null)
-			{
-				Multiplayer.Client.Disconnect();
-				Multiplayer.Client = null;
-			}
+			Multiplayer.Client?.Disconnect();
+			Multiplayer.ServiceLocator?.EndLifetimeScope();
 		}
 
-		public void OnClientDisconnected()
+		public void OnPlayerDisconnected()
         {
 			Multiplayer.Client = null;
-        }
+			Multiplayer.ServiceLocator = null;
+		}
 	}
 }

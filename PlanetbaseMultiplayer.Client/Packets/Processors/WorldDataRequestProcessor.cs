@@ -1,6 +1,7 @@
 ﻿using Planetbase;
 using PlanetbaseMultiplayer.Client.Simulation;
 using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.World;
 using PlanetbaseMultiplayer.Model.Players;
@@ -20,13 +21,13 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             return typeof(WorldDataRequestPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
-            ClientProcessorContext clientProcessor = (ClientProcessorContext)context;
-            SimulationManager simulationManager = clientProcessor.ServiceLocator.LocateService<SimulationManager>();
+            Client client = context.ServiceLocator.LocateService<Client>();
+            SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
 
             Player? player = simulationManager.GetSimulationOwner();
-            if (player.HasValue && clientProcessor.Client.LocalPlayer.HasValue && clientProcessor.Client.LocalPlayer.Value != player.Value)
+            if (player.HasValue && client.LocalPlayer.HasValue && client.LocalPlayer.Value != player.Value)
                 return; // Not the simulation owner
 
             GameStateGame gameStateGame = GameManager.getInstance().getGameState() as GameStateGame;
@@ -35,7 +36,7 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
             WorldStateData worldStateData = new WorldStateData(xmlData);
 
             WorldDataPacket worldDataPacket = new WorldDataPacket(worldStateData);
-            clientProcessor.Client.SendPacket(worldDataPacket);
+            client.SendPacket(worldDataPacket);
         }
     }
 }

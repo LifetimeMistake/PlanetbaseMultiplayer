@@ -85,7 +85,7 @@
     <Compile Include="Packets\Session\SessionDataPacket.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\PacketRouter.cs" />
-    <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
+    <Compile Include="Packets\Processors\ProcessorContext.cs" />
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Packets\Session\SimulationOwnerChangedPacket.cs" />
     <Compile Include="Packets\World\WorldDataPacket.cs" />

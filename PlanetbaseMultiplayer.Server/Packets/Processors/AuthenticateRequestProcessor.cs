@@ -1,4 +1,5 @@
 ﻿using PlanetbaseMultiplayer.Model.Packets;
+using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.Session;
 using PlanetbaseMultiplayer.Model.Players;
@@ -19,13 +20,13 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             return typeof(AuthenticateRequestPacket);
         }
 
-        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, IProcessorContext context)
+        public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
-            ServerProcessorContext processorContext = (ServerProcessorContext)context;
+            Server server = context.ServiceLocator.LocateService<Server>();
             AuthenticateRequestPacket authenticateRequestPacket = (AuthenticateRequestPacket)packet;
-            ServerSettings serverSettings = processorContext.Server.Settings;
-            PlayerManager playerManager = processorContext.ServiceLocator.LocateService<PlayerManager>();
-            SimulationManager simulationManager = processorContext.ServiceLocator.LocateService<SimulationManager>();
+            ServerSettings serverSettings = server.Settings;
+            PlayerManager playerManager = context.ServiceLocator.LocateService<PlayerManager>();
+            SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
 
             AuthenticatePacket authenticateResponsePacket;
             if (playerManager.PlayerExists(sourcePlayerId))
@@ -59,7 +60,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
                 Console.WriteLine($"Player {sourcePlayerId} successfully authenticated!");
             }
 
-            processorContext.Server.SendPacketToPlayer(authenticateResponsePacket, sourcePlayerId);
+            server.SendPacketToPlayer(authenticateResponsePacket, sourcePlayerId);
         }
     }
 }
