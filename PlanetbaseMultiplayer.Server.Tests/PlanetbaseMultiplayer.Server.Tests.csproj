@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PlanetbaseMultiplayer.Model\PlanetbaseMultiplayer.Model.csproj" />
+    <ProjectReference Include="..\PlanetbaseMultiplayer.Server\PlanetbaseMultiplayer.Server.csproj" />
   </ItemGroup>
 
 </Project>

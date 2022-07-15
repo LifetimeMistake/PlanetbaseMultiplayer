@@ -77,5 +77,13 @@ namespace PlanetbaseMultiplayer.Model.Autofac
                 .Select(r => r.Activator.LimitType)
                 .Select(t => lifetimeScope.Resolve(t) as T).ToList();
         }
+
+        public List<Type> GetDerivedServiceTypes<T>() where T : class
+        {
+            AssertLifetimeScopeExists();
+            return lifetimeScope.ComponentRegistry.Registrations
+                .Where(r => typeof(T).IsAssignableFrom(r.Activator.LimitType))
+                .Select(r => r.Activator.LimitType).ToList();
+        }
     }
 }
