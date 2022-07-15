@@ -2,6 +2,7 @@
 using PlanetbaseMultiplayer.Model.Packets.Processors;
 using PlanetbaseMultiplayer.Model.Packets.Processors.Abstract;
 using PlanetbaseMultiplayer.Model.Packets.World;
+using PlanetbaseMultiplayer.Server.World;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,8 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
 
         public override void ProcessPacket(Guid sourcePlayerId, Packet packet, ProcessorContext context)
         {
-            WorldDataRequestFailPacket worldDataRequestFailPacket = (WorldDataRequestFailPacket)packet;
-
+            WorldDataManager worldDataManager = context.ServiceLocator.LocateService<WorldDataManager>();
+            worldDataManager.OnWorldRequestFailed();
         }
     }
 }

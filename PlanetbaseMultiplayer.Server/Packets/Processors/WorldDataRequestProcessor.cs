@@ -58,7 +58,7 @@ namespace PlanetbaseMultiplayer.Server.Packets.Processors
             else
             {
                 // The state we have is already the newest
-                WorldData worldData = worldDataManager.GetWorldData();
+                WorldData worldData = worldDataManager.SaveWorldData();
                 WorldDataPacket worldDataPacket = new WorldDataPacket(worldData);
                 server.SendPacketToPlayer(worldDataPacket, sourcePlayerId);
             }

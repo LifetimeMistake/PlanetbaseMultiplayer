@@ -81,17 +81,15 @@ namespace PlanetbaseMultiplayer.Server.Environment
             server.SendPacketToAll(endDisasterPacket);
         }
 
-        public bool Save(WorldData world)
+        public void Save(WorldData world)
         {
             DisasterData disasterData = new DisasterData(disaster);
             world.Disasters = disasterData;
-            return true;
         }
 
-        public bool Load(WorldData world)
+        public void Load(WorldData world)
         {
             disaster = world.Disasters.CurrentDisaster;
-            return true;
         }
     }
 }

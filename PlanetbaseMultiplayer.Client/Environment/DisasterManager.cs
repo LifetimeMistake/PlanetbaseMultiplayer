@@ -146,24 +146,13 @@ namespace PlanetbaseMultiplayer.Client.Environment
             client.SendPacket(endDisasterPacket);
         }
 
-        public bool Serialize(XmlDocument document)
-        {
-            return true;
-        }
-
-        public bool Deserialize(XmlDocument document)
-        {
-            return true;
-        }
-
-        public bool Save(WorldData world)
+        public void Save(WorldData world)
         {
             DisasterData disasterData = new DisasterData(disaster);
             world.Disasters = disasterData;
-            return true;
         }
 
-        public bool Load(WorldData world)
+        public void Load(WorldData world)
         {
             if (world.Disasters.CurrentDisaster.HasValue)
             {
@@ -173,8 +162,6 @@ namespace PlanetbaseMultiplayer.Client.Environment
             {
                 disaster = world.Disasters.CurrentDisaster;
             }
-
-            return true;
         }
     }
 }

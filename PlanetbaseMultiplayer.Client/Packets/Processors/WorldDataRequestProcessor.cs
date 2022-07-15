@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace PlanetbaseMultiplayer.Client.Packets.Processors
 {
@@ -27,29 +28,27 @@ namespace PlanetbaseMultiplayer.Client.Packets.Processors
         {
             Client client = context.ServiceLocator.LocateService<Client>();
             SimulationManager simulationManager = context.ServiceLocator.LocateService<SimulationManager>();
+            WorldDataManager worldDataManager = context.ServiceLocator.LocateService<WorldDataManager>();
 
             Player? player = simulationManager.GetSimulationOwner();
             if (player.HasValue && client.LocalPlayer.HasValue && client.LocalPlayer.Value != player.Value)
                 return; // Not the simulation owner
 
-            GameStateGame gameStateGame = GameManager.getInstance().getGameState() as GameStateGame;
-            string xmlData = WorldSerializer.Serialize(gameStateGame);
-            WorldData worldData = new WorldData();
-            worldData.XmlData = xmlData;
-
-            foreach (IPersistent persistent in context.ServiceLocator.LocateServicesOfType<IPersistent>())
+            WorldData worldData;
+            try
             {
-                if (!persistent.Save(worldData))
-                {
-                    // Inform the server that something went terribly wrong.
-                    WorldDataRequestFailPacket worldDataRequestFailPacket = new WorldDataRequestFailPacket();
-                    client.SendPacket(worldDataRequestFailPacket);
-
-                    // TODO: Handle this by informing the user about it and not interrupting the game
-                    throw new Exception($"Failed to serialize persistent manager: {persistent.GetType().Name}");
-                }
+                worldData = worldDataManager.SaveWorldData();
+            }
+            catch(Exception ex)
+            {
+                Debug.LogWarning($"Failed to save world data: {ex}");
+                // World data request failed, something went wrong
+                WorldDataRequestFailPacket worldDataRequestFailPacket = new WorldDataRequestFailPacket();
+                client.SendPacket(worldDataRequestFailPacket);
+                return;
             }
 
+            // Else, send world data to the server
             WorldDataPacket worldDataPacket = new WorldDataPacket(worldData);
             client.SendPacket(worldDataPacket);
         }

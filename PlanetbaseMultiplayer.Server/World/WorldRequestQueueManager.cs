@@ -66,7 +66,7 @@ namespace PlanetbaseMultiplayer.Server.World
             WorldDataManager worldDataManager = server.ServiceLocator.LocateService<WorldDataManager>();
 
             Console.WriteLine("Delivering world data...");
-            WorldData worldData = worldDataManager.GetWorldData();
+            WorldData worldData = worldDataManager.SaveWorldData();
             WorldDataPacket worldDataPacket = new WorldDataPacket(worldData);
             foreach (KeyValuePair<Guid, Player> kvp in playerQueue)
             {

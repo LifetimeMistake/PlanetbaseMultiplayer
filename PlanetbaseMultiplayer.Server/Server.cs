@@ -43,11 +43,6 @@ namespace PlanetbaseMultiplayer.Server
             this.router = router ?? throw new ArgumentNullException(nameof(router));
             this.serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
 
-            WorldData worldData;
-            using (FileStream stream = File.OpenRead(settings.SavePath))
-            {
-                worldData = WorldData.Deserialize(stream);
-            }
             SynchronizationContext.SetSynchronizationContext(synchronizationContext);
             playerConnections = new Dictionary<Guid, long>();
         }

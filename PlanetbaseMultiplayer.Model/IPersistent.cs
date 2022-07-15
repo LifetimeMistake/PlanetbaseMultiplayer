@@ -9,7 +9,7 @@ namespace PlanetbaseMultiplayer.Model
 {
     public interface IPersistent
     {
-        bool Save(WorldData world); // Dumps the persistence data into the given WorldData object
-        bool Load(WorldData world); // Loads the persistence data from the given WorldData object
+        void Save(WorldData world); // Dumps the persistence data into the given WorldData object
+        void Load(WorldData world); // Loads the persistence data from the given WorldData object
     }
 }

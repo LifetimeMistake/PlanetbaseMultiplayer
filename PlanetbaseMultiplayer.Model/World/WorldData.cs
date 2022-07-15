@@ -39,6 +39,11 @@ namespace PlanetbaseMultiplayer.Model.World
             }
         }
 
+        public void Serialize(Stream stream)
+        {
+            serializer.Serialize(stream, this);
+        }
+
         public static WorldData Deserialize(byte[] data)
         {
             using (MemoryStream stream = new MemoryStream(data))

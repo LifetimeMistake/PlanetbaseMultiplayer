@@ -19,8 +19,8 @@ namespace PlanetbaseMultiplayer.Server
             serviceLocator.BeginLifetimeScope();
 
             Server server = serviceLocator.LocateService<Server>();
-            server.Start();
             server.Initialize();
+            server.Start();
             Console.ReadLine();
         }
     }

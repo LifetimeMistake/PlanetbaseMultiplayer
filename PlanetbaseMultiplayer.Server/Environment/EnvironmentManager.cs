@@ -69,19 +69,17 @@ namespace PlanetbaseMultiplayer.Server.Environment
             UpdateEnvironmentData(time, windLevel, windDirection);
         }
 
-        public bool Save(WorldData world)
+        public void Save(WorldData world)
         {
             EnvironmentData environmentData = new EnvironmentData(time, windLevel, windDirection);
             world.Environment = environmentData;
-            return true;
         }
 
-        public bool Load(WorldData world)
+        public void Load(WorldData world)
         {
             time = world.Environment.DayTime;
             windLevel = world.Environment.WindLevel;
             windDirection = world.Environment.WindDirection;
-            return true;
         }
     }
 }
